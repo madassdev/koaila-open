@@ -43,8 +43,7 @@ class IntegrationsController extends Controller
      */
     public function store(IntegrationRequest $request, $type)
     {
-        Integrations::create([
-            'user_id' => Auth::id(),
+        Auth::user()->integrations()->create([
             'type' => $type,
             'data' => $request->except('_token')
         ]);
@@ -59,7 +58,7 @@ class IntegrationsController extends Controller
      */
     public function show(Integrations $integrations)
     {
-        //
+        
     }
 
     /**

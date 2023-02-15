@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use League\Csv\Reader;
+use App\Models\Result;
 
 use function PHPUnit\Framework\fileExists;
 
@@ -26,19 +27,13 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $filePath = public_path("/csv/".Auth::user()->result_file_name);
-        if (fileExists($filePath)){
-            $rows = array_map('str_getcsv', file($filePath));
-            $headers = array_shift($rows);
-            $csv = array();
-            foreach ($rows as $row) {
-                $csv[] = array_combine($headers, $row);
-            }
-            return view('home')->with([
-                'headers'=>$headers,
-                'rows'=>$csv,
-            ]);
-        }
-        return view('home');
+        $results = Auth::user()->results->map(function($result) {
+            $result->data = $result->loadData();
+            return $result;
+        });
+
+        return view('home')->with([
+            'results' => $results,
+        ]);
     }
 }
