@@ -19,6 +19,9 @@ const app = createApp({});
 import LineChart from './components/LineChart.vue';
 app.component('line-chart', LineChart);
 
+import ConfigForm from './components/ConfigForm.vue';
+app.component('config-form', ConfigForm);
+
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue

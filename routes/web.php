@@ -25,4 +25,5 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/integrations', [App\Http\Controllers\IntegrationsController::class, 'index'])->name('integrations');
     Route::get('/integrations-forms/{type}', [App\Http\Controllers\IntegrationsController::class, 'create'])->name('integrations-forms');
     Route::post('/integrations-forms/{type}', [App\Http\Controllers\IntegrationsController::class, 'store'])->name('create-integration');
+    Route::get('/config', [App\Http\Controllers\ConfigurationController::class, 'index'])->name('configuration');
 });
