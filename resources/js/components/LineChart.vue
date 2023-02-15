@@ -15,20 +15,20 @@ ChartJS.register(Title, Tooltip, Legend, CategoryScale, LinearScale)
 
 export default {
   props: ['label','data'],
-  name: 'CHART',
+  name: 'lineChart',
   components: { Line },
-
   data() {
     return {
       chartData: {
-        labels: Object.keys(this.data),
-        datasets:{
-          label: this.label,
-          data:Object.values(this.data),
-        }, 
-      },
+      labels: Object.keys(this.data),
+      datasets:[{
+        label: this.label,
+        data:Object.values(this.data),
+      }], 
+    },
       chartOptions: {
-        responsive: true
+        responsive: true,
+        pointRadius: 0,
       }
     }
   }

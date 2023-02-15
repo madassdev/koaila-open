@@ -14,31 +14,25 @@
                         </div>
                     @endif
 
+                    <div class="columns-2">
                     @if($ttl = $results->firstWhere('type','time_to_value'))
-                    <h1>hello1</h1>
-                        {{-- <line-chart :labels= "[
-                            '2022-04-08',
-                            '2022-04-09',
-                        ]"
-                        :data= "[
-                            1,
-                            2,
-                        ]"
-                        :name= "'Time to value'"></line-chart> --}}
+                    <div>
+                    <line-chart 
+                        :data= '{!!json_encode($ttl->data)!!}'
+                        :label= '"Time to Value"'
+                        ></line-chart>
+                    </div>
                     @endif
 
                     @if($daumauData = $results->firstWhere('type','daumau'))
-                        {{-- <line-chart 
-                        :labels= "['2022-04-08','2022-04-09']" 
-                        :datasets= "[{
-                              label: 'Data One',
-                              data: [40, 39]
-                        }]"></line-chart> --}}
+                    <div>
                         <line-chart 
-                        :data= '{!!json_encode($daumauData)!!}'
+                        :data= '{!!json_encode($daumauData->data)!!}'
                         :label= '"DAU/MAU"'
                         ></line-chart>
+                    </div>
                     @endif
+                </div>
 
                     @if ($upsell = $results->firstWhere('type','upsell'))
                         <div class="grid grid-cols-2 gap-4">
