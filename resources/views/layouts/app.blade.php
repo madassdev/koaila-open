@@ -65,6 +65,10 @@
                                     <a class="dropdown-item" href="{{ route('integrations') }}">
                                         {{ __('Integrations') }}
                                     </a>
+
+                                    <a class="dropdown-item" href="{{ route('configuration') }}">
+                                        {{ __('Configuration') }}
+                                    </a>
                                 </div>
                             </li>
                         @endguest

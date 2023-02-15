@@ -22,8 +22,9 @@ Auth::routes();
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-    Route::get('/integrations', [App\Http\Controllers\IntegrationsController::class, 'index'])->name('integrations');
-    Route::get('/integrations-forms/{type}', [App\Http\Controllers\IntegrationsController::class, 'create'])->name('integrations-forms');
-    Route::post('/integrations-forms/{type}', [App\Http\Controllers\IntegrationsController::class, 'store'])->name('create-integration');
+    Route::get('/integrations', [App\Http\Controllers\IntegrationController::class, 'index'])->name('integrations');
+    Route::get('/integrations-forms/{type}', [App\Http\Controllers\IntegrationController::class, 'create'])->name('integrations-forms');
+    Route::post('/integrations-forms/{type}', [App\Http\Controllers\IntegrationController::class, 'store'])->name('create-integration');
     Route::get('/config', [App\Http\Controllers\ConfigurationController::class, 'index'])->name('configuration');
+    Route::post('/config/{type}', [App\Http\Controllers\ConfigurationController::class, 'store'])->name('create-configuration');
 });
