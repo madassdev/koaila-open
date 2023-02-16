@@ -14,20 +14,36 @@
                         </div>
                     @endif
 
-                    <h1 class="text-lg"> Conversion channels</h1>
-                    <form method="POST" action="{{ route('create-configuration', ['type'=>'aha_moment']) }}">
-                        @csrf      
-                        
-                        @if(session()->has('message'))
-                            <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4" role="alert">
-                                <p>{{ session()->get('message') }}</p>
-                            </div>
-                        @endif
+                    {{-- TODO: 
+                        - put the whole form in component?
+                        - show existing config in form
+                    --}}
 
-                        <config-form :existing_config='$existing_config'></config-form>
+                    @if(session()->has('message'))
+                        <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4" role="alert">
+                            <p>{{ session()->get('message') }}</p>
+                        </div>
+                    @endif
+
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
+                    @foreach (['conversion_channels'=>'Conversion channels','aha_moment'=>'Aha Moment'] as $configType => $configTitle) 
+
+                    <form method="POST" action="{{ route('create-configuration', ['type'=>$configType]) }}">
+                        @csrf      
+
+                        <config-form title="{{$configTitle}}" :existing-config='{!!json_encode($existingConfigs->where('type',$configType)->first()?->configuration)!!}'></config-form>
                 
-                        <div class="row mb-0">
-                            <div class="col-md-8 offset-md-4 mt-3">
+                        <div class="row grid grid-cols-3 px-3">
+                            <div class="flex justify-center col-start-2 mt-3">
                                 <button class="bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded">
                                     {{ __('Submit') }}
                                 </button>
@@ -35,27 +51,11 @@
                         </div>
                     </form>
 
-                    <h1 class="text-lg"> AHA Moment</h1>
-                    <form method="POST" action="{{ route('create-configuration', ['type'=>'aha_moment']) }}">
-                        @csrf      
+                    @if(!$loop->last)
+                        <hr class="m-3">
+                    @endif
                         
-                        @if(session()->has('message'))
-                            <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4" role="alert">
-                                <p>{{ session()->get('message') }}</p>
-                            </div>
-                        @endif
-
-                        <config-form :existing_config='$existing_config'></config-form>
-                
-                        <div class="row mb-0">
-                            <div class="col-md-8 offset-md-4 mt-3">
-                                <button class="bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded">
-                                    {{ __('Submit') }}
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-
+                    @endforeach
                 </div>
             </div>
         </div>

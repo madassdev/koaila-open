@@ -14,11 +14,9 @@ class ConfigurationRequest extends FormRequest
      */
     public function rules()
     {
-        if ($this->route('type') == 'aha_moment'){
-            return [
-                'name' => ['required','string'],
-                'event' => ['required','string'],
-            ];
-        }
+        return [
+            'fields.*.name' => ['required','string'],
+            'fields.*.event' => ['required','string'],
+        ];
     }
 }

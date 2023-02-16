@@ -9,29 +9,19 @@ use App\Http\Requests\ConfigurationRequest;
 class ConfigurationController extends Controller
 {
     public function index()
-    {
-        // if(Auth::user()->configurations->where("type","aha_moment")->exists()){
-        //     $existing_config = Auth::user()->configurations->where("type","aha_moment")->first()->configuration;
-        // }
-        // else{
-        //     $existing_config=[
-        //         "name"=> "",
-        //         "event"=>"",
-        //     ];
-        // }
-        $existing_config=[
-            "name"=> 'Name',
-            "event"=>'Event',
-        ];
-        return view('configuration')->with('existing_config',$existing_config);
+    {    
+        return view('configuration')
+            ->with('existingConfigs', Auth::user()->configurations()->get());
     }
 
     public function store(ConfigurationRequest $request, $type)
     {
-        Auth::user()->configurations()->create([
-            'type' => $type,
-            'configuration' => json_encode($request->fields)
-        ]);
+        Auth::user()->configurations()->firstOrNew([
+            'type' => $type
+        ])->fill([
+            'configuration' => $request->fields
+        ])->save();
+
         return redirect()->back()->with('message', 'Configuration saved!');
     }
 }
