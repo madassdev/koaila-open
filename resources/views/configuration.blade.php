@@ -5,7 +5,7 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-12">
-            <h1 class="text-xl py-8">{{ __('Dashboard') }}</h1>
+            <h1 class="text-xl py-8">{{ __('Configuration') }}</h1>
             <div class="card">
                 <div class="card-body">
                     @if (session('status'))
@@ -14,29 +14,36 @@
                         </div>
                     @endif
 
-                    <form method="POST">
+                    {{-- TODO: 
+                        - put the whole form in component?
+                        - show existing config in form
+                    --}}
+
+                    @if(session()->has('message'))
+                        <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4" role="alert">
+                            <p>{{ session()->get('message') }}</p>
+                        </div>
+                    @endif
+
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
+                    @foreach (['conversion_channels'=>'Conversion channels','aha_moment'=>'Aha Moment'] as $configType => $configTitle) 
+
+                    <form method="POST" action="{{ route('create-configuration', ['type'=>$configType]) }}">
                         @csrf      
-                        
-                        @if(session()->has('message'))
-                            <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4" role="alert">
-                                <p>{{ session()->get('message') }}</p>
-                            </div>
-                        @endif
 
-                        <h1 class="text-lg"> AHA Moment</h1>
-                        <config-form 
-                        :label1= '"Name"'
-                        :label2= '"Event"'>
-                        </config-form>
-
-                        <h1 class="text-lg"> Features</h1>
-                        <config-form 
-                        :label1= '"Name"'
-                        :label2= '"Event"'>
-                        </config-form>
+                        <config-form title="{{$configTitle}}" :existing-config='{!!json_encode($existingConfigs->where('type',$configType)->first()?->configuration)!!}'></config-form>
                 
-                        <div class="row mb-0">
-                            <div class="col-md-8 offset-md-4 mt-3">
+                        <div class="row grid grid-cols-3 px-3">
+                            <div class="flex justify-center col-start-2 mt-3">
                                 <button class="bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded">
                                     {{ __('Submit') }}
                                 </button>
@@ -44,6 +51,11 @@
                         </div>
                     </form>
 
+                    @if(!$loop->last)
+                        <hr class="m-3">
+                    @endif
+                        
+                    @endforeach
                 </div>
             </div>
         </div>

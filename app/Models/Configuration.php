@@ -15,6 +15,10 @@ class Configuration extends Model
         'configuration',
     ];
 
+    protected $casts = [
+        'configuration' => 'array'
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);

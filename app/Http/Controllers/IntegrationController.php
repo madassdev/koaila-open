@@ -7,7 +7,7 @@ use App\Models\Integrations;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class IntegrationsController extends Controller
+class IntegrationController extends Controller
 {
 
     public function __construct()

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->id();
             $table->foreignIdFor(User::class,'user_id');
             $table->string('type');
-            $table->string('configuration');
+            $table->json('configuration');
             $table->timestamps();
         });
     }
