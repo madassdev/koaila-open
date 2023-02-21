@@ -5,38 +5,61 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-12">
-            <h1 class="text-xl py-8">{{ __('Dashboard') }}</h1>
-            <div class="card">
-                <div class="card-body">
+            <h1 class="text-xl py-4">{{ __('Dashboard') }}</h1>
                     @if (session('status'))
                         <div class="alert alert-success" role="alert">
                             {{ session('status') }}
                         </div>
                     @endif
 
-                    <div class="columns-2">
+                    @if($featureAdoption = $results->firstWhere('type','feature_adoption'))
+                    <div class="grid lg:grid-cols-2 md:grid-cols-1 gap-4">
+                        <div class="bg-white rounded mt-4">
+                            <div class="p-4">
+                                <h1 class="text-lg font-semibold text-gray-900 mb-4 text-center">Feature adoption (%)</h1>
+                                <bar-chart 
+                                    :data= '{!!json_encode($featureAdoption->data)!!}'
+                                    label= "Feature adoption"
+                                    backgroundcolor= "#ad74ce"
+                                    :limit='2'
+                                    legend
+                                ></bar-chart>
+                            </div>
+                        </div>
+                    </div>
+                    @endif
+
+                    <div class="grid lg:grid-cols-2 md:grid-cols-1 gap-4">
                         @if($ttl = $results->firstWhere('type','time_to_value'))
-                        <div>
-                        <h1 class="text-lg font-semibold text-gray-900">Time to value</h1>
-                        <line-chart 
-                            :data= '{!!json_encode($ttl->data)!!}'
-                            :label= '"Time to Value"'
-                            ></line-chart>
+                        <div class="bg-white rounded mt-4">
+                            <div class="p-4">
+                                <h1 class="text-lg font-semibold text-gray-900 mb-4 text-center">Time to value (in minutes)</h1>
+                                <line-chart 
+                                    :data= '{!!json_encode($ttl->data)!!}'
+                                    label= "Time to Value"
+                                    backgroundcolor= "#4778e9"
+                                    ></line-chart>
+                            </div>
                         </div>
                         @endif
 
                         @if($daumauData = $results->firstWhere('type','daumau'))
-                        <div>
-                            <h1 class="text-lg font-semibold text-gray-900">DAU/MAU</h1>
-                            <line-chart 
-                            :data= '{!!json_encode($daumauData->data)!!}'
-                            :label= '"DAU/MAU"'
-                            ></line-chart>
+                        <div class="bg-white rounded mt-4">
+                            <div class="p-4">
+                                <h1 class="text-lg font-semibold text-gray-900 mb-4 text-center">DAU/MAU</h1>
+                                <line-chart 
+                                :data= '{!!json_encode($daumauData->data)!!}'
+                                label= "DAU/MAU"
+                                backgroundcolor= "#8d75cf"
+                                ></line-chart>
+                            </div>
                         </div>
                         @endif
                     </div>
 
                     @if ($upsell = $results->firstWhere('type','upsell'))
+                    <div class="bg-white rounded mt-4">
+                        <div class="p-4">
                         <div class="grid grid-cols-2 gap-4">
                             <div class="p-4 text-left bg-white dark:text-white dark:bg-gray-800">
                                 <h1 class="text-lg font-semibold text-gray-900">{{count($upsell->data['rows'])}} users to upsell</h1>
@@ -54,6 +77,8 @@
                             </div>
                             </div>
                         </div>
+
+                        <div class="flex flex-col h-screen">
                         <div class="flex grow overflow-x-auto">
                             <table class="relative w-full border text-sm text-left text-gray-500 dark:text-gray-400">
                                 <thead>
@@ -102,10 +127,23 @@
                                 </tbody>
                             </table>
                         </div>
+                        </div>
                     @endif
 
                     @if(!isset($row) & !isset($daumauData) & !isset($timeToValueFilePath))
-                        {{ __('You are logged in!') }}
+                        <div class="flex justify-center">
+                            <p class="py-3 text-lg">Let's get you started in ~10min, follow
+                                <a href="{{url('https://illustrious-perch-600.notion.site/Getting-started-10min-37dd19cc7503474a8409893aebacaaa6')}}" target="_blank" class="text-blue-700">
+                                    these steps
+                                </a>
+                                or book a call with our CTO.
+                            </p>
+                        </div>
+                  
+                        <!-- Calendly inline widget begin -->
+                        <div class="calendly-inline-widget" data-url="https://calendly.com/kristellefeghali/30min" style="min-width:320px;height:630px;"></div>
+                        <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
+                        <!-- Calendly inline widget end -->
                     @endif
                 </div>
             </div>

@@ -18,12 +18,12 @@ class Result extends Model
 
     public function loadData() {
         switch($this->type) {
+            case 'feature_adoption':
             case 'time_to_value':
             case 'daumau':
                 $filePath = public_path("/results/".$this->filename);
                 if (file_exists($filePath)){
                     $str = file_get_contents($filePath);
-                    $data = json_decode($str, true);
                     return json_decode($str, true);
                 }   
                 return null;

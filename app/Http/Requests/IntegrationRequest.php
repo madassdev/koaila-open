@@ -20,3 +20,4 @@ class IntegrationRequest extends FormRequest
         ];
     }
 }
+

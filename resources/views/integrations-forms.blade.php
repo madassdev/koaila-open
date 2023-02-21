@@ -4,9 +4,13 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
+            <div class="inline-flex p-3">
+                <p class="capitalize"> {{ $type }} integration</p>
+                @if(Auth::user()->integrations()->where('type', $type)->first()?->data)
+                <p class="inline-block rounded-full text-white bg-green-400 px-2 py-1 text-xs font-bold ml-3">Connected</p>
+                @endif
+            </div>
             <div class="card">
-                <div class="card-header capitalize">{{ $type }} integration</div>
-
                 <div class="card-body">
                     @if (session('status'))
                         <div class="alert alert-success" role="alert">
@@ -14,7 +18,6 @@
                         </div>
                     @endif
 
-                    
                     <form method="POST" action="{{ route('create-integration', ['type'=>$type]) }}">
                         @csrf      
                         
@@ -61,7 +64,7 @@
 
                 
                         <div class="row mb-0">
-                            <div class="col-md-8 offset-md-4 mt-3">
+                            <div class="col-md-6 offset-md-4 mt-3 flex justify-end">
                                 <button class="bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded">
                                     {{ __('Submit') }}
                                 </button>

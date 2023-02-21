@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\IntegrationRequest;
-use App\Models\Integrations;
+use App\Models\Integration;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -43,20 +43,22 @@ class IntegrationController extends Controller
      */
     public function store(IntegrationRequest $request, $type)
     {
-        Auth::user()->integrations()->create([
-            'type' => $type,
+        Auth::user()->integrations()->firstOrNew([
+            'type' => $type
+        ])->fill([
             'data' => $request->except('_token')
-        ]);
+        ])->save();
+
         return redirect()->back()->with('message', 'Integration successful!');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Integrations  $integrations
+     * @param  \App\Models\Integration  $integrations
      * @return \Illuminate\Http\Response
      */
-    public function show(Integrations $integrations)
+    public function show(Integration $integration)
     {
         
     }
@@ -67,7 +69,7 @@ class IntegrationController extends Controller
      * @param  \App\Models\Integrations  $integrations
      * @return \Illuminate\Http\Response
      */
-    public function edit(Integrations $integrations)
+    public function edit(Integration $integration)
     {
         //
     }
@@ -79,7 +81,7 @@ class IntegrationController extends Controller
      * @param  \App\Models\Integrations  $integrations
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Integrations $integrations)
+    public function update(Request $request, Integration $integration)
     {
         //
     }
@@ -90,7 +92,7 @@ class IntegrationController extends Controller
      * @param  \App\Models\Integrations  $integrations
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Integrations $integrations)
+    public function destroy(Integration $integration)
     {
         //
     }

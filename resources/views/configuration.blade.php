@@ -14,11 +14,6 @@
                         </div>
                     @endif
 
-                    {{-- TODO: 
-                        - put the whole form in component?
-                        - show existing config in form
-                    --}}
-
                     @if(session()->has('message'))
                         <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4" role="alert">
                             <p>{{ session()->get('message') }}</p>
@@ -35,8 +30,15 @@
                         </div>
                     @endif
 
-                    @foreach (['conversion_channels'=>'Conversion channels','aha_moment'=>'Aha Moment'] as $configType => $configTitle) 
+                    @foreach (
+                        [
+                            'conversion_channels'=>'Conversion channels',
+                            'aha_moment'=>'Aha Moment',
+                            'feature' => 'Features'
+                        ]
+                     as $configType => $configTitle) 
 
+                    {{-- Form is in blade to go faster but ultimately, it should be moved to the ConfigForm component. --}}
                     <form method="POST" action="{{ route('create-configuration', ['type'=>$configType]) }}">
                         @csrf      
 
