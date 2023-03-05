@@ -6,7 +6,6 @@
 
 import './bootstrap';
 import { createApp } from 'vue';
-import './home.js';
 
 /**
  * Next, we will create a fresh Vue application instance. You may then begin
@@ -24,6 +23,9 @@ app.component('config-form', ConfigForm);
 
 import BarChart from './components/BarChart.vue';
 app.component('bar-chart', BarChart);
+
+import SankeyChart from './components/SankeyChart.vue';
+app.component('sankey-chart', SankeyChart);
 
 /**
  * The following block of code may be used to automatically register your

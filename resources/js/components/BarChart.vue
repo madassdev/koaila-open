@@ -15,7 +15,7 @@ ChartJS.register(Title, Tooltip, Legend, CategoryScale, LinearScale)
 
 export default {
   props: ['label','data', 'backgroundcolor','legend','limit'],
-  name: 'lineChart',
+  name: 'barChart',
   components: { Bar },
 
   mounted(){
