@@ -1,5 +1,4 @@
 @extends('layouts.app')
-@vite('resources/js/home.js')
 
 @section('content')
 <div class="container">
