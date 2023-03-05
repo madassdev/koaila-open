@@ -29,3 +29,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/config/{type}', [App\Http\Controllers\ConfigurationController::class, 'store'])->name('create-configuration');
     Route::get('/upsell-dashboard', [App\Http\Controllers\UpsellController::class, 'index'])->name('upsell-dashboard');
 });
+
+Route::get('/debug-sentry', function () {
+    throw new Exception('My first Sentry error!');
+});
