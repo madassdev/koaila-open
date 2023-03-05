@@ -27,7 +27,6 @@
                 $ttl = $results->firstWhere('type','time_to_value');
                 $featureAdoption = $results->firstWhere('type','feature_adoption');
                 $saleFunnel = $results->firstWhere('type','sale_funnel');
-                dd($daumauData->data);
             @endphp
 
             {{-- <sankey-chart :data='{!!json_encode($saleFunnel->data)!!}'></sankey-chart> --}}
