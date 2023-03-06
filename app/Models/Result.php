@@ -5,6 +5,7 @@ namespace App\Models;
 use Exception;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class Result extends Model
 {
@@ -22,20 +23,25 @@ class Result extends Model
             case 'feature_adoption':
             case 'time_to_value':
             case 'daumau':
-                $filePath = public_path("/results/".$this->filename);
-                if (file_exists($filePath)){
-                    $str = file_get_contents($filePath);
+                $filePath = "/results/".$this->filename;
+            if (Storage::exists($filePath)){
+                    $str = Storage::get($filePath);
                     return json_decode($str, true);
-                }   
+                }
                 return null;
             case 'upsell':
-                $upsell_filePath = public_path("/results/".$this->filename);
-                if (file_exists($upsell_filePath)){
-                    $rows = array_map('str_getcsv', file($upsell_filePath));
-                    $headers = array_shift($rows);
+                $upsell_filePath = "/results/".$this->filename;
+                if (Storage::exists($upsell_filePath)){
+                    $csv = Storage::get($upsell_filePath);
+                    $rows = preg_split("/\r\n|\n|\r/", $csv);
+                    $headers = str_getcsv(array_shift($rows),',');
                     $csv = array();
                     foreach ($rows as $row) {
-                        $csv[] = array_combine($headers, $row);
+                        $row=str_getcsv($row, ',');
+                        if(count($row)===count($headers)){
+                            $csv[] = array_combine($headers, $row);
+                        }
+
                     }
                     return [
                         'headers' => $headers,
