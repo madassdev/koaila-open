@@ -24,10 +24,10 @@ class Result extends Model
             case 'time_to_value':
             case 'daumau':
                 $filePath = "/results/".$this->filename;
-            if (Storage::exists($filePath)){
-                    $str = Storage::get($filePath);
-                    return json_decode($str, true);
-                }
+                if (Storage::exists($filePath)){
+                        $str = Storage::get($filePath);
+                        return json_decode($str, true);
+                    }
                 return null;
             case 'upsell':
                 $upsell_filePath = "/results/".$this->filename;
@@ -48,6 +48,7 @@ class Result extends Model
                         'rows' => $csv,
                     ];
                 }
+                return null;
             default:
                 throw new Exception('Unknown result type: '.$this->type);
         }

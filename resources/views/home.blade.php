@@ -29,7 +29,7 @@
                 $saleFunnel = $results->firstWhere('type','sale_funnel');
             @endphp
 
-            {{-- <sankey-chart :data='{!!json_encode($saleFunnel->data)!!}'></sankey-chart> --}}
+            <sankey-chart :data='{!!json_encode($saleFunnel->data)!!}'></sankey-chart>
 
             <div id="global_dashboard">
                 <x-global-dashboard :daumau-data='$daumauData' :ttl='$ttl' :feature-adoption='$featureAdoption' />
