@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class IntegrationRequest extends FormRequest
 {
- 
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -15,8 +15,8 @@ class IntegrationRequest extends FormRequest
     public function rules()
     {
         return [
-            'api_key' => ['required','string'],
-            'api_secret' => ['required','string']
+            'key' => ['required','string'],
+            'secret' => ['required','string']
         ];
     }
 }

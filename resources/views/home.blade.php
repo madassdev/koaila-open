@@ -32,11 +32,11 @@
             <sankey-chart :data='{!!json_encode($saleFunnel->data)!!}'></sankey-chart>
 
             <div id="global_dashboard">
-                <x-global-dashboard :daumau-data='$daumauData' :ttl='$ttl' :feature-adoption='$featureAdoption' />
+                <x-dashboard.global-dashboard :daumau-data='$daumauData' :ttl='$ttl' :feature-adoption='$featureAdoption' />
             </div>
 
             @if(!isset($daumauData) & !isset($ttl) & !isset($featureAdoption))
-                <x-empty-dashboard/>
+                <x-dashboard.empty-dashboard/>
             @endif
         </div>
     </div>

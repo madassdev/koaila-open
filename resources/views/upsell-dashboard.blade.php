@@ -27,11 +27,11 @@
             @endphp
 
             <div id="upsell_dashboard">
-                <x-upsell-dashboard :upsell='$upsell' />
+                <x-dashboard.upsell-dashboard :upsell='$upsell' />
             </div>
 
             @if(!isset($upsell))
-                <x-empty-dashboard/>
+                <x-dashboard.empty-dashboard/>
             @endif
 
         </div>
