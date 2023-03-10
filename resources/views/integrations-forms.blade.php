@@ -53,8 +53,8 @@
 
                         @if(in_array($type, array_keys($usage_tracking_tools)))
 
-                            @foreach($usage_tracking_tools[$type] as $field)
-                                <x-forms.input id="key" name="key" label={{$field}}/>
+                            @foreach(array_keys($usage_tracking_tools[$type]) as $field)
+                                <x-forms.input id={{$field}} name={{$field}} label={{$usage_tracking_tools[$type][$field]}}/>
                             @endforeach
 
                         @endif
