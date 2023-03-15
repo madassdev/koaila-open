@@ -35,17 +35,17 @@
                             'aha_moment'=>'Aha Moment',
                             'feature' => 'Features'
                         ]
-                     as $configType => $configTitle) 
+                     as $configType => $configTitle)
 
                     {{-- Form is in blade to go faster but ultimately, it should be moved to the ConfigForm component. --}}
                     <form method="POST" action="{{ route('create-configuration', ['type'=>$configType]) }}">
-                        @csrf      
+                        @csrf
 
                         <config-form title="{{$configTitle}}" :existing-config='{!!json_encode($existingConfigs->where('type',$configType)->first()?->configuration)!!}'></config-form>
-                
+
                         <div class="row grid grid-cols-3 px-3">
                             <div class="flex justify-center col-start-2 mt-3">
-                                <button class="bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded">
+                                <button class="bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded" v-track.configurations_form_submit>
                                     {{ __('Submit') }}
                                 </button>
                             </div>
@@ -55,7 +55,7 @@
                     @if(!$loop->last)
                         <hr class="m-3">
                     @endif
-                        
+
                     @endforeach
                 </div>
             </div>

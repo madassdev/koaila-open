@@ -12,13 +12,10 @@
 
             <div class="flex flex-wrap">
                 <div class="p-4">
-                    <a href="{{ route('home') }}" class="text-lg text-white bg-gray-300 hover:bg-blue-600 rounded py-1 px-2">{{ __('Dashboard') }}</a>
+                    <a href="{{ route('home') }}" class="text-lg text-white bg-gray-300 hover:bg-blue-600 rounded py-1 px-2" v-track.global_dashboard_click>{{ __('Dashboard') }}</a>
                 </div>
                 <div class="p-4">
-                    <a href="{{ route('upsell-dashboard') }}" class="text-lg text-white bg-blue-600 hover:bg-blue-700 rounded py-1 px-2">{{ __('Users to upsell') }}</a>
-                </div>
-                <div class="p-4">
-                    <a class="text-lg text-white bg-gray-300 hover:bg-blue-600 rounded py-1 px-2">{{ __('All users') }}</a>
+                    <a href="{{ route('upsell-dashboard') }}" class="text-lg text-white bg-blue-600 hover:bg-blue-700 rounded py-1 px-2" v-track.upsell_dashboard_click>{{ __('Users to upsell') }}</a>
                 </div>
             </div>
 

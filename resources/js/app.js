@@ -5,14 +5,13 @@
  */
 
 import './bootstrap';
-import { createApp } from 'vue';
+import initAmplitude from './plugins/amplitude';
 
 /**
  * Next, we will create a fresh Vue application instance. You may then begin
  * registering components with the application instance so they are ready
  * to use in your application's views. An example is included for you.
  */
-
 const app = createApp({});
 
 import LineChart from './components/LineChart.vue';
@@ -25,6 +24,7 @@ import BarChart from './components/BarChart.vue';
 app.component('bar-chart', BarChart);
 
 import SankeyChart from './components/SankeyChart.vue';
+import {createApp} from "vue";
 app.component('sankey-chart', SankeyChart);
 
 /**
@@ -45,4 +45,5 @@ app.component('sankey-chart', SankeyChart);
  * scaffolding. Otherwise, you will need to add an element yourself.
  */
 
+initAmplitude(app);
 app.mount('#app');

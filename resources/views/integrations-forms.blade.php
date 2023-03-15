@@ -54,14 +54,14 @@
                         @if(in_array($type, array_keys($usage_tracking_tools)))
 
                             @foreach(array_keys($usage_tracking_tools[$type]) as $field)
-                                <x-forms.input id={{$field}} name={{$field}} label={{$usage_tracking_tools[$type][$field]}}/>
+                                <x-forms.input id={{$field}} name={{$field}} label={{$usage_tracking_tools[$type][$field]}}></x-forms.input>
                             @endforeach
 
                         @endif
 
                         <div class="row mb-0">
                             <div class="col-md-6 offset-md-4 mt-3 flex justify-end">
-                                <button class="bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded">
+                                <button class="bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded" v-track.integration_form_submit>
                                     {{ __('Submit') }}
                                 </button>
                             </div>

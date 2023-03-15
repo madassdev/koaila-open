@@ -28,6 +28,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/config', [App\Http\Controllers\ConfigurationController::class, 'index'])->name('configuration');
     Route::post('/config/{type}', [App\Http\Controllers\ConfigurationController::class, 'store'])->name('create-configuration');
     Route::get('/upsell-dashboard', [App\Http\Controllers\UpsellController::class, 'index'])->name('upsell-dashboard');
+    Route::get('/upsell-download', [App\Http\Controllers\UpsellController::class, 'download'])->name('upsell-download');
 });
 
 Route::get('/debug-sentry', function () {

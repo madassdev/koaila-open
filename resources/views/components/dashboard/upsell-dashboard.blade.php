@@ -12,8 +12,8 @@
             </div>
             <div class="p-4 text-right">
                 <div class="flex justify-end items-center">
-                    <a href="{{URL('/results/'.Auth::user()->results->firstWhere('type','upsell')->filename)}}"
-                       target="_blank" class="bg-blue-700 hover:bg-blue-800 text-white font-bold p-3 rounded">
+                    <a href="{{route('upsell-download')}}"
+                       target="_blank" class="bg-blue-700 hover:bg-blue-800 text-white font-bold p-3 rounded" v-track.upsell_user_list_download_click>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                              stroke="currentColor" class="w-6 h-6 inline">
                             <path stroke-linecap="round" stroke-linejoin="round"

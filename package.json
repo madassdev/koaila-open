@@ -19,6 +19,8 @@
         "vue": "^3.2.37"
     },
     "dependencies": {
+        "@amplitude/analytics-browser": "^1.9.1",
+        "amplitude-js": "^8.21.6",
         "chart.js": "^4.2.1",
         "vue-chartjs": "^5.2.0",
         "vue-google-charts": "^1.1.0",

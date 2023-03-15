@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 use Illuminate\Http\Request;
 
@@ -27,5 +28,10 @@ class UpsellController extends Controller
         return view('upsell-dashboard')->with([
             'results' => $results,
         ]);
+    }
+
+    public function download(){
+        $path = 'results/'.Auth::user()->results->firstWhere('type','upsell')->filename;
+        return Storage::download($path);
     }
 }
