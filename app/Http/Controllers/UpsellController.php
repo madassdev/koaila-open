@@ -34,4 +34,19 @@ class UpsellController extends Controller
         $path = 'results/'.Auth::user()->results->firstWhere('type','upsell')->filename;
         return Storage::download($path);
     }
+
+    public function sendUpsellEmails(){
+        // Read CSV file and get the necessary information
+        $csvFileData = Auth::user()->results()->whereIn('type', ['upsell'])->get()->map(function($result) {
+            $result->data = $result->loadData();
+            return $result;
+        });
+
+        $gpt3GeneratedEmail = sendGPT3Request('write a love message to Julien', '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', 'davinci');
+        if($gpt3GeneratedEmail['body']['error'] != null){
+            dd($gpt3GeneratedEmail['body']['error']['message']);
+        }
+
+
+    }
 }
