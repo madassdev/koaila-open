@@ -42,11 +42,13 @@ class UpsellController extends Controller
             return $result;
         });
 
-        $gpt3GeneratedEmail = sendGPT3Request('write a love message to Julien', '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', 'davinci');
+        $gpt3GeneratedEmail = sendGPT3Request(
+            'Write an upsell email to the free users of microtica based on the following pricing plans: https://www.microtica.com/pricing.
+            Your goal is to get them to upgrade to a paying plan. Use their behaviour on the app to convert them',
+            config('services.open_ai.api_key'),
+            'davinci');
         if($gpt3GeneratedEmail['body']['error'] != null){
             dd($gpt3GeneratedEmail['body']['error']['message']);
         }
-
-
     }
 }
