@@ -34,4 +34,21 @@ class UpsellController extends Controller
         $path = 'results/'.Auth::user()->results->firstWhere('type','upsell')->filename;
         return Storage::download($path);
     }
+
+    public function sendUpsellEmails(){
+        // Read CSV file and get the necessary information
+        $csvFileData = Auth::user()->results()->whereIn('type', ['upsell'])->get()->map(function($result) {
+            $result->data = $result->loadData();
+            return $result;
+        });
+
+        $gpt3GeneratedEmail = sendGPT3Request(
+            'Write an upsell email to the free users of microtica based on the following pricing plans: https://www.microtica.com/pricing.
+            Your goal is to get them to upgrade to a paying plan. Use their behaviour on the app to convert them',
+            config('services.open_ai.api_key'),
+            'davinci');
+        if($gpt3GeneratedEmail['body']['error'] != null){
+            dd($gpt3GeneratedEmail['body']['error']['message']);
+        }
+    }
 }

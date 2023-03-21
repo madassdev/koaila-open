@@ -1,6 +1,6 @@
 <template>
-    <Line 
-    :data="chartData" 
+    <Line
+    :data="chartData"
     :options="chartOptions"
     />
   </template>
@@ -17,7 +17,7 @@ export default {
   props: {
     'label':String,
     'data': Object,
-    'labels': Object, 
+    'labels': Object,
     'backgroundcolor': String,
     'legend': Boolean
   },
@@ -25,16 +25,6 @@ export default {
   components: { Line },
 
   mounted(){
-    if(this.label ==="Time to Value" || this.label ==="DAU/MAU"){
-      this.chartData={
-        labels: Object.keys(this.data),
-        datasets:[{
-          label: this.label,
-          data:Object.values(this.data),
-          borderColor: this.backgroundcolor
-        }], 
-      }
-    }
     if(this.label ==="Feature adoption"){
       let a=[]
       let dataLabels=[]
@@ -59,13 +49,23 @@ export default {
         datasets: a,
       }
     }
+    else{
+      this.chartData={
+          labels: Object.keys(this.data),
+          datasets:[{
+              label: this.label,
+              data:Object.values(this.data),
+              borderColor: this.backgroundcolor
+          }],
+      }
+    }
   },
 
   data() {
     return {
       chartData: {
         labels: [],
-        datasets:[], 
+        datasets:[],
       },
 
       chartOptions: {

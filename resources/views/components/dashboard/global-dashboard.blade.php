@@ -1,6 +1,6 @@
-@props(['daumauData','ttl','featureAdoption'])
+@props(['waumauData','daumauData','ttl','featureAdoption'])
 
-@if($daumauData || $ttl || $featureAdoption )
+@if($waumauData || $daumauData || $ttl || $featureAdoption )
 <div class="grid lg:grid-cols-2 md:grid-cols-1 gap-4" id="dashboard">
     @if($featureAdoption)
         <div class="bg-white rounded mt-4">
@@ -56,10 +56,24 @@
                 <line-chart
                     :data= '{!!json_encode($daumauData->data)!!}'
                     label= "DAU/MAU"
+                    backgroundcolor= "#8d75c9"
+                ></line-chart>
+            </div>
+        </div>
+    @endif
+
+    @if($waumauData)
+        <div class="bg-white rounded mt-4">
+            <div class="p-4">
+                <h1 class="text-lg font-semibold text-gray-900 mb-4 text-center">WAU/MAU (%)</h1>
+                <line-chart
+                    :data= '{!!json_encode($waumauData->data)!!}'
+                    label= "WAU/MAU"
                     backgroundcolor= "#8d75cf"
                 ></line-chart>
             </div>
         </div>
     @endif
+
 </div>
 @endif

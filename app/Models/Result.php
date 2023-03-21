@@ -22,6 +22,7 @@ class Result extends Model
             case 'sale_funnel':
             case 'feature_adoption':
             case 'time_to_value':
+            case 'waumau':
             case 'daumau':
                 $filePath = "/results/".$this->filename;
                 if (Storage::exists($filePath)){
