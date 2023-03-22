@@ -6,6 +6,7 @@
 
 import './bootstrap';
 import initAmplitude from './plugins/amplitude';
+import {createApp} from "vue";
 
 /**
  * Next, we will create a fresh Vue application instance. You may then begin
@@ -24,8 +25,10 @@ import BarChart from './components/BarChart.vue';
 app.component('bar-chart', BarChart);
 
 import SankeyChart from './components/SankeyChart.vue';
-import {createApp} from "vue";
 app.component('sankey-chart', SankeyChart);
+
+import DoughnutChart from './components/DoughnutChart.vue';
+app.component('doughnut-chart', DoughnutChart);
 
 /**
  * The following block of code may be used to automatically register your

@@ -1,14 +1,33 @@
-@props(['upsell'])
+@props(['upsellStats','upsell'])
+
+@if($upsellStats)
+    <div class="grid lg:grid-cols-2 md:grid-cols-1 gap-4 bg-white rounded mt-4 h-auto">
+        <div class="p-4 flex">
+            <div class="m-auto">
+                <h1 class="text-lg font-semibold text-gray-900 mb-4 text-center">{{$upsellStats->data['number_of_users_to_upsell']}} users to upsell</h1>
+                <h1 class="text-lg font-semibold text-gray-900 mb-4 text-center">Predicted MRR: + {{$upsellStats->data['total_predicted_mrr']}} USD</h1>
+                <h1 class="text-lg font-semibold text-gray-900 mb-4 text-center">Predicted ARR: + {{$upsellStats->data['total_predicted_arr']}} USD</h1>
+            </div>
+        </div>
+        <div class="p-4">
+            <h1 class="text-lg font-semibold text-gray-900 mb-4 text-center">Users to upsell/MA (%)</h1>
+            <doughnut-chart
+                :data= '[{{$upsellStats->data['number_of_users_to_upsell']}},{{$upsellStats->data['total_number_of_active_users_this_month']}}]'
+                :labels = '["number_of_users_to_upsell","total_number_of_active_users_this_month"]'
+                label= "Users to upsell/MAU"
+                :backgroundcolor= '["#ad74ce","#4778e9"]'
+            ></doughnut-chart>
+        </div>
+    </div>
+@endif
 
 @if ($upsell)
 <div class="bg-white rounded mt-4" id="upsell-table">
     <div class="p-4">
         <div class="grid grid-cols-2 gap-4">
             <div class="p-4 text-left bg-white dark:text-white dark:bg-gray-800">
-                <h1 class="text-lg font-semibold text-gray-900">{{count($upsell->data['rows'])}} users to upsell</h1>
-                <p class="mt-1 text-sm font-normal text-gray-500 dark:text-gray-400">List of users to upsell with the
-                    reason we believe they might convert!
-                    <br/>The column of this table are the most common events among users who were previously upsold.</p>
+                <h1 class="text-lg font-semibold text-gray-900">Users to upsell</h1>
+                <p class="mt-1 text-sm font-normal text-gray-500 dark:text-gray-400">The column of this table are the most common events among users who were previously upsold.</p>
             </div>
             <div class="p-4 text-right">
                 <div class="flex justify-end items-center">

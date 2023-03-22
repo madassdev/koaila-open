@@ -25,31 +25,6 @@ export default {
   components: { Line },
 
   mounted(){
-    if(this.label ==="Feature adoption"){
-      let a=[]
-      let dataLabels=[]
-      let random_color= ''
-      let temp =''
-      for(let dataLabel of Object.keys(this.data)){
-        while(temp === random_color){
-          temp = '#'+Math.floor(Math.random()*16777215).toString(16)
-        }
-        random_color=temp
-
-        dataLabels = Object.keys(this.data[dataLabel])
-        a.push({
-          label: dataLabel.replaceAll('_', ' '),
-          data:Object.values(this.data[dataLabel]),
-          backgroundColor: random_color,
-          borderColor: random_color
-        })
-      }
-      this.chartData={
-        labels: dataLabels,
-        datasets: a,
-      }
-    }
-    else{
       this.chartData={
           labels: Object.keys(this.data),
           datasets:[{
@@ -58,7 +33,6 @@ export default {
               borderColor: this.backgroundcolor
           }],
       }
-    }
   },
 
   data() {

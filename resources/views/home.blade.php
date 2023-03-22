@@ -27,12 +27,8 @@
                 $saleFunnel = $results->firstWhere('type','sale_funnel');
             @endphp
 
-            @if(isset($saleFunnel))
-                <sankey-chart :data='{!!json_encode($saleFunnel->data)!!}'></sankey-chart>
-            @endif
-
             <div id="global_dashboard">
-                <x-dashboard.global-dashboard :waumau-data='$waumauData' :daumau-data='$daumauData' :ttl='$ttl' :feature-adoption='$featureAdoption' />
+                <x-dashboard.global-dashboard :sale-funnel='$saleFunnel' :waumau-data='$waumauData' :daumau-data='$daumauData' :ttl='$ttl' :feature-adoption='$featureAdoption' />
             </div>
 
             @if(!isset($waumauData) & !isset($daumauData) & !isset($ttl) & !isset($featureAdoption))

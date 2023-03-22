@@ -21,10 +21,11 @@
 
             @php
                 $upsell = $results->firstWhere('type','upsell');
+                $upsellStats = $results->firstWhere('type','upsell_stats');
             @endphp
 
             <div id="upsell_dashboard">
-                <x-dashboard.upsell-dashboard :upsell='$upsell' />
+                <x-dashboard.upsell-dashboard :upsell-stats='$upsellStats' :upsell='$upsell' />
             </div>
 
             @if(!isset($upsell))
