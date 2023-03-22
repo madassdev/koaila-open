@@ -19,6 +19,7 @@ class Result extends Model
 
     public function loadData() {
         switch($this->type) {
+            case 'upsell_stats':
             case 'sale_funnel':
             case 'feature_adoption':
             case 'time_to_value':
