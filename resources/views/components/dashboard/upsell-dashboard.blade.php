@@ -10,7 +10,7 @@
             </div>
         </div>
         <div class="p-4">
-            <h1 class="text-lg font-semibold text-gray-900 mb-4 text-center">Users to upsell/MA (%)</h1>
+            <h1 class="text-lg font-semibold text-gray-900 mb-4 text-center">Users to upsell / MAU (%)</h1>
             <doughnut-chart
                 :data= '[{{$upsellStats->data['number_of_users_to_upsell']}},{{$upsellStats->data['total_number_of_active_users_this_month']}}]'
                 :labels = '["number_of_users_to_upsell","total_number_of_active_users_this_month"]'

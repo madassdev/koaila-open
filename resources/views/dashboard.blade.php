@@ -12,10 +12,10 @@
 
             <div class="flex flex-wrap">
                 <div class="p-4">
-                    <a href="{{ route('home') }}" class="text-lg text-white bg-blue-600 hover:bg-blue-700 focus:text-black rounded py-1 px-2" v-track._dashboard_click>{{ __('Dashboard') }}</a>
+                    <a href="{{ route('upsell-dashboard') }}" class="text-lg text-white bg-gray-300 hover:bg-blue-600 focus:text-black rounded py-1 px-2" v-track.upsell_dashboard_click>{{ __('Users to upsell') }}</a>
                 </div>
                 <div class="p-4">
-                    <a href="{{ route('upsell-dashboard') }}" class="text-lg text-white bg-gray-300 hover:bg-blue-600 focus:text-black rounded py-1 px-2" v-track.upsell_dashboard_click>{{ __('Users to upsell') }}</a>
+                    <a href="{{ route('dashboard') }}" class="text-lg text-white bg-blue-600 hover:bg-blue-700 focus:text-black rounded py-1 px-2" v-track._dashboard_click>{{ __('Dashboard') }}</a>
                 </div>
             </div>
 

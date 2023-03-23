@@ -8,7 +8,7 @@ use App\Models\Result;
 
 use function PHPUnit\Framework\fileExists;
 
-class HomeController extends Controller
+class DashboardController extends Controller
 {
     /**
      * Create a new controller instance.
@@ -32,7 +32,7 @@ class HomeController extends Controller
             return $result;
         });
 
-        return view('home')->with([
+        return view('dashboard')->with([
             'results' => $results,
         ]);
     }

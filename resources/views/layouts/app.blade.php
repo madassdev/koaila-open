@@ -21,7 +21,7 @@
 <div id="app" class="min-h-screen flex flex-col">
     <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
         <div class="container">
-            <a class="navbar-brand" href="{{ route('home') }}">
+            <a class="navbar-brand" href="{{ route('upsell-dashboard') }}">
                 {{ config('app.name', 'Prophesee') }}
             </a>
 
@@ -63,7 +63,7 @@
                             </a>
 
                             <div class="dropdown-menu dropdown-menu-end w-72" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item inline-flex items-center py-3" href="{{ route('home') }}">
+                                <a class="dropdown-item inline-flex items-center py-3" href="{{ route('dashboard') }}">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                          stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                         <path stroke-linecap="round" stroke-linejoin="round"
