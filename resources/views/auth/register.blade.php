@@ -39,6 +39,20 @@
                     </div>
                 </div>
 
+                <div class="row mb-3">
+                    <label for="company_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ __('Company Name') }}</label>
+
+                    <div>
+                        <input id="company_name" type="company_name" class="form-control @error('company_name') is-invalid @enderror bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" name="company_name" value="{{ old('company_name') }}" required autocomplete="company-name">
+
+                        @error('company_name')
+                        <span class="invalid-feedback" role="alert">
+                                <strong>{{ $message }}</strong>
+                            </span>
+                        @enderror
+                    </div>
+                </div>
+
 
                 <div class="row mb-3">
                     <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">{{ __('Password') }}</label>
