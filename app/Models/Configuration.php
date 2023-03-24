@@ -11,12 +11,22 @@ class Configuration extends Model
 
     protected $fillable = [
         'user_id',
-        'type',
-        'configuration',
+        'aha_moment',
+        'features',
+        'conversion_channel',
+        'pricing_page',
     ];
 
     protected $casts = [
-        'configuration' => 'array'
+        'aha_moment'=> 'array',
+        'features'=> 'array',
+        'conversion_channel'=> 'array',
+    ];
+
+    protected $attributes = [
+        'aha_moment' => '[]',
+        'features' => '[]',
+        'conversion_channel' => '[]',
     ];
 
     public function user()

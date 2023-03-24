@@ -26,7 +26,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/integrations-forms/{type}', [App\Http\Controllers\IntegrationController::class, 'create'])->name('integrations-forms');
     Route::post('/integrations-forms/{type}', [App\Http\Controllers\IntegrationController::class, 'store'])->name('create-integration');
     Route::get('/config', [App\Http\Controllers\ConfigurationController::class, 'index'])->name('configuration');
-    Route::post('/config/{type}', [App\Http\Controllers\ConfigurationController::class, 'store'])->name('create-configuration');
+    Route::post('/config', [App\Http\Controllers\ConfigurationController::class, 'store'])->name('create-configuration');
     Route::get('/upsell-dashboard', [App\Http\Controllers\UpsellController::class, 'index'])->name('upsell-dashboard');
     Route::get('/upsell-download', [App\Http\Controllers\UpsellController::class, 'download'])->name('upsell-download');
     Route::get('/upsell-send-emails', [App\Http\Controllers\UpsellController::class, 'sendUpsellEmails'])->name('upsell-send-emails');

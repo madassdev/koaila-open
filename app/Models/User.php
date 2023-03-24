@@ -53,8 +53,8 @@ class User extends Authenticatable
         return $this->hasMany(Result::class);
     }
 
-    public function configurations()
+    public function configuration()
     {
-        return $this->hasMany(Configuration::class);
+        return $this->hasOne(Configuration::class);
     }
 }

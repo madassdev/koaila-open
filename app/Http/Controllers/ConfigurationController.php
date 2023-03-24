@@ -9,19 +9,19 @@ use App\Http\Requests\ConfigurationRequest;
 class ConfigurationController extends Controller
 {
     public function index()
-    {    
+    {
         return view('configuration')
-            ->with('existingConfigs', Auth::user()->configurations()->get());
+            ->with('existingConfigs', Auth::user()->configuration);
     }
 
-    public function store(ConfigurationRequest $request, $type)
+    public function store(ConfigurationRequest $request)
     {
-        Auth::user()->configurations()->firstOrNew([
-            'type' => $type
-        ])->fill([
-            'configuration' => $request->fields
-        ])->save();
-
+        if(Auth::user()->configuration()->exists()){
+            Auth::user()->configuration()->update($request->validated());
+        }
+        else{
+            Auth::user()->configuration()->create($request->validated());
+        }
         return redirect()->back()->with('message', 'Configuration saved!');
     }
 }

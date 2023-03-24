@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class ConfigurationRequest extends FormRequest
 {
- 
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -15,8 +15,13 @@ class ConfigurationRequest extends FormRequest
     public function rules()
     {
         return [
-            'fields.*.name' => ['required','string'],
-            'fields.*.event' => ['required','string'],
+            'aha_moment.*.name' => ['required','string'],
+            'aha_moment.*.event' => ['required','string'],
+            'features.*.name' => ['required','string'],
+            'features.*.event' => ['required','string'],
+            'conversion_channel.*.name' => ['required','string'],
+            'conversion_channel.*.event' => ['required','string'],
+            'pricing_page_url' => ['required','string'],
         ];
     }
 }
