@@ -11,14 +11,14 @@
                     <label for="name" class="col-md-4 col-form-label text-md-end">Name</label>
 
                     <div class="col-md-6">
-                        <input id="name" v-model="field.name" :name="`fields[${index}][name]`" type="text" class="form-control" autocomplete="name" autofocus>
+                        <input id="name" v-model="field.name" :name="`${this.type}[${index}][name]`" type="text" class="form-control" autocomplete="name" autofocus>
                     </div>
                 </div>
                 <div class="flex justify-center row py-3">
                     <label for="event" class="col-md-4 col-form-label text-md-end">Event</label>
 
                     <div class="col-md-6">
-                        <input id="event" v-model="field.event" :name="`fields[${index}][event]`" type="text" class="form-control" autocomplete="event" autofocus>
+                        <input id="event" v-model="field.event" :name="`${this.type}[${index}][event]`" type="text" class="form-control" autocomplete="event" autofocus>
                     </div>
                 </div>
                 <div class="flex justify-center form-group py-3">
@@ -38,15 +38,15 @@
                     </svg>
                 </button>
             </div>
-        </div>   
+        </div>
     </div>
 </template>
 
 <script>
     export default {
         name: 'ConfigForm',
-        props:['existingConfig','title'],
-        
+        props:['existingConfig','title','type'],
+
         data: () => ({
             fields: [{
                 name: '',
@@ -58,7 +58,7 @@
             if (this.existingConfig) {
                 this.fields = this.existingConfig
             }
-           
+
         },
 
         methods: {

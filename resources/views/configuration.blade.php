@@ -29,19 +29,42 @@
                         </div>
                     @endif
 
-                    @foreach (
-                        [
-                            'conversion_channels'=>'Conversion channels',
-                            'aha_moment'=>'Aha Moment',
-                            'feature' => 'Features'
-                        ]
-                     as $configType => $configTitle)
-
                     {{-- Form is in blade to go faster but ultimately, it should be moved to the ConfigForm component. --}}
-                    <form method="POST" action="{{ route('create-configuration', ['type'=>$configType]) }}">
+                    <form method="POST" action="{{ route('create-configuration') }}">
                         @csrf
 
-                        <config-form title="{{$configTitle}}" :existing-config='{!!json_encode($existingConfigs->where('type',$configType)->first()?->configuration)!!}'></config-form>
+                        @foreach (
+                            [
+                                'pricing_page_url' => 'Pricing Page',
+                                'conversion_channel'=>'Conversion channels',
+                                'aha_moment'=>'Aha Moment',
+                                'features' => 'Features'
+                            ]
+                            as $configType => $configTitle)
+                            @if($configType!='pricing_page_url')
+                                <config-form type="{{$configType}}" title="{{$configTitle}}" :existing-config='{!!json_encode($existingConfigs->$configType)!!}'></config-form>
+                            @else
+                                <div class="grid grid-cols-3">
+                                    <div class="flex justify-center col-start-1 p-3">
+                                        <h1 class="text-lg">{{$configTitle}}</h1>
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-3">
+                                    <div class="flex justify-center row py-3">
+                                        <label for="{{$configType}}" class="col-md-4 col-form-label text-md-end">URL</label>
+
+                                        <div class="col-md-6">
+                                            <input id="{{$configType}}" name="pricing_page_url" type="text" class="form-control" autocomplete="{{$configType}}" value='{{$existingConfigs->pricing_page_url}}' autofocus>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+
+                            @if(!$loop->last)
+                                <hr class="m-3">
+                            @endif
+                        @endforeach
 
                         <div class="row grid grid-cols-3 px-3">
                             <div class="flex justify-center col-start-2 mt-3">
@@ -51,12 +74,6 @@
                             </div>
                         </div>
                     </form>
-
-                    @if(!$loop->last)
-                        <hr class="m-3">
-                    @endif
-
-                    @endforeach
                 </div>
             </div>
         </div>
