@@ -39,6 +39,26 @@
                             </div>
                         @endforeach
                     </div>
+
+                    <h1 class="text-base">Payment Processing Tools</h1>
+                    <div class="grid grid-cols-4 gap-4 pb-10">
+                        @foreach([[
+                            'name' => 'Stripe',
+                            'image' => 'stripe.jpeg',
+                            'slug' => 'stripe'
+                            ]] as $payment_processing_provider)
+                            <div class="w-full rounded bg-gray-50 p-2 relative">
+                                @if(Auth::user()->integrations()->where('type', $payment_processing_provider['slug'])->first()?->data)
+                                    <div class="flex justify-end">
+                                        <p class="inline-block rounded-full text-white bg-green-400 px-2 py-1 text-xs font-bold mr-3">Connected</p>
+                                    </div>
+                                @endif
+                                <img src="{{ asset('images/'. $payment_processing_provider['image']) }}"class="block object-contain object-center w-full rounded-lg p-4" alt="{{$payment_processing_provider['name']}} Logo"/>
+                                <p class="text-center">{{$payment_processing_provider['name']}}</p>
+                                <a class="absolute inset-0" href="{{ route('integrations-forms', ['type'=>$payment_processing_provider['slug']]) }}"></a>
+                            </div>
+                        @endforeach
+                    </div>
                 </div>
             </div>
     </div>

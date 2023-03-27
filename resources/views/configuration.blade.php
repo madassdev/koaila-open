@@ -42,7 +42,7 @@
                             ]
                             as $configType => $configTitle)
                             @if($configType!='pricing_page_url')
-                                <config-form type="{{$configType}}" title="{{$configTitle}}" :existing-config='{!!json_encode($existingConfigs->$configType)!!}'></config-form>
+                                <config-form type="{{$configType}}" title="{{$configTitle}}" :existing-config='{{!! !empty($existingConfigs) ? json_encode($existingConfigs->$configType) : null }}'></config-form>
                             @else
                                 <div class="grid grid-cols-3">
                                     <div class="flex justify-center col-start-1 p-3">
@@ -55,7 +55,7 @@
                                         <label for="{{$configType}}" class="col-md-4 col-form-label text-md-end">URL</label>
 
                                         <div class="col-md-6">
-                                            <input id="{{$configType}}" name="pricing_page_url" type="text" class="form-control" autocomplete="{{$configType}}" value='{{$existingConfigs->pricing_page_url}}' autofocus>
+                                            <input id="{{$configType}}" name="pricing_page_url" type="text" class="form-control" autocomplete="{{$configType}}" value='{{!! !empty($existingConfigs) ? $existingConfigs->pricing_page_url : null }}' autofocus>
                                         </div>
                                     </div>
                                 </div>

@@ -46,7 +46,11 @@
                                 'mixpanel' => [
                                     'key' => 'Service Account Name',
                                     'secret' => 'Service Account Secret'
-                                ]
+                                ],
+                                'stripe' => [
+                                    'key' => 'API Key',
+                                    'secret' => 'API Secret'
+                                ],
 
                             ]
                         @endphp

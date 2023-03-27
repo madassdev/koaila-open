@@ -37,19 +37,30 @@ class UpsellController extends Controller
 
     public function sendUpsellEmails(){
         // Read CSV file and get the necessary information
-        $csvFileData = Auth::user()->results()->whereIn('type', ['upsell'])->get()->map(function($result) {
-            $result->data = $result->loadData();
-            return $result;
-        });
+        $csvFileData = Auth::user()->results()->whereIn('type', ['upsell'])->first();
+        $csvFileData->data = $csvFileData->loadData();
 
-        $prompts = json_decode(stripslashes(Storage::get("/gpt3-prompts/upsell-email-prompts.json")),true);
+        $prompts = json_decode(stripslashes(Storage::get("/gpt3-prompts/prompts.json")),true);
+        $upsell_prompt = str_replace("[company_name]", Auth::user()->company_name, $prompts['upsell_email_prompt']);
+        $upsell_prompt = str_replace("[pricing_page_url]", Auth::user()->configuration->pricing_page_url, $upsell_prompt);
 
-        $gpt3GeneratedEmail = sendGPT3Request(
-            $prompts['microtica'],
-            config('services.open_ai.api_key'),
-            'davinci');
-        if($gpt3GeneratedEmail['body']['error'] != null){
-            dd($gpt3GeneratedEmail['body']['error']['message']);
+        foreach($csvFileData->data['rows'] as $row){
+//            Convert array containing user behaviour from csv file to string with key:value
+            $userAttributes = array_map(function($value, $key) {
+                return $key.'="'.$value.'"';
+            }, array_values($row), array_keys($row));
+            $userAttributes = implode(' ', $userAttributes);
+
+            $upsell_prompt=$upsell_prompt.' '.$userAttributes;
+            dd($upsell_prompt);
+
+            $gpt3GeneratedEmail = sendGPT3Request(
+                $upsell_prompt,
+                config('services.open_ai.api_key'),
+                'davinci');
+            if($gpt3GeneratedEmail['body']['error'] != null){
+                dd($gpt3GeneratedEmail['body']['error']['message']);
+            }
         }
         return null;
     }
