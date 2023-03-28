@@ -1,22 +1,21 @@
 @props(['upsellStats','upsell'])
 
 @if($upsellStats)
-    <div class="grid lg:grid-cols-2 md:grid-cols-1 gap-4 bg-white rounded mt-4 h-auto">
-        <div class="p-4 flex">
-            <div class="m-auto">
-                <h1 class="text-lg font-semibold text-gray-900 mb-4 text-center">{{$upsellStats->data['number_of_users_to_upsell']}} users to upsell</h1>
-                <h1 class="text-lg font-semibold text-gray-900 mb-4 text-center">Predicted MRR: + {{$upsellStats->data['total_predicted_mrr']}} USD</h1>
-                <h1 class="text-lg font-semibold text-gray-900 mb-4 text-center">Predicted ARR: + {{$upsellStats->data['total_predicted_arr']}} USD</h1>
-            </div>
+    <div class="grid lg:grid-cols-3 md:grid-cols-1 gap-4 mt-4 h-auto">
+        <div class="bg-white rounded p-4">
+            <h1 class="text-lg font-semibold text-gray-900 text-center">{{$upsellStats->data['number_of_users_to_upsell']}} users to upsell</h1>
         </div>
-        <div class="p-4">
-            <h1 class="text-lg font-semibold text-gray-900 mb-4 text-center">Users to upsell / MAU (%)</h1>
-            <doughnut-chart
-                :data= '[{{$upsellStats->data['number_of_users_to_upsell']}},{{$upsellStats->data['total_number_of_active_users_this_month']}}]'
-                :labels = '["number_of_users_to_upsell","total_number_of_active_users_this_month"]'
-                label= "Users to upsell/MAU"
-                :backgroundcolor= '["#ad74ce","#4778e9"]'
-            ></doughnut-chart>
+        <div class="bg-white rounded p-4">
+            <h1 class="text-lg font-semibold text-center">
+                <span class="text-gray-900">Predicted MRR:</span>
+                <span class="text-green-500"> + {{$upsellStats->data['total_predicted_mrr']}} USD</span>
+            </h1>
+        </div>
+        <div class="bg-white rounded p-4">
+            <h1 class="text-lg font-semibold text-center">
+                <span class="text-gray-900">Predicted ARR:</span>
+                <span class="text-green-500"> + {{$upsellStats->data['total_predicted_arr']}} USD</span>
+            </h1>
         </div>
     </div>
 @endif
