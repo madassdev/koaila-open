@@ -14,6 +14,11 @@ class IntegrationRequest extends FormRequest
      */
     public function rules()
     {
+        if($this->route('type') =='stripe'){
+            return [
+                'key' => ['required','string'],
+            ];
+        }
         return [
             'key' => ['required','string'],
             'secret' => ['required','string']

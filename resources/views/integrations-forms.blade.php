@@ -49,7 +49,6 @@
                                 ],
                                 'stripe' => [
                                     'key' => 'API Key',
-                                    'secret' => 'API Secret'
                                 ],
 
                             ]
