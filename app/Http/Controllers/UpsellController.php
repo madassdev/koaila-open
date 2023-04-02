@@ -20,7 +20,7 @@ class UpsellController extends Controller
      */
     public function index()
     {
-        $results = Auth::user()->results()->whereIn('type', ['upsell_stats','upsell'])->get()->map(function($result) {
+        $results = Auth::user()->results()->whereIn('type', ['sale_funnel','drop_offs','upsell_stats','upsell'])->get()->map(function($result) {
             $result->data = $result->loadData();
             return $result;
         });

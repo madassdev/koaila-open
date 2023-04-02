@@ -1,4 +1,39 @@
-@props(['upsellStats','upsell'])
+@props(['saleFunnel', 'dropOffData', 'upsellStats','upsell'])
+
+@if($saleFunnel)
+    <div class="flex flex-wrap">
+        @foreach($saleFunnel->data as $event)
+            <div class="flex py-2">
+                <h1 class="bg-indigo-500 rounded p-2 text-white">{{$event}}</h1>
+                @if(!$loop->last)
+                    <span>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                        </svg>
+                    </span>
+                @endif
+            </div>
+        @endforeach
+    </div>
+@endif
+
+@if($dropOffData)
+    <div class="flex flex-wrap py-4">
+        <table class="border text-sm text-left text-gray-500 dark:text-gray-400">
+            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                <th class="px-6 py-2 text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">Event</th>
+                <th class="px-6 py-2 text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">Drop-off (%)</th>
+            </tr>
+            @foreach($dropOffData->data as $event)
+                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                    @foreach($event as $e)
+                        <th class="px-6 py-2 font-bold text-gray-900 whitespace-nowrap dark:text-white">{{$e}}</th>
+                    @endforeach
+                </tr>
+            @endforeach
+        </table>
+    </div>
+@endif
 
 @if($upsellStats)
     <div class="grid lg:grid-cols-3 md:grid-cols-1 gap-4 mt-4 h-auto">
