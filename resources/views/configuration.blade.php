@@ -36,17 +36,21 @@
                         </div>
                     </div>
 
+                    @foreach($tokens as $token)
                     <div class="grid grid-cols-3">
                         <div class="flex justify-center row py-3">
                             <label for="api_token" class="col-md-4 col-form-label text-md-end">Key</label>
                             <div class="col-md-6">
-                                <input id="api_token" type="text" class="form-control" value='{{ !! !empty($token) ? $token : null}}' autofocus>
+                                <input id="api_token" type="text" class="form-control" value='{{ !! !empty($token) ? $token->token : null}}' autofocus>
                             </div>
-                            <a href="{{ route('api-token') }}">Generate API Key</a>
+                            <a href="{{ route('create-token') }}">Generate API Key</a>
                         </div>
                     </div>
                     <hr class="m-3">
                     </div>
+
+                    @endforeach
+
 
                     {{-- Form is in blade to go faster but ultimately, it should be moved to the ConfigForm component. --}}
                     <form method="POST" action="{{ route('create-configuration') }}">
