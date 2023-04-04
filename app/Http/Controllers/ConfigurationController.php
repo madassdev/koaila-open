@@ -24,4 +24,12 @@ class ConfigurationController extends Controller
         }
         return redirect()->back()->with('message', 'Configuration saved!');
     }
+
+    public function createAPIToken()
+    {
+        $token = Auth::user()->createToken('MyAppToken')->accessToken;
+
+        return redirect()->back()->with('message', 'API Key generated!');
+
+    }
 }

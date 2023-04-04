@@ -29,6 +29,25 @@
                         </div>
                     @endif
 
+                    <div>
+                    <div class="grid grid-cols-3">
+                        <div class="flex justify-center col-start-1 p-3">
+                            <h1 class="text-lg">API Key</h1>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-3">
+                        <div class="flex justify-center row py-3">
+                            <label for="api_token" class="col-md-4 col-form-label text-md-end">Key</label>
+                            <div class="col-md-6">
+                                <input id="api_token" type="text" class="form-control" value='{{ !! !empty($token) ? $token : null}}' autofocus>
+                            </div>
+                            <a href="{{ route('api-token') }}">Generate API Key</a>
+                        </div>
+                    </div>
+                    <hr class="m-3">
+                    </div>
+
                     {{-- Form is in blade to go faster but ultimately, it should be moved to the ConfigForm component. --}}
                     <form method="POST" action="{{ route('create-configuration') }}">
                         @csrf

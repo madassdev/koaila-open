@@ -15,6 +15,7 @@ class Configuration extends Model
         'features',
         'conversion_channel',
         'pricing_page',
+        'api_token'
     ];
 
     protected $casts = [

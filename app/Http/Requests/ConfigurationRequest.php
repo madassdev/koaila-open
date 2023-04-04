@@ -22,6 +22,7 @@ class ConfigurationRequest extends FormRequest
             'conversion_channel.*.name' => ['required','string'],
             'conversion_channel.*.event' => ['required','string'],
             'pricing_page_url' => ['required','string'],
+            'api_token' => ['string'],
         ];
     }
 }
