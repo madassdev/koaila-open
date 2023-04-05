@@ -27,7 +27,7 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        $results = Auth::user()->results()->whereIn('type', ['sale_funnel','feature_adoption','time_to_value','daumau', 'waumau'])->get()->map(function($result) {
+        $results = Auth::user()->results()->whereIn('type', ['feature_adoption','time_to_value','daumau', 'waumau'])->get()->map(function($result) {
             $result->data = $result->loadData();
             return $result;
         });

@@ -20,12 +20,14 @@
             </div>
 
             @php
-                $upsell = $results->firstWhere('type','upsell');
-                $upsellStats = $results->firstWhere('type','upsell_stats');
+               $saleFunnel = $results->firstWhere('type','sale_funnel');
+               $dropOffData = $results->firstWhere('type','drop_offs');
+               $upsell = $results->firstWhere('type','upsell');
+               $upsellStats = $results->firstWhere('type','upsell_stats');
             @endphp
 
             <div id="upsell_dashboard">
-                <x-dashboard.upsell-dashboard :upsell-stats='$upsellStats' :upsell='$upsell' />
+                <x-dashboard.upsell-dashboard :sale-funnel='$saleFunnel' :drop-off-data='$dropOffData' :upsell-stats='$upsellStats' :upsell='$upsell' />
             </div>
 
             @if(!isset($upsell))
