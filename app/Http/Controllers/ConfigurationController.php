@@ -11,7 +11,13 @@ class ConfigurationController extends Controller
     public function index()
     {
         return view('configuration')
-            ->with(['existingConfigs'=> Auth::user()->configuration, 'tokens' => Auth::user()->tokens]);
+            ->with(['existingConfigs'=> Auth::user()->configuration]);
+    }
+
+    public function getUUID()
+    {
+        return view('api-configuration')
+            ->with(['existingConfigs'=> Auth::user()->configuration]);
     }
 
     public function store(ConfigurationRequest $request)
@@ -23,11 +29,5 @@ class ConfigurationController extends Controller
             Auth::user()->configuration()->create($request->validated());
         }
         return redirect()->back()->with('message', 'Configuration saved!');
-    }
-
-    public function createAPIToken()
-    {
-        Auth::user()->createToken('MyAppToken')->accessToken;
-        return redirect()->back()->with('message', 'API Key generated!');
     }
 }

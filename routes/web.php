@@ -30,16 +30,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/upsell-dashboard', [App\Http\Controllers\UpsellController::class, 'index'])->name('upsell-dashboard');
     Route::get('/upsell-download', [App\Http\Controllers\UpsellController::class, 'download'])->name('upsell-download');
     Route::get('/upsell-send-emails', [App\Http\Controllers\UpsellController::class, 'sendUpsellEmails'])->name('upsell-send-emails');
-    Route::get('/tokens/create', [App\Http\Controllers\ConfigurationController::class, 'createAPIToken'])->name('create-token');
-});
-
-Route::controller(\App\Http\Controllers\API\RegisterController::class)->group(function(){
-    Route::post('api/register', 'register');
-    Route::post('api/login', 'login');
-});
-
-Route::middleware('auth:sanctum')->group( function () {
-    Route::post('api/data-mapping', [\App\Http\Controllers\API\DataMappingController::class, 'store']);
+    Route::get('/api-configuration', [App\Http\Controllers\ConfigurationController::class, 'getUUID'])->name('api-configuration');
 });
 
 Route::get('/debug-sentry', function () {

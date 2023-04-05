@@ -13,9 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('data_mapping', function (Blueprint $table) {
+        Schema::create('data_mappings', function (Blueprint $table) {
             $table->id();
-            $table->string('user_id')->nullable();
+            $table->foreignIdFor(\App\Models\Configuration::class,'config_id');
             $table->string('stripe_id')->nullable();
             $table->string('usage_tracking_id')->nullable();
             $table->string('email')->nullable();
@@ -30,6 +30,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('data_mapping');
+        Schema::dropIfExists('data_mappings');
     }
 };

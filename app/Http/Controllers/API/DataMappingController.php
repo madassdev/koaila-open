@@ -3,16 +3,19 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\DataMappingRequest;
-
+use App\Http\Requests\DataMappingRequest;
+use App\Models\Configuration;
+use App\Models\DataMapping;
 class DataMappingController extends Controller
 {
     public function store(DataMappingRequest $request)
     {
         $input = $request->all();
 
-        $product = DataMapping::create($input);
+        $input['config_id'] = Configuration::where('uuid',$request->config_uuid)->firstOrFail()->id;
 
-        return $this->sendResponse(new ProductResource($product), 'Mapping created successfully.');
+        DataMapping::create($input);
+
+        return response(['message' => 'Mapping created successfully.']);
     }
 }

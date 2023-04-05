@@ -10,7 +10,7 @@ class DataMapping extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id',
+        'config_id',
         'stripe_id',
         'usage_tracking_id',
         'email',

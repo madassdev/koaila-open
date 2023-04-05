@@ -4,9 +4,17 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-12">
-            <h1 class="text-xl py-8">{{ __('Configuration') }}</h1>
+            <div class="flex flex-wrap">
+                <div class="p-4">
+                    <a href="{{ route('configuration') }}" class="text-lg text-white bg-blue-600 hover:bg-blue-700 rounded py-1 px-2" v-track.configuration_page_click>{{ __('Configurations') }}</a>
+                </div>
+                <div class="p-4">
+                    <a href="{{ route('api-configuration') }}" class="text-lg text-white bg-gray-300 hover:bg-blue-600 rounded py-1 px-2" v-track.api_configuration_page_click>{{ __('API Configuration') }}</a>
+                </div>
+            </div>
             <div class="card">
                 <div class="card-body">
+
                     @if (session('status'))
                         <div class="alert alert-success" role="alert">
                             {{ session('status') }}
@@ -28,29 +36,6 @@
                             </ul>
                         </div>
                     @endif
-
-                    <div>
-                    <div class="grid grid-cols-3">
-                        <div class="flex justify-center col-start-1 p-3">
-                            <h1 class="text-lg">API Key</h1>
-                        </div>
-                    </div>
-
-                    @foreach($tokens as $token)
-                    <div class="grid grid-cols-3">
-                        <div class="flex justify-center row py-3">
-                            <label for="api_token" class="col-md-4 col-form-label text-md-end">Key</label>
-                            <div class="col-md-6">
-                                <input id="api_token" type="text" class="form-control" value='{{ !! !empty($token) ? $token->token : null}}' autofocus>
-                            </div>
-                            <a href="{{ route('create-token') }}">Generate API Key</a>
-                        </div>
-                    </div>
-                    <hr class="m-3">
-                    </div>
-
-                    @endforeach
-
 
                     {{-- Form is in blade to go faster but ultimately, it should be moved to the ConfigForm component. --}}
                     <form method="POST" action="{{ route('create-configuration') }}">
