@@ -1,10 +1,10 @@
 <template>
     <GChart :type="chartType" :data="chartData" :options="chartOptions" :settings="settings" />
   </template>
-  
+
   <script>
   import { GChart } from 'vue-google-charts';
-    
+
   export default {
     props:{
         'data':Object
@@ -18,8 +18,14 @@
         chartType: 'Sankey',
         chartData: this.data,
         chartOptions: {
-            width: 800,
-            height: 600,
+            width: 1500,
+            height: 200,
+            sankey: {
+                node:
+                    {
+                        width: 5,
+                    }
+            },
         },
         settings: {
           packages: ['sankey'],

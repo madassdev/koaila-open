@@ -1,10 +1,6 @@
-@props(['saleFunnel','waumauData','daumauData','ttl','featureAdoption'])
+@props(['saleFunnel','dropOffData','waumauData','daumauData','ttl','featureAdoption'])
 
-@if($saleFunnel || $waumauData || $daumauData || $ttl || $featureAdoption )
-    @if($saleFunnel)
-        <sankey-chart :data='{!!json_encode($saleFunnel->data)!!}'></sankey-chart>
-    @endif
-
+@if($waumauData || $daumauData || $ttl || $featureAdoption )
     <div class="grid lg:grid-cols-2 md:grid-cols-1 gap-4" id="dashboard">
         @if($featureAdoption)
             <div class="bg-white rounded mt-4">

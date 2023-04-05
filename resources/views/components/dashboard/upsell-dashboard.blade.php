@@ -1,4 +1,21 @@
-@props(['upsellStats','upsell'])
+@props(['saleFunnel', 'upsellStats','upsell'])
+
+@if($saleFunnel)
+    <div class="flex flex-wrap">
+        @foreach($saleFunnel->data as $event)
+            <div class="flex py-2">
+                <h1 class="bg-indigo-500 rounded p-2 text-white">{{$event}}</h1>
+                @if(!$loop->last)
+                    <span>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                        </svg>
+                    </span>
+                @endif
+            </div>
+        @endforeach
+    </div>
+@endif
 
 @if($upsellStats)
     <div class="grid lg:grid-cols-3 md:grid-cols-1 gap-4 mt-4 h-auto">

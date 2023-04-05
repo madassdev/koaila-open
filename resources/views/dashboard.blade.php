@@ -24,11 +24,10 @@
                 $waumauData = $results->firstWhere('type','waumau');
                 $ttl = $results->firstWhere('type','time_to_value');
                 $featureAdoption = $results->firstWhere('type','feature_adoption');
-                $saleFunnel = $results->firstWhere('type','sale_funnel');
             @endphp
 
             <div id="global_dashboard">
-                <x-dashboard.global-dashboard :sale-funnel='$saleFunnel' :waumau-data='$waumauData' :daumau-data='$daumauData' :ttl='$ttl' :feature-adoption='$featureAdoption' />
+                <x-dashboard.global-dashboard :waumau-data='$waumauData' :daumau-data='$daumauData' :ttl='$ttl' :feature-adoption='$featureAdoption' />
             </div>
 
             @if(!isset($waumauData) & !isset($daumauData) & !isset($ttl) & !isset($featureAdoption))
