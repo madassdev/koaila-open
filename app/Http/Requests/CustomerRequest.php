@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class DataMappingRequest extends FormRequest
+class CustomerRequest extends FormRequest
 {
 
     /**

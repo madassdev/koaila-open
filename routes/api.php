@@ -19,5 +19,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
-Route::post('data-mapping', [\App\Http\Controllers\API\DataMappingController::class, 'store']);
+Route::post('data-mapping', [\App\Http\Controllers\API\CustomerController::class, 'store']);
 

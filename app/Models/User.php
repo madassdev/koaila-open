@@ -60,6 +60,6 @@ class User extends Authenticatable
 
     public function dataMapping()
     {
-        return $this->hasMany(DataMapping::class);
+        return $this->hasMany(Customer::class);
     }
 }
