@@ -18,4 +18,14 @@ class CustomerController extends Controller
 
         return response(['message' => 'Mapping created successfully.']);
     }
+
+//    Add columns to customer table: upsell data , timestamp, step in funnel, link to amplitude/mixpanel
+//    Upsell data JSON {
+//        column1: value,
+//        column2: value,
+//      }
+//    Step in funnel, list of events performed [event1, event2,...]
+//    Link string
+//    In post request we need the user ID and the users email
+//    Should I create a separate table to store this info?
 }
