@@ -81,7 +81,7 @@
                                         {{$value}}
                                     </th>
                                 @elseif($key=='likelihood')
-                                    @if($value=='high')
+                                    @if($value==5)
                                         <td class="px-6 py-4 text-center text-2xl text-green-600">
                                             <div class="flex items-center">
                                                 <svg aria-hidden="true" class="w-5 h-5 text-yellow-400"
