@@ -11,7 +11,13 @@ class ConfigurationController extends Controller
     public function index()
     {
         return view('configuration')
-            ->with('existingConfigs', Auth::user()->configuration);
+            ->with(['existingConfigs'=> Auth::user()->configuration]);
+    }
+
+    public function getUUID()
+    {
+        return view('api-configuration')
+            ->with(['existingConfigs'=> Auth::user()->configuration]);
     }
 
     public function store(ConfigurationRequest $request)

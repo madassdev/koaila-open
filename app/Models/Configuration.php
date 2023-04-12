@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class Configuration extends Model
 {
@@ -15,6 +16,7 @@ class Configuration extends Model
         'features',
         'conversion_channel',
         'pricing_page',
+        'uuid'
     ];
 
     protected $casts = [
@@ -32,5 +34,12 @@ class Configuration extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    protected static function booted(): void
+    {
+        static::creating(function (Configuration $config) {
+            $config->uuid = Str::uuid();
+        });
     }
 }
