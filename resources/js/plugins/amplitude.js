@@ -3,7 +3,7 @@ import * as amplitude from '@amplitude/analytics-browser';
 
 // Init amplitude client
 window.amplitude = amplitude
-amplitude.init('e4b4a405f604a27b0bf91ec1fec479c2', {
+amplitude.init('e4b4a405f604a27b0bf91ec1fec479c2',null, {
     defaultEvents: {
         pageViews: true,
         sessions: true,

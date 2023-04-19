@@ -50,7 +50,7 @@
                             ]
                             as $configType => $configTitle)
                             @if($configType!='pricing_page_url')
-                                <config-form type="{{$configType}}" title="{{$configTitle}}" :existing-config='{{!! !empty($existingConfigs) ? json_encode($existingConfigs->$configType) : null }}'></config-form>
+                                <config-form type="{{$configType}}" title="{{$configTitle}}" :existing-config='{{!! !empty($existingConfigs) ? json_encode($existingConfigs->$configType) : '[]' }}'></config-form>
                             @else
                                 <div class="grid grid-cols-3">
                                     <div class="flex justify-center col-start-1 p-3">

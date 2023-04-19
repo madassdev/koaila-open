@@ -45,7 +45,7 @@
 <script>
     export default {
         name: 'ConfigForm',
-        props:['existingConfig','title','type'],
+        props: ['existingConfig','title','type'],
 
         data: () => ({
             fields: [{
@@ -57,6 +57,9 @@
         mounted(){
             if (this.existingConfig) {
                 this.fields = this.existingConfig
+                if (this.fields.length === 0){
+                    this.addField()
+                }
             }
 
         },
