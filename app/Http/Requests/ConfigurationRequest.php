@@ -21,7 +21,7 @@ class ConfigurationRequest extends FormRequest
             'features.*.event' => ['required','string'],
             'conversion_channel.*.name' => ['required','string'],
             'conversion_channel.*.event' => ['required','string'],
-            'pricing_page_url' => ['required','string'],
+            'pricing_page_url' => ['required','string','url'],
             'uuid' => ['string'],
         ];
     }

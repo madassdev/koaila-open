@@ -7,6 +7,7 @@
     "require": {
         "php": "^8.0.2",
         "aws/aws-sdk-php": "^3.262",
+        "doctrine/dbal": "^3.6",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^9.19",
         "laravel/sanctum": "^3.2",
@@ -60,7 +61,10 @@
     },
     "extra": {
         "laravel": {
-            "dont-discover": []
+            "dont-discover": [],
+            "commands": [
+                "App\\Console\\Commands\\ImportUpsellListCommand"
+            ]
         }
     },
     "config": {
@@ -68,7 +72,8 @@
         "preferred-install": "dist",
         "sort-packages": true,
         "allow-plugins": {
-            "pestphp/pest-plugin": true
+            "pestphp/pest-plugin": true,
+            "php-http/discovery": true
         }
     },
     "minimum-stability": "stable",

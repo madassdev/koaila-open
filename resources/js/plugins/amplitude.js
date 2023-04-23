@@ -1,16 +1,15 @@
-import { createApp } from 'vue'
 import * as amplitude from '@amplitude/analytics-browser';
 
 // Init amplitude client
 window.amplitude = amplitude
-amplitude.init('e4b4a405f604a27b0bf91ec1fec479c2',null, {
+
+amplitude.init('e4b4a405f604a27b0bf91ec1fec479c2',undefined, {
     defaultEvents: {
         pageViews: true,
         sessions: true,
         formInteractions: true,
         fileDownloads: true,
-    },
-    serverZone: amplitude.Types.ServerZone.EU,
+    }
 });
 
 // Hook function used by event listener

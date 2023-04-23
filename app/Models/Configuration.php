@@ -15,7 +15,7 @@ class Configuration extends Model
         'aha_moment',
         'features',
         'conversion_channel',
-        'pricing_page',
+        'pricing_page_url',
         'uuid'
     ];
 
