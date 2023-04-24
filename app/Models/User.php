@@ -58,8 +58,8 @@ class User extends Authenticatable
         return $this->hasOne(Configuration::class);
     }
 
-    public function dataMapping()
+    public function customerState()
     {
-        return $this->hasMany(Customer::class);
+        return $this->hasMany(CustomerState::class);
     }
 }

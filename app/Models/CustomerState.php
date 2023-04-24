@@ -10,6 +10,7 @@ class CustomerState extends Model
     use HasFactory;
 
     protected $fillable = [
+        'user_id',
         'customer_email',
         'date',
         'state',
@@ -23,8 +24,8 @@ class CustomerState extends Model
         'state' => 'array',
     ];
 
-    public function customer()
+    public function user()
     {
-        return $this->belongsTo(Customer::class);
+        return $this->belongsTo(User::class);
     }
 }
