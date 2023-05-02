@@ -16,9 +16,10 @@ return new class extends Migration
     {
         Schema::create('customer_states', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(User::class,'user_id');
-            $table->string('customer_email');
+            $table->foreignIdFor(\App\Models\Customer::class,'customer_id');
+            $table->string('email');
             $table->timestamp('date');
+            $table->jsonb('plans');
             $table->json('state');
             $table->timestamps();
         });
@@ -31,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('customers_states');
+        Schema::dropIfExists('customer_states');
     }
 };

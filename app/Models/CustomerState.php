@@ -10,22 +10,20 @@ class CustomerState extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id',
-        'customer_email',
+        'customer_id',
+        'email',
         'date',
-        'state',
-    ];
-
-    protected $hidden = [
+        'plans',
         'state',
     ];
 
     protected $casts = [
         'state' => 'array',
+        'plans' => 'array',
     ];
 
-    public function user()
+    public function customer()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Customer::class);
     }
 }

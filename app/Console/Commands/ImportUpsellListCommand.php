@@ -2,7 +2,10 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Configuration;
 use App\Models\CustomerState;
+use App\Models\Customer;
+use App\Models\User;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\CSV;
 use Illuminate\Support\Facades\DB;
@@ -15,7 +18,7 @@ class ImportUpsellListCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'import:upsell:list';
+    protected $signature = 'import:upsell-list {config_id} {file_path}';
 
     /**
      * The console command description.
@@ -31,10 +34,13 @@ class ImportUpsellListCommand extends Command
      */
     public function handle()
     {
-        $user_id = '4';
-        // Path to CSV file containing upsell list
-        $upsell_filePath = "/results/notionforms.csv";
-        $csv = array();
+        $configId = $this->argument('config_id');
+        if (!Configuration::whereId($configId)->exists()) {
+            $this->error('Configuration does not exist.');
+            return Command::FAILURE;
+        }
+        $upsell_filePath = $this->argument('file_path');
+        $csv = [];
         if (Storage::exists($upsell_filePath)) {
             $csv_file = Storage::get($upsell_filePath);
             $rows = preg_split("/\r\n|\n|\r/", $csv_file);
@@ -47,22 +53,37 @@ class ImportUpsellListCommand extends Command
             }
         }
 
-        foreach ($csv as $row){
-            $states = [
-                'plan' => $row['plan'],
-                'funnel_step'=> $row['funnel step'],
-                'likelihood'=>$row['likelihood'],
-                'user_creation_time' => $row['user_creation_time'],
-                'time_to_value'=> $row['time_to_value'],
-                'events' => array_slice($row, 7),
-            ];
-            CustomerState::create([
-                'user_id' => $user_id,
-                'customer_email' => $row['email'],
-                'date' => date('Y-m-d H:i:s'),
-                'state' => $states,
-            ]);
-        }
+        $this->withProgressBar($csv, function($row) use ($configId) {
+            $customer = $this->importCustomer($row, $configId);
+            $this->importCustomerState($row, $customer->id);
+        });
+
         return Command::SUCCESS;
+    }
+
+    private function importCustomer($customerData, $configId) {
+        return Customer::firstOrCreate([
+            'config_id' => $configId,
+            'email' => strtolower($customerData['email']),
+            'stripe_id' => $customerData['stripe_id'],
+            'usage_tracking_id' => intval($customerData['amplitude_id']),
+        ]);
+    }
+
+    private function importCustomerState($customerData, $customerID) {
+        $states = [
+            'funnel_step'=> $customerData['funnel step'],
+            'likelihood'=>$customerData['likelihood'],
+            'user_creation_time' => $customerData['user_creation_time'],
+            'time_to_value'=> $customerData['time_to_value'],
+            'events' => array_slice($customerData, 7),
+        ];
+        CustomerState::create([
+            'customer_id' => $customerID,
+            'email' => strtolower($customerData['email']),
+            'date' => date('Y-m-d H:i:s'),
+            'plans' => $customerData['plan'],
+            'state' => $states,
+        ]);
     }
 }

@@ -36,6 +36,11 @@ class Configuration extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function customers()
+    {
+        return $this->hasMany(Customer::class,'config_id');
+    }
+
     protected static function booted(): void
     {
         static::creating(function (Configuration $config) {

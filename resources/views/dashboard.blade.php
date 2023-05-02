@@ -11,7 +11,7 @@
             @endif
 
             <div class="flex flex-wrap">
-                <div class="p-4">
+                <div class="py-4">
                     <a href="{{ route('upsell-dashboard') }}" class="text-lg text-white bg-gray-300 hover:bg-blue-600 focus:text-black rounded py-1 px-2" v-track.upsell_dashboard_click>{{ __('Users to upsell') }}</a>
                 </div>
                 <div class="p-4">

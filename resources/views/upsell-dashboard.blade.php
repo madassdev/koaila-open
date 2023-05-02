@@ -11,7 +11,7 @@
             @endif
 
             <div class="flex flex-wrap">
-                <div class="p-4">
+                <div class="py-4">
                     <a href="{{ route('upsell-dashboard') }}" class="text-lg text-white bg-blue-600 hover:bg-blue-700 rounded py-1 px-2" v-track.upsell_dashboard_click>{{ __('Users to upsell') }}</a>
                 </div>
                 <div class="p-4">
@@ -27,10 +27,10 @@
             @endphp
 
             <div id="upsell_dashboard">
-                <x-dashboard.upsell-dashboard :sale-funnel='$saleFunnel' :drop-off-data='$dropOffData' :upsell-stats='$upsellStats' :upsell='$upsell' />
+                <x-dashboard.upsell-dashboard :sale-funnel='$saleFunnel' :drop-off-data='$dropOffData' :upsell-stats='$upsellStats' :upsell='$upsell' :customers='$customers' />
             </div>
 
-            @if(!isset($upsell))
+            @if(empty($customers))
                 <x-dashboard.empty-dashboard/>
             @endif
 

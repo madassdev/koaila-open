@@ -31,6 +31,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/upsell-download', [App\Http\Controllers\UpsellController::class, 'download'])->name('upsell-download');
     Route::get('/upsell-send-emails', [App\Http\Controllers\UpsellController::class, 'sendUpsellEmails'])->name('upsell-send-emails');
     Route::get('/api-configuration', [App\Http\Controllers\ConfigurationController::class, 'getUUID'])->name('api-configuration');
+    Route::get('/customer-dashboard/{email}', [App\Http\Controllers\CustomerController::class, 'show'])->name('customer-dashboard');
 });
 
 Route::get('/debug-sentry', function () {

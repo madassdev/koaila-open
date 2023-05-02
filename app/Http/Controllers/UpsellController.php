@@ -25,8 +25,11 @@ class UpsellController extends Controller
             return $result;
         });
 
+        $customers = Auth::user()->configuration()->first()->customers()->with('latestState')->get();
+
         return view('upsell-dashboard')->with([
             'results' => $results,
+            'customers' => $customers,
         ]);
     }
 

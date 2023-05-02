@@ -57,9 +57,4 @@ class User extends Authenticatable
     {
         return $this->hasOne(Configuration::class);
     }
-
-    public function customerState()
-    {
-        return $this->hasMany(CustomerState::class);
-    }
 }
