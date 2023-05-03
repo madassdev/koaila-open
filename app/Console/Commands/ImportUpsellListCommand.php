@@ -71,6 +71,10 @@ class ImportUpsellListCommand extends Command
     }
 
     private function importCustomerState($customerData, $customerID) {
+        $events=[];
+        foreach ($customerData as $key=>$value)
+            if(!in_array($key, array('','email','funnel_step','likelihood','user_creation_time','time_to_value','plan')))
+                $events[$key] = $value;
         $states = [
             'funnel_step'=> $customerData['funnel step'],
             'likelihood'=>$customerData['likelihood'],

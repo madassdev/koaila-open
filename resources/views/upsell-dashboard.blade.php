@@ -21,13 +21,12 @@
 
             @php
                $saleFunnel = $results->firstWhere('type','sale_funnel');
-               $dropOffData = $results->firstWhere('type','drop_offs');
-               $upsell = $results->firstWhere('type','upsell');
                $upsellStats = $results->firstWhere('type','upsell_stats');
-            @endphp
+               @endphp
 
             <div id="upsell_dashboard">
-                <x-dashboard.upsell-dashboard :sale-funnel='$saleFunnel' :drop-off-data='$dropOffData' :upsell-stats='$upsellStats' :upsell='$upsell' :customers='$customers' />
+                <x-dashboard.timeline :sale-funnel='$saleFunnel' customerStep=""/>
+                <x-dashboard.upsell-dashboard :upsell-stats='$upsellStats' :customers='$customers' />
             </div>
 
             @if(empty($customers))

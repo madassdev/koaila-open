@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\CustomerState;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -20,15 +21,22 @@ class UpsellController extends Controller
      */
     public function index()
     {
-        $results = Auth::user()->results()->whereIn('type', ['sale_funnel','upsell_stats','upsell'])->get()->map(function($result) {
+        $results = Auth::user()->results()->whereIn('type', ['sale_funnel','upsell_stats'])->get()->map(function($result) {
             $result->data = $result->loadData();
             return $result;
         });
 
-        $customers = Auth::user()->configuration()->first()->customers()->with('latestState')->get();
+        $customers = Auth::user()->configuration()->first()->customers()->whereHas('latestState')->with('latestState')->get();
 
         return view('upsell-dashboard')->with([
             'results' => $results,
+            'customers' => $customers,
+        ]);
+    }
+
+    public function show(){
+        $customers = Auth::user()->configuration()->first()->customers()->whereHas('latestState')->get();
+        return view('upsell-historic-dashboard')->with([
             'customers' => $customers,
         ]);
     }

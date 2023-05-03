@@ -11,8 +11,14 @@ class CustomerController extends Controller
     {
         $customer = Auth::user()->configuration()->first()->customers()->where('email', $email)->with('states')->get();
 
+        $saleFunnel = Auth::user()->results()->whereIn('type', ['sale_funnel'])->get()->map(function($result) {
+            $result->data = $result->loadData();
+            return $result;
+        })->firstWhere('type','sale_funnel');
+
         return view('customer-dashboard')->with([
             'customer' => $customer,
+            'saleFunnel' => $saleFunnel,
         ]);
     }
 }

@@ -17,8 +17,15 @@
                     </div>
 
                     <div class="bg-white rounded p-4">
-                        <h1 class="text-lg font-semibold text-gray-900 text-center">{{$customer->first()->states->first()->state['plan']}}</h1>
+                        <h1 class="text-lg font-semibold text-gray-900 text-center">{{$customer->first()->states->first()->plans}}</h1>
                     </div>
+                </div>
+
+                <div>
+                    @php
+                       $funnelStep= $customer->first()->states->first()->state['funnel_step'];
+                    @endphp
+                    <x-dashboard.timeline :sale-funnel='$saleFunnel' :customer-step='$funnelStep'/>
                 </div>
 
                 <div class="grid lg:grid-cols-3 md:grid-cols-1 gap-4 mt-4 h-auto">
@@ -60,7 +67,7 @@
                 <div class="bg-white rounded mt-4" id="upsell-table">
                     <div class="p-4">
                         <div class="p-4 text-left bg-white dark:text-white dark:bg-gray-600">
-                            <h1 class="text-lg font-semibold text-gray-900">Historical behaviour</h1>
+                            <h1 class="text-lg font-semibold text-gray-900">User behaviour</h1>
                             <p class="mt-1 text-sm font-normal text-gray-500 dark:text-gray-400">Click on the dates below to see the evolution of the user's behaviour over time</p>
                         </div>
                         @foreach($customer->first()->states as $state)
