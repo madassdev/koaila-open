@@ -26,7 +26,7 @@ class UpsellController extends Controller
             return $result;
         });
 
-        $latestDate = Auth::user()->configuration()->first()->customerStates()->orderByDesc('date')->first()->date;
+        $latestDate = Auth::user()->configuration()->first()->customerStates()->orderByDesc('date')->first()?->date;
 
         $customers = Auth::user()->configuration()
             ->first()
@@ -45,7 +45,7 @@ class UpsellController extends Controller
     }
 
     public function show(){
-        $latestDate = Auth::user()->configuration()->first()->customerStates()->orderByDesc('date')->first()->date;
+        $latestDate = Auth::user()->configuration()->first()->customerStates()->orderByDesc('date')->first()?->date;
 
         $customers = Auth::user()->configuration()
             ->first()
@@ -56,6 +56,7 @@ class UpsellController extends Controller
             })
             ->with('latestState')
             ->get();
+
         return view('upsell-historic-dashboard')->with([
             'customers' => $customers,
         ]);
