@@ -7,7 +7,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Prophesee') }}</title>
+    <title>{{ config('app.name', 'Koaila') }}</title>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -24,7 +24,7 @@
     <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
         <div class="container">
             <a class="navbar-brand" href="{{ route('upsell-dashboard') }}">
-                {{ config('app.name', 'Prophesee') }}
+                {{ config('app.name', 'Koaila') }}
             </a>
 
             <div id="navbarSupportedContent">
