@@ -14,7 +14,10 @@
                 <div class="py-4">
                     <a href="{{ route('upsell-dashboard') }}" class="text-lg text-white bg-gray-300 hover:bg-blue-600 focus:text-black rounded py-1 px-2" v-track.upsell_dashboard_click>{{ __('Users to upsell') }}</a>
                 </div>
-                <div class="p-4">
+                <div class="py-4 px-4">
+                    <a href="{{ route('upsell-historic-dashboard') }}" class="text-lg text-white bg-gray-300 hover:bg-blue-600 rounded py-1 px-2" v-track.upsell_historic_dashboard_click>{{ __('Upsell History') }}</a>
+                </div>
+                <div class="py-4">
                     <a href="{{ route('dashboard') }}" class="text-lg text-white bg-blue-600 hover:bg-blue-700 focus:text-black rounded py-1 px-2" v-track._dashboard_click>{{ __('Dashboard') }}</a>
                 </div>
             </div>

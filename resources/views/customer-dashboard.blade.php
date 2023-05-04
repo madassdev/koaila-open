@@ -23,7 +23,7 @@
 
                 <div>
                     @php
-                       $funnelStep= $customer->first()->states->first()->state['funnel_step'];
+                       $funnelStep= $customer->first()->latestState->state['funnel_step'];
                     @endphp
                     <x-dashboard.timeline :sale-funnel='$saleFunnel' :customer-step='$funnelStep'/>
                 </div>

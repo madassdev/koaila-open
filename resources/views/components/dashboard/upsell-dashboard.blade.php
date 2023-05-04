@@ -51,11 +51,17 @@
                         <th scope="col"
                             class="sticky top-0 px-6 py-3 text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 text-center">{{ 'Email' }}</th>
                         @foreach(array_keys($customers->first()->latestState->state) as $header)
-                            @if($header != 'events')
-                                <th scope="col"
-                                class="sticky top-0 px-6 py-3 text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 text-center">{{ ucfirst(trans(str_replace('_', ' ', $header))) }}</th>
-                            @endif
+                            @switch($header)
+                                @case('events')
+                                    @break
+                                @case('funnel_step')
+                                    @break
+                                @default
+                                    <th scope="col"
+                                        class="sticky top-0 px-6 py-3 text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 text-center">{{ ucfirst(trans(str_replace('_', ' ', $header))) }}</th>
+                            @endswitch
                         @endforeach
+                        <th scope="col" class="sticky top-0 px-6 py-3 text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 text-center"></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -89,10 +95,19 @@
                                             @endif
                                         </div>
                                     </td>
+                                @elseif($key=='funnel_step')
                                 @elseif($key!='events')
                                     <td class="px-6 py-4 text-center">{{$value}}</td>
                                 @endif
                             @endforeach
+                            <td>
+                                <form method="POST" action="{{ route('delete-customer-state', $customer->latestState->id) }}">
+                                    {{ csrf_field() }}
+                                    <div class="form-group">
+                                        <input type="submit" onclick="return confirm('Are you sure you want to delete this user from the upsell list?')" class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900" value="Delete user">
+                                    </div>
+                                </form>
+                            </td>
                         </tr>
                     @endforeach
                     </tbody>

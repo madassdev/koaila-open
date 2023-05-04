@@ -41,6 +41,11 @@ class Configuration extends Model
         return $this->hasMany(Customer::class,'config_id');
     }
 
+    public function customerStates()
+    {
+        return $this->hasManyThrough(CustomerState::class,Customer::class,'config_id','customer_id');
+    }
+
     protected static function booted(): void
     {
         static::creating(function (Configuration $config) {

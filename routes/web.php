@@ -32,7 +32,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/upsell-send-emails', [App\Http\Controllers\UpsellController::class, 'sendUpsellEmails'])->name('upsell-send-emails');
     Route::get('/api-configuration', [App\Http\Controllers\ConfigurationController::class, 'getUUID'])->name('api-configuration');
     Route::get('/customer-dashboard/{email}', [App\Http\Controllers\CustomerController::class, 'show'])->name('customer-dashboard');
-    Route::get('/upsell-historic-dashboard', [App\Http\Controllers\UpsellController::class, 'show'])->name('upsell-historic-dashboard.blade.php');
+    Route::get('/upsell-historic-dashboard', [App\Http\Controllers\UpsellController::class, 'show'])->name('upsell-historic-dashboard');
+    Route::post('/delete-customer-state/{customer_state_id}', [App\Http\Controllers\UpsellController::class, 'destroy'])->name('delete-customer-state');
 });
 
 Route::get('/debug-sentry', function () {

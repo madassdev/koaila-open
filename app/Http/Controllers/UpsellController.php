@@ -26,7 +26,17 @@ class UpsellController extends Controller
             return $result;
         });
 
-        $customers = Auth::user()->configuration()->first()->customers()->whereHas('latestState')->with('latestState')->get();
+        $latestDate = Auth::user()->configuration()->first()->customerStates()->orderByDesc('date')->first()->date;
+
+        $customers = Auth::user()->configuration()
+            ->first()
+            ->customers()
+            ->whereHas('latestState', function ($q) use ($latestDate) {
+                $latestDateWithoutSeconds = date('Y-m-d H:i:00', strtotime($latestDate));
+                return $q->whereRaw("to_char(date, 'YYYY-MM-DD HH24:MI:00') = ?", [$latestDateWithoutSeconds]);
+            })
+            ->with('latestState')
+            ->get();
 
         return view('upsell-dashboard')->with([
             'results' => $results,
@@ -35,7 +45,17 @@ class UpsellController extends Controller
     }
 
     public function show(){
-        $customers = Auth::user()->configuration()->first()->customers()->whereHas('latestState')->get();
+        $latestDate = Auth::user()->configuration()->first()->customerStates()->orderByDesc('date')->first()->date;
+
+        $customers = Auth::user()->configuration()
+            ->first()
+            ->customers()
+            ->whereHas('latestState', function ($q) use ($latestDate) {
+                $latestDateWithoutSeconds = date('Y-m-d H:i:00', strtotime($latestDate));
+                return $q->whereRaw("to_char(date, 'YYYY-MM-DD HH24:MI:00') < ?", [$latestDateWithoutSeconds]);
+            })
+            ->with('latestState')
+            ->get();
         return view('upsell-historic-dashboard')->with([
             'customers' => $customers,
         ]);
@@ -44,6 +64,11 @@ class UpsellController extends Controller
     public function download(){
         $path = 'results/'.Auth::user()->results->firstWhere('type','upsell')->filename;
         return Storage::download($path);
+    }
+
+    public function destroy($customerStateId){
+        CustomerState::find($customerStateId)->delete();
+        return redirect()->route('upsell-dashboard');
     }
 
     public function sendUpsellEmails(){
