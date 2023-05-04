@@ -15,7 +15,7 @@ class Configuration extends Model
         'aha_moment',
         'features',
         'conversion_channel',
-        'pricing_page',
+        'pricing_page_url',
         'uuid'
     ];
 
@@ -34,6 +34,16 @@ class Configuration extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function customers()
+    {
+        return $this->hasMany(Customer::class,'config_id');
+    }
+
+    public function customerStates()
+    {
+        return $this->hasManyThrough(CustomerState::class,Customer::class,'config_id','customer_id');
     }
 
     protected static function booted(): void

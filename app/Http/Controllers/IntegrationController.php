@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Auth;
 
 class IntegrationController extends Controller
 {
-
     public function __construct()
     {
         $this->middleware('auth');
@@ -32,13 +31,13 @@ class IntegrationController extends Controller
      */
     public function create($type)
     {
-        return view('integrations-forms',['type' => $type]);
+        return view('integrations-forms', ['type' => $type]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(IntegrationRequest $request, $type)
@@ -55,18 +54,18 @@ class IntegrationController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Integration  $integrations
+     * @param \App\Models\Integration $integrations
      * @return \Illuminate\Http\Response
      */
     public function show(Integration $integration)
     {
-        
+
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Integrations  $integrations
+     * @param \App\Models\Integrations $integrations
      * @return \Illuminate\Http\Response
      */
     public function edit(Integration $integration)
@@ -77,8 +76,8 @@ class IntegrationController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Integrations  $integrations
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Models\Integrations $integrations
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Integration $integration)
@@ -89,7 +88,7 @@ class IntegrationController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Integrations  $integrations
+     * @param \App\Models\Integrations $integrations
      * @return \Illuminate\Http\Response
      */
     public function destroy(Integration $integration)

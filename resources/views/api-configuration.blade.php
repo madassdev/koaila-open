@@ -5,7 +5,7 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="flex flex-wrap">
-                <div class="p-4">
+                <div class="py-4">
                     <a href="{{ route('configuration') }}" class="text-lg text-white bg-gray-300 hover:bg-blue-600 rounded py-1 px-2" v-track.configuration_page_click>{{ __('Configurations') }}</a>
                 </div>
                 <div class="p-4">

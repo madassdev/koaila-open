@@ -1,21 +1,4 @@
-@props(['saleFunnel', 'upsellStats','upsell'])
-
-@if($saleFunnel)
-    <div class="flex flex-wrap">
-        @foreach($saleFunnel->data as $event)
-            <div class="flex py-2">
-                <h1 class="bg-indigo-500 rounded p-2 text-white">{{$event}}</h1>
-                @if(!$loop->last)
-                    <span>
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                          <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
-                        </svg>
-                    </span>
-                @endif
-            </div>
-        @endforeach
-    </div>
-@endif
+@props(['upsellStats','upsell', 'customers'])
 
 @if($upsellStats)
     <div class="grid lg:grid-cols-3 md:grid-cols-1 gap-4 mt-4 h-auto">
@@ -37,7 +20,7 @@
     </div>
 @endif
 
-@if ($upsell)
+@if($customers->count())
 <div class="bg-white rounded mt-4" id="upsell-table">
     <div class="p-4">
         <div class="grid grid-cols-2 gap-4">
@@ -65,97 +48,66 @@
                 <table class="relative w-full border text-sm text-left text-gray-500 dark:text-gray-400">
                     <thead>
                     <tr>
-                        @foreach($upsell->data['headers'] as $header)
-                            <th scope="col"
-                                class="sticky top-0 px-6 py-3 text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">{{ ucfirst(trans(str_replace('_', ' ', $header))) }}</th>
+                        <th scope="col"
+                            class="sticky top-0 px-6 py-3 text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 text-center">{{ 'Email' }}</th>
+                        @foreach(array_keys($customers->first()->latestState->state) as $header)
+                            @switch($header)
+                                @case('events')
+                                    @break
+                                @case('funnel_step')
+                                    @break
+                                @default
+                                    <th scope="col"
+                                        class="sticky top-0 px-6 py-3 text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 text-center">{{ ucfirst(trans(str_replace('_', ' ', $header))) }}</th>
+                            @endswitch
                         @endforeach
+                        <th scope="col" class="sticky top-0 px-6 py-3 text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 text-center"></th>
                     </tr>
                     </thead>
                     <tbody>
-                    @foreach ($upsell->data['rows'] as $row)
+                    @foreach ($customers as $customer)
                         <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                            @foreach($row as $key=>$value)
-                                @if($key=='user_id')
-                                    <th scope="row"
-                                        class="px-6 py-4 font-bold text-gray-900 whitespace-nowrap dark:text-white text-center">
-                                        {{$value}}
-                                    </th>
-                                @elseif($key=='likelihood')
-                                    @if($value==5)
-                                        <td class="px-6 py-4 text-center text-2xl text-green-600">
-                                            <div class="flex items-center">
-                                                <svg aria-hidden="true" class="w-5 h-5 text-yellow-400"
-                                                     fill="currentColor" viewBox="0 0 20 20"
-                                                     xmlns="http://www.w3.org/2000/svg"><title>First star</title>
-                                                    <path
-                                                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                                                </svg>
-                                                <svg aria-hidden="true" class="w-5 h-5 text-yellow-400"
-                                                     fill="currentColor" viewBox="0 0 20 20"
-                                                     xmlns="http://www.w3.org/2000/svg"><title>Second star</title>
-                                                    <path
-                                                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                                                </svg>
-                                                <svg aria-hidden="true" class="w-5 h-5 text-yellow-400"
-                                                     fill="currentColor" viewBox="0 0 20 20"
-                                                     xmlns="http://www.w3.org/2000/svg"><title>Third star</title>
-                                                    <path
-                                                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                                                </svg>
+                            <th scope="row"
+                                class="px-6 py-4 font-bold text-gray-900 whitespace-nowrap dark:text-white text-center">
+                                <a href="{{ route('customer-dashboard', ['email'=>$customer['email']]) }}">{{$customer['email']}}</a>
+                            </th>
+                            @foreach($customer->latestState->state as $key=>$value)
+                                @if($key=='likelihood')
+                                    <td class="px-6 py-4 text-center text-2xl text-green-600">
+                                        <div class="flex items-center">
+                                            @foreach (range(1, $value) as $item)
                                                 <svg aria-hidden="true" class="w-5 h-5 text-yellow-400"
                                                      fill="currentColor" viewBox="0 0 20 20"
                                                      xmlns="http://www.w3.org/2000/svg"><title>Fourth star</title>
                                                     <path
                                                         d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
                                                 </svg>
-                                                <svg aria-hidden="true" class="w-5 h-5 text-yellow-400"
-                                                     fill="currentColor" viewBox="0 0 20 20"
-                                                     xmlns="http://www.w3.org/2000/svg"><title>Fourth star</title>
-                                                    <path
-                                                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                                                </svg>
-                                            </div>
-                                        </td>
-                                    @else
-                                        <td class="px-6 py-4 text-center text-2xl text-blue-600">
-                                            <div class="flex items-center">
-                                                <svg aria-hidden="true" class="w-5 h-5 text-yellow-400"
-                                                     fill="currentColor" viewBox="0 0 20 20"
-                                                     xmlns="http://www.w3.org/2000/svg"><title>First star</title>
-                                                    <path
-                                                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                                                </svg>
-                                                <svg aria-hidden="true" class="w-5 h-5 text-yellow-400"
-                                                     fill="currentColor" viewBox="0 0 20 20"
-                                                     xmlns="http://www.w3.org/2000/svg"><title>Second star</title>
-                                                    <path
-                                                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                                                </svg>
-                                                <svg aria-hidden="true" class="w-5 h-5 text-yellow-400"
-                                                     fill="currentColor" viewBox="0 0 20 20"
-                                                     xmlns="http://www.w3.org/2000/svg"><title>Third star</title>
-                                                    <path
-                                                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                                                </svg>
-                                                <svg aria-hidden="true" class="w-5 h-5 text-yellow-400"
-                                                     fill="currentColor" viewBox="0 0 20 20"
-                                                     xmlns="http://www.w3.org/2000/svg"><title>Fourth star</title>
-                                                    <path
-                                                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                                                </svg>
-                                                <svg aria-hidden="true" class="w-5 h-5 text-gray-300 dark:text-gray-500"
-                                                     fill="currentColor" viewBox="0 0 20 20"
-                                                     xmlns="http://www.w3.org/2000/svg"><title>Fifth star</title>
-                                                    <path
-                                                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                                                </svg>
-                                            </div>
-                                        </td>
-                                    @endif
-                                @else
+                                            @endforeach
+                                            @if(5-$value != 0)
+                                                @foreach(range(1, 5-$value) as $item)
+                                                    <svg aria-hidden="true" class="w-5 h-5 text-gray-200"
+                                                         fill="currentColor" viewBox="0 0 20 20"
+                                                         xmlns="http://www.w3.org/2000/svg"><title>Fourth star</title>
+                                                        <path
+                                                            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                                                    </svg>
+                                                @endforeach
+                                            @endif
+                                        </div>
+                                    </td>
+                                @elseif($key=='funnel_step')
+                                @elseif($key!='events')
                                     <td class="px-6 py-4 text-center">{{$value}}</td>
                                 @endif
                             @endforeach
+                            <td>
+                                <form method="POST" action="{{ route('delete-customer-state', $customer->latestState->id) }}">
+                                    {{ csrf_field() }}
+                                    <div class="form-group">
+                                        <input type="submit" onclick="return confirm('Are you sure you want to delete this user from the upsell list?')" class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900" value="Delete user">
+                                    </div>
+                                </form>
+                            </td>
                         </tr>
                     @endforeach
                     </tbody>

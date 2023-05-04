@@ -16,6 +16,8 @@
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 
+    @stack('customer-dashboard-scripts')
+
 </head>
 <body>
 <div id="app" class="min-h-screen flex flex-col">

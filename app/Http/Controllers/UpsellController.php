@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\CustomerState;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -20,19 +21,54 @@ class UpsellController extends Controller
      */
     public function index()
     {
-        $results = Auth::user()->results()->whereIn('type', ['sale_funnel','upsell_stats','upsell'])->get()->map(function($result) {
+        $results = Auth::user()->results()->whereIn('type', ['sale_funnel','upsell_stats'])->get()->map(function($result) {
             $result->data = $result->loadData();
             return $result;
         });
 
+        $latestDate = Auth::user()->configuration()->first()->customerStates()->orderByDesc('date')->first()->date;
+
+        $customers = Auth::user()->configuration()
+            ->first()
+            ->customers()
+            ->whereHas('latestState', function ($q) use ($latestDate) {
+                $latestDateWithoutSeconds = date('Y-m-d H:i:00', strtotime($latestDate));
+                return $q->whereRaw("to_char(date, 'YYYY-MM-DD HH24:MI:00') = ?", [$latestDateWithoutSeconds]);
+            })
+            ->with('latestState')
+            ->get();
+
         return view('upsell-dashboard')->with([
             'results' => $results,
+            'customers' => $customers,
+        ]);
+    }
+
+    public function show(){
+        $latestDate = Auth::user()->configuration()->first()->customerStates()->orderByDesc('date')->first()->date;
+
+        $customers = Auth::user()->configuration()
+            ->first()
+            ->customers()
+            ->whereHas('latestState', function ($q) use ($latestDate) {
+                $latestDateWithoutSeconds = date('Y-m-d H:i:00', strtotime($latestDate));
+                return $q->whereRaw("to_char(date, 'YYYY-MM-DD HH24:MI:00') < ?", [$latestDateWithoutSeconds]);
+            })
+            ->with('latestState')
+            ->get();
+        return view('upsell-historic-dashboard')->with([
+            'customers' => $customers,
         ]);
     }
 
     public function download(){
         $path = 'results/'.Auth::user()->results->firstWhere('type','upsell')->filename;
         return Storage::download($path);
+    }
+
+    public function destroy($customerStateId){
+        CustomerState::find($customerStateId)->delete();
+        return redirect()->route('upsell-dashboard');
     }
 
     public function sendUpsellEmails(){
