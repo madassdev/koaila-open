@@ -31,7 +31,7 @@
             <div class="p-4 text-right">
                 <div class="flex justify-end items-center">
                     <a href="{{route('upsell-download')}}"
-                       target="_blank" class="bg-blue-700 hover:bg-blue-800 text-white font-bold p-3 rounded" v-track.upsell_user_list_download_click>
+                       target="_blank" class="py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" v-track.upsell_user_list_download_click>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                              stroke="currentColor" class="w-6 h-6 inline">
                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -104,7 +104,7 @@
                                 <form method="POST" action="{{ route('delete-customer-state', $customer->latestState->id) }}">
                                     {{ csrf_field() }}
                                     <div class="form-group">
-                                        <input type="submit" onclick="return confirm('Are you sure you want to delete this user from the upsell list?')" class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900" value="Delete user">
+                                        <input type="submit" onclick="return confirm('Are you sure you want to delete this user from the upsell list?')" class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900" value="Delete">
                                     </div>
                                 </form>
                             </td>
