@@ -18,7 +18,7 @@ class ImportUpsellListCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'import:upsell-list {config_id} {file_path}';
+    protected $signature = 'import:upsell-list {company_name} {config_id} {file_path}';
 
     /**
      * The console command description.
@@ -55,6 +55,7 @@ class ImportUpsellListCommand extends Command
 
         $this->withProgressBar($csv, function($row) use ($configId) {
             $customer = $this->importCustomer($row, $configId);
+            echo('ok');
             $this->importCustomerState($row, $customer->id);
         });
 
@@ -62,18 +63,37 @@ class ImportUpsellListCommand extends Command
     }
 
     private function importCustomer($customerData, $configId) {
+        if($this->argument('company_name')=='microtica') {
+            $stripe_id = '';
+            $usage_tracking_id = '';
+        } else{
+            $stripe_id = $customerData['stripe_id'];
+            $usage_tracking_id = intval($customerData['amplitude_id']);
+        }
+
         return Customer::firstOrCreate([
             'config_id' => $configId,
-            'email' => strtolower($customerData['email']),
-            'stripe_id' => $customerData['stripe_id'],
-            'usage_tracking_id' => intval($customerData['amplitude_id']),
+            'email' => strtolower($customerData['distinct_id']),
+            'stripe_id' => $stripe_id,
+            'usage_tracking_id' => $usage_tracking_id,
         ]);
     }
 
     private function importCustomerState($customerData, $customerID) {
         $events=[];
         foreach ($customerData as $key=>$value)
-            if(!in_array($key, array('','email','funnel_step','likelihood','user_creation_time','time_to_value','plan')))
+            if(!in_array($key, array(
+                '',
+                'email',
+                'funnel_step',
+                'funnel step',
+                'likelihood',
+                'user_creation_time',
+                'time_to_value',
+                'plan',
+                'stripe_id',
+                'amplitude_id'
+                )))
                 $events[$key] = $value;
         $states = [
             'funnel_step'=> $customerData['funnel step'],
@@ -84,7 +104,7 @@ class ImportUpsellListCommand extends Command
         ];
         CustomerState::create([
             'customer_id' => $customerID,
-            'email' => strtolower($customerData['email']),
+            'email' => strtolower($customerData['distinct_id']),
             'date' => date('Y-m-d H:i:s'),
             'plans' => $customerData['plan'],
             'state' => $states,
