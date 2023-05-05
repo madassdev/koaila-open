@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\Customer;
+use App\Models\CustomerState;
 use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Http\Request;
@@ -20,5 +22,15 @@ class CustomerController extends Controller
             'customer' => $customer,
             'saleFunnel' => $saleFunnel,
         ]);
+    }
+
+    public function toggleVisibility($customerId){
+        $customer = Customer::findOrFail($customerId);
+        $this->authorize('toggleVisibility', $customer);
+
+        $hiddenAt = $customer->hidden_at == null ? now() : null;
+        $customer->update(['hidden_at'=> $hiddenAt]);
+
+        return redirect()->route('upsell-dashboard');
     }
 }

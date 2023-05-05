@@ -13,6 +13,7 @@ class Customer extends Model
         'stripe_id',
         'usage_tracking_id',
         'email',
+        'hidden_at',
     ];
 
     public function states()
