@@ -67,11 +67,6 @@ class UpsellController extends Controller
         return Storage::download($path);
     }
 
-    public function destroy($customerStateId){
-        CustomerState::find($customerStateId)->delete();
-        return redirect()->route('upsell-dashboard');
-    }
-
     public function sendUpsellEmails(){
         // Read CSV file and get the necessary information
         $csvFileData = Auth::user()->results()->whereIn('type', ['upsell'])->first();
