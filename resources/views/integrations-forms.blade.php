@@ -38,7 +38,7 @@
                         @endif
 
                         @php
-                            $usage_tracking_tools= [
+                            $basic_authentication= [
                                 'amplitude' => [
                                     'key' => 'API Key',
                                     'secret' => 'API Secret'
@@ -50,25 +50,34 @@
                                 'stripe' => [
                                     'key' => 'API Key',
                                 ],
-
+                            ];
+                            $oauth_authentication=[
+                                'hubspot'=> [
+                                    'image'=>'hubspot.png'
+                                ]
                             ]
                         @endphp
 
-                        @if(in_array($type, array_keys($usage_tracking_tools)))
-
-                            @foreach(array_keys($usage_tracking_tools[$type]) as $field)
-                                <x-forms.input id={{$field}} name={{$field}} label={{$usage_tracking_tools[$type][$field]}}></x-forms.input>
+                        @if(in_array($type, array_keys($basic_authentication)))
+                            @foreach(array_keys($basic_authentication[$type]) as $field)
+                                <x-forms.input id={{$field}} name={{$field}} label={{$basic_authentication[$type][$field]}}></x-forms.input>
                             @endforeach
-
+                            <div class="row mb-0">
+                                <div class="col-md-6 offset-md-4 mt-3 flex justify-end">
+                                    <button class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" v-track.integration_form_submit>
+                                        {{ __('Submit') }}
+                                    </button>
+                                </div>
+                            </div>
                         @endif
 
-                        <div class="row mb-0">
-                            <div class="col-md-6 offset-md-4 mt-3 flex justify-end">
-                                <button class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" v-track.integration_form_submit>
-                                    {{ __('Submit') }}
-                                </button>
+                        @if(in_array($type, array_keys($oauth_authentication)))
+                            <div class="grid justify-items-center">
+                                    <img src="{{ asset('images/'. $oauth_authentication[$type]['image']) }}" class="block object-contain object-center w-20 rounded-lg py-4" alt="{{$type}} Logo"/>
+                                    <h1 class="text-lg">Hubspot</h1>
+                                    <a class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" href="{{ route('oauth.redirect', $type) }}">Connect</a>
                             </div>
-                        </div>
+                        @endif
                     </form>
                 </div>
             </div>

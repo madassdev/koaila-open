@@ -19,11 +19,6 @@ class IntegrationRequest extends FormRequest
                 return [
                 'key' => ['required','string'],
                 ];
-            case 'hubspot':
-                return [
-                    'access_token' => ['required','string'],
-                    'refresh_token' => ['required','string'],
-                ];
             default:
                 return [
                     'key' => ['required','string'],

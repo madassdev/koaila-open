@@ -1,11 +1,8 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers\OAuth;
 
-use App\Exceptions\EmailTakenException;
 use App\Http\Controllers\Controller;
-use App\Models\OAuthProvider;
-use http\Exception\InvalidArgumentException;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Laravel\Socialite\Facades\Socialite;
 
@@ -34,10 +31,13 @@ class OAuthController extends Controller
     {
         switch ($provider) {
             case 'hubspot':
-                $url = Socialite::driver($provider)->redirect()->getTargetUrl();
+                $url = Socialite::driver($provider)
+                    ->scopes(['crm.objects.contacts.read','crm.objects.companies.read'])
+                    ->redirect()
+                    ->getTargetUrl();
                 break;
             default:
-                throw new InvalidArgumentException('Invalid provider');
+                throw new \InvalidArgumentException('Invalid provider');
         }
         return [
             'url' => $url,
@@ -59,33 +59,24 @@ class OAuthController extends Controller
                 $user = Socialite::driver($provider)->stateless()->user();
                 break;
             default:
-                throw new InvalidArgumentException('Invalid provider');
+                throw new \InvalidArgumentException('Invalid provider');
         }
+        $this->findOrCreateIntegration($provider, $user);
 
-        $integration = $this->findOrCreateIntegration($provider, $user);
-
-        $responseData = [
-            'new_user' => $integration->justCreated ?? false,
-            'token' => $user->token,
-            'token_type' => 'bearer',
-            'expires_in' => $this->guard()->getPayload()->get('exp') - time(),
-        ];
-
-        if (request()->expectsJson()) {
-            return response()->json($responseData);
-        }
-
-        return view('oauth/callback', $responseData);
+        return redirect(route('integrations'));
     }
 
     protected function findOrCreateIntegration($provider, $user)
     {
-        $integration = $user->integrations()->firstOrNew([
+        $integration = \Auth::user()->integrations()->firstOrNew([
             'type' => $provider
         ])->fill([
             'data' => [
                 'access_token' => $user->token,
                 'refresh_token' => $user->refreshToken,
+                'expiresIn' => $user->expiresIn,
+                'email'=>$user->email,
+                'id'=>$user->id,
             ]
         ])->save();
 
