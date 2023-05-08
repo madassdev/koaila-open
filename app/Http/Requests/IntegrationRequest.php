@@ -14,15 +14,22 @@ class IntegrationRequest extends FormRequest
      */
     public function rules()
     {
-        if($this->route('type') =='stripe'){
-            return [
+        switch($this->route('type')){
+            case 'stripe':
+                return [
                 'key' => ['required','string'],
-            ];
+                ];
+            case 'hubspot':
+                return [
+                    'access_token' => ['required','string'],
+                    'refresh_token' => ['required','string'],
+                ];
+            default:
+                return [
+                    'key' => ['required','string'],
+                    'secret' => ['required','string']
+                ];
         }
-        return [
-            'key' => ['required','string'],
-            'secret' => ['required','string']
-        ];
     }
 }
 
