@@ -33,7 +33,14 @@
                             'image' => 'stripe.jpeg',
                             'slug' => 'stripe',
                             'description' =>'Sync your Stripe data for more accurate results'
-                            ]] as $usage_tracking_provider)
+                            ],
+                            [
+                            'name' => 'Hubspot',
+                            'image' => 'hubspot.png',
+                            'slug' => 'hubspot',
+                            'description' =>'Sync your Hubspot data for more accurate results'
+                            ],
+                            ] as $usage_tracking_provider)
                             <div class="w-full rounded border border-gray-200 p-2 relative hover:bg-gray-50">
                                 <div class="grid grid-cols-2 items-center p-2">
                                     <div class="w-12">

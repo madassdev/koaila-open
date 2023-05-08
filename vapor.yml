@@ -4,7 +4,7 @@ environments:
     production:
         database: prophesee
         storage: prophesee-storage
-        domain: app.prophesee.io
+        domain: app.koaila.com
         memory: 1024
         cli-memory: 512
         runtime: 'php-8.2:al2'

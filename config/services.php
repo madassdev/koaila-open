@@ -33,6 +33,12 @@ return [
 
     'open_ai' => [
         'api_key' => env('OPEN_AI_API_KEY')
-    ]
+    ],
+
+    'hubspot' => [
+        'client_id' => env('HUBSPOT_CLIENT_ID'),
+        'client_secret' => env('HUBSPOT_CLIENT_SECRET'),
+        'redirect' => env('HUBSPOT_REDIRECT_URI')
+    ],
 
 ];
