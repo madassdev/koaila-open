@@ -73,9 +73,16 @@
 
                         @if(in_array($type, array_keys($oauth_authentication)))
                             <div class="grid justify-items-center">
+                                <div class="flex items-center gap-4">
+                                    <img src="{{ asset('logo.svg') }}" class="block object-contain object-center w-20 rounded-lg py-4" alt="{{$type}} Logo"/>
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
+                                    </svg>
                                     <img src="{{ asset('images/'. $oauth_authentication[$type]['image']) }}" class="block object-contain object-center w-20 rounded-lg py-4" alt="{{$type}} Logo"/>
-                                    <h1 class="text-lg">Hubspot</h1>
-                                    <a class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" href="{{ route('oauth.redirect', $type) }}">Connect</a>
+                                </div>
+                                <h1 class="text-lg">Sync Hubspot with Koaila</h1>
+                                <p class="p-8">Koaila will be able to get demographic data (account name, account sector of activity, list of users in the account and their roles) on your users to give you predictions on an account level</p>
+                                <a class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" href="{{ route('oauth.redirect', $type) }}">Connect</a>
                             </div>
                         @endif
                     </form>
