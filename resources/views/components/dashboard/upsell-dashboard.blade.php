@@ -21,11 +21,11 @@
 @endif
 
 @php
-    $hiddenCustomers=$customers->whereNotNull('hidden_at');
-    $customers=$customers->whereNull('hidden_at');
+    $hiddenCustomers=$customers?->whereNotNull('hidden_at');
+    $customers=$customers?->whereNull('hidden_at');
 @endphp
 
-@if($customers->count())
+@if($customers?->count())
 <div class="bg-white rounded mt-4" id="upsell-table">
     <div class="p-4">
         <div class="grid grid-cols-2 gap-4">
@@ -128,7 +128,7 @@
 </div>
 @endif
 
-@if($hiddenCustomers->count())
+@if($hiddenCustomers?->count())
     <div class="bg-white rounded mt-4" id="upsell-table">
         <div class="p-4">
             <div class="grid grid-cols-2 gap-4">

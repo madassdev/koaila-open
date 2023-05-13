@@ -25,7 +25,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="grid grid-cols-1">
-                            @if($customers->count()!=0)
+                            @if($customers?->count()!=0)
                                 <div class="grid grid-cols-2 gap-4">
                                     <div class="p-4 text-left bg-white dark:text-white dark:bg-gray-800">
                                         <h1 class="text-lg font-semibold text-gray-900">Previously detected users</h1>

@@ -26,17 +26,21 @@ class UpsellController extends Controller
             return $result;
         });
 
-        $latestDate = Auth::user()->configuration()->first()->customerStates()->orderByDesc('date')->first()?->date;
+        $latestDate = Auth::user()->configuration()->first()?->customerStates()?->orderByDesc('date')->first()?->date;
 
-        $customers = Auth::user()->configuration()
-            ->first()
-            ->customers()
-            ->whereHas('latestState', function ($q) use ($latestDate) {
-                $latestDateWithoutSeconds = date('Y-m-d H:i:00', strtotime($latestDate));
-                return $q->whereRaw("to_char(date, 'YYYY-MM-DD HH24:MI:00') = ?", [$latestDateWithoutSeconds]);
-            })
-            ->with('latestState')
-            ->get();
+        $customers=null;
+
+        if($latestDate){
+            $customers = Auth::user()->configuration()
+                ->first()
+                ->customers()
+                ->whereHas('latestState', function ($q) use ($latestDate) {
+                    $latestDateWithoutSeconds = date('Y-m-d H:i:00', strtotime($latestDate));
+                    return $q->whereRaw("to_char(date, 'YYYY-MM-DD HH24:MI:00') = ?", [$latestDateWithoutSeconds]);
+                })
+                ->with('latestState')
+                ->get();
+        }
 
         return view('upsell-dashboard')->with([
             'results' => $results,
@@ -45,18 +49,19 @@ class UpsellController extends Controller
     }
 
     public function show(){
-        $latestDate = Auth::user()->configuration()->first()->customerStates()->orderByDesc('date')->first()?->date;
-
-        $customers = Auth::user()->configuration()
-            ->first()
-            ->customers()
-            ->whereHas('latestState', function ($q) use ($latestDate) {
-                $latestDateWithoutSeconds = date('Y-m-d H:i:00', strtotime($latestDate));
-                return $q->whereRaw("to_char(date, 'YYYY-MM-DD HH24:MI:00') < ?", [$latestDateWithoutSeconds]);
-            })
-            ->with('latestState')
-            ->get();
-
+        $latestDate = Auth::user()->configuration()->first()?->customerStates()?->orderByDesc('date')->first()?->date;
+        $customers=null;
+        if($latestDate){
+            $customers = Auth::user()->configuration()
+                ->first()
+                ->customers()
+                ->whereHas('latestState', function ($q) use ($latestDate) {
+                    $latestDateWithoutSeconds = date('Y-m-d H:i:00', strtotime($latestDate));
+                    return $q->whereRaw("to_char(date, 'YYYY-MM-DD HH24:MI:00') < ?", [$latestDateWithoutSeconds]);
+                })
+                ->with('latestState')
+                ->get();
+        }
         return view('upsell-historic-dashboard')->with([
             'customers' => $customers,
         ]);
