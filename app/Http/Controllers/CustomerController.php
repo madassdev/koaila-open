@@ -9,9 +9,9 @@ use Illuminate\Http\Request;
 
 class CustomerController extends Controller
 {
-    public function show($email)
+    public function show($id)
     {
-        $customer = Auth::user()->configuration()->first()->customers()->where('email', $email)->with('states')->get();
+        $customer = Auth::user()->configuration()->first()->customers()->where('id', $id)->with('states')->get();
 
         $saleFunnel = Auth::user()->results()->whereIn('type', ['sale_funnel'])->get()->map(function($result) {
             $result->data = $result->loadData();

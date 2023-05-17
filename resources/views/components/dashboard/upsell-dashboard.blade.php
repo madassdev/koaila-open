@@ -74,7 +74,7 @@
                         <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                             <th scope="row"
                                 class="px-6 py-4 font-bold text-gray-900 whitespace-nowrap dark:text-white text-center">
-                                <a href="{{ route('customer-dashboard', ['email'=>$customer['email']]) }}">{{$customer['email']}}</a>
+                                <a href="{{ route('customer-dashboard', ['id'=>$customer['id']]) }}">{{$customer['email']}}</a>
                             </th>
                             @foreach($customer->latestState->state as $key=>$value)
                                 @if($key=='likelihood')
@@ -177,7 +177,7 @@
                             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                 <th scope="row"
                                     class="px-6 py-4 font-bold text-gray-900 whitespace-nowrap dark:text-white text-center">
-                                    <a href="{{ route('customer-dashboard', ['email'=>$hiddenCustomer['email']]) }}">{{$hiddenCustomer['email']}}</a>
+                                    <a href="{{ route('customer-dashboard', ['id'=>$hiddenCustomer['id']]) }}">{{$hiddenCustomer['email']}}</a>
                                 </th>
                                 @foreach($hiddenCustomer->latestState->state as $key=>$value)
                                     @if($key=='likelihood')

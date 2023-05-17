@@ -32,7 +32,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/upsell-download', [App\Http\Controllers\UpsellController::class, 'download'])->name('upsell-download');
     Route::get('/upsell-send-emails', [App\Http\Controllers\UpsellController::class, 'sendUpsellEmails'])->name('upsell-send-emails');
     Route::get('/api-configuration', [App\Http\Controllers\ConfigurationController::class, 'getUUID'])->name('api-configuration');
-    Route::get('/customer-dashboard/{email}', [App\Http\Controllers\CustomerController::class, 'show'])->name('customer-dashboard');
+    Route::get('/customer-dashboard/{id}', [App\Http\Controllers\CustomerController::class, 'show'])->name('customer-dashboard');
     Route::get('/upsell-historic-dashboard', [App\Http\Controllers\UpsellController::class, 'show'])->name('upsell-historic-dashboard');
     Route::post('/hide-customer-state/{customer_id}', [App\Http\Controllers\CustomerController::class, 'toggleVisibility'])->name('hide-customer-state');
 
