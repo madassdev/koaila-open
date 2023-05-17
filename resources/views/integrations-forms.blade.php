@@ -64,7 +64,7 @@
                             @endforeach
                             <div class="row mb-0">
                                 <div class="col-md-6 offset-md-4 mt-3 flex justify-end">
-                                    <button class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" v-track.integration_form_submit>
+                                    <button class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 focus:outline-none" v-track.integration_form_submit>
                                         {{ __('Submit') }}
                                     </button>
                                 </div>
@@ -82,7 +82,7 @@
                                 </div>
                                 <h1 class="text-lg">Sync Hubspot with Koaila</h1>
                                 <p class="p-8">Koaila will be able to get demographic data (account name, account sector of activity, list of users in the account and their roles) on your users to give you predictions on an account level</p>
-                                <a class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800" href="{{ route('oauth.redirect', $type) }}">Connect</a>
+                                <a class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 focus:outline-none" href="{{ route('oauth.redirect', $type) }}">Connect</a>
                             </div>
                         @endif
                     </form>

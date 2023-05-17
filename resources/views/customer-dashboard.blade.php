@@ -66,9 +66,9 @@
 
                 <div class="bg-white rounded mt-4" id="upsell-table">
                     <div class="p-4">
-                        <div class="p-4 text-left bg-white dark:text-white dark:bg-gray-600">
+                        <div class="p-4 text-left bg-white">
                             <h1 class="text-lg font-semibold text-gray-900">User behaviour</h1>
-                            <p class="mt-1 text-sm font-normal text-gray-500 dark:text-gray-400">Click on the dates below to see the evolution of the user's behaviour over time</p>
+                            <p class="mt-1 text-sm font-normal text-gray-500">Click on the dates below to see the evolution of the user's behaviour over time</p>
                         </div>
                         @foreach($customer->first()->states as $state)
                             <div class="p-4">
@@ -81,18 +81,18 @@
                                 </h1>
                                 <div class="flex flex-col">
                                     <div class="flex grow overflow-x-auto">
-                                        <table id="{{$state['date']}}" style="display:none" class="relative w-full border text-sm text-left text-gray-500 dark:text-gray-400">
+                                        <table id="{{$state['date']}}" style="display:none" class="relative w-full border text-sm text-left text-gray-500F">
                                                 <thead>
-                                                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                                    <tr class="bg-white border-b">
                                                         @foreach($state['state']['events'] as $key=>$value)
-                                                            <th scope="col" class="px-6 py-4 font-bold text-gray-900 whitespace-nowrap dark:text-white text-center">
+                                                            <th scope="col" class="px-6 py-4 font-bold text-gray-900 whitespace-nowrap text-center">
                                                                 {{ ucfirst(trans(str_replace('_', ' ', $key))) }}
                                                             </th>
                                                         @endforeach
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                                                    <tr class="bg-white border-b">
                                                         @foreach($state['state']['events'] as $key=>$value)
                                                             <td class="px-6 py-4 text-center">{{$value}}</td>
                                                         @endforeach

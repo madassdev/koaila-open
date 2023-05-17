@@ -29,14 +29,14 @@
 <div class="bg-white rounded mt-4" id="upsell-table">
     <div class="p-4">
         <div class="grid grid-cols-2 gap-4">
-            <div class="p-4 text-left bg-white dark:text-white dark:bg-gray-800">
+            <div class="p-4 text-left bg-white">
                 <h1 class="text-lg font-semibold text-gray-900">Users to upsell</h1>
-                <p class="mt-1 text-sm font-normal text-gray-500 dark:text-gray-400">The column of this table are the most common events among users who were previously upsold.</p>
+                <p class="mt-1 text-sm font-normal text-gray-500">The column of this table are the most common events among users who were previously upsold.</p>
             </div>
             <div class="p-4 text-right">
                 <div class="flex justify-end items-center">
                     <a href="{{route('upsell-download')}}"
-                       target="_blank" class="py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" v-track.upsell_user_list_download_click>
+                       target="_blank" class="py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200" v-track.upsell_user_list_download_click>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                              stroke="currentColor" class="w-6 h-6 inline">
                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -50,11 +50,11 @@
 
         <div class="flex flex-col h-screen">
             <div class="flex grow overflow-x-auto">
-                <table class="relative w-full border text-sm text-left text-gray-500 dark:text-gray-400">
+                <table class="relative w-full border text-sm text-left text-gray-500">
                     <thead>
                     <tr>
                         <th scope="col"
-                            class="sticky top-0 px-6 py-3 text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 text-center">{{ 'Email' }}</th>
+                            class="sticky top-0 px-6 py-3 text-xs text-gray-700 uppercase bg-gray-50 text-center">{{ 'Email' }}</th>
                         @foreach(array_keys($customers->first()->latestState->state) as $header)
                             @switch($header)
                                 @case('events')
@@ -63,17 +63,17 @@
                                     @break
                                 @default
                                     <th scope="col"
-                                        class="sticky top-0 px-6 py-3 text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 text-center">{{ ucfirst(trans(str_replace('_', ' ', $header))) }}</th>
+                                        class="sticky top-0 px-6 py-3 text-xs text-gray-700 uppercase bg-gray-50 text-center">{{ ucfirst(trans(str_replace('_', ' ', $header))) }}</th>
                             @endswitch
                         @endforeach
-                        <th scope="col" class="sticky top-0 px-6 py-3 text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 text-center"></th>
+                        <th scope="col" class="sticky top-0 px-6 py-3 text-xs text-gray-700 uppercase bg-gray-50 text-center"></th>
                     </tr>
                     </thead>
                     <tbody>
                     @foreach ($customers as $customer)
-                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                        <tr class="bg-white border-b">
                             <th scope="row"
-                                class="px-6 py-4 font-bold text-gray-900 whitespace-nowrap dark:text-white text-center">
+                                class="px-6 py-4 font-bold text-gray-900 whitespace-nowrap text-center">
                                 <a href="{{ route('customer-dashboard', ['id'=>$customer['id']]) }}">{{$customer['email']}}</a>
                             </th>
                             @foreach($customer->latestState->state as $key=>$value)
@@ -109,7 +109,7 @@
                                 <form method="POST" action="{{ route('hide-customer-state', $customer->id) }}">
                                     {{ csrf_field() }}
                                     <div class="form-group">
-                                        <button type="submit" onclick="return confirm('Are you sure you want to hide this user from the list?')" class="focus:outline-none text-white bg-blue-500 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium text-sm p-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-900">
+                                        <button type="submit" onclick="return confirm('Are you sure you want to hide this user from the list?')" class="focus:outline-none text-white bg-blue-500 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium text-sm p-2">
                                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
                                                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -132,14 +132,14 @@
     <div class="bg-white rounded mt-4" id="upsell-table">
         <div class="p-4">
             <div class="grid grid-cols-2 gap-4">
-                <div class="p-4 text-left bg-white dark:text-white dark:bg-gray-800">
+                <div class="p-4 text-left bg-white">
                     <h1 class="text-lg font-semibold text-gray-900">Hidden users</h1>
-                    <p class="mt-1 text-sm font-normal text-gray-500 dark:text-gray-400">These are users you chose to hide but appear in the analysis.</p>
+                    <p class="mt-1 text-sm font-normal text-gray-500">These are users you chose to hide but appear in the analysis.</p>
                 </div>
                 <div class="p-4 text-right">
                     <div class="flex justify-end items-center">
                         <a href="{{route('upsell-download')}}"
-                           target="_blank" class="py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" v-track.upsell_user_list_download_click>
+                           target="_blank" class="py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200" v-track.upsell_user_list_download_click>
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                                  stroke="currentColor" class="w-6 h-6 inline">
                                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -153,11 +153,11 @@
 
             <div class="flex flex-col">
                 <div class="flex">
-                    <table class="w-full border text-sm text-left text-gray-500 dark:text-gray-400">
+                    <table class="w-full border text-sm text-left text-gray-500">
                         <thead>
                         <tr>
                             <th scope="col"
-                                class="px-6 py-3 text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 text-center">{{ 'Email' }}</th>
+                                class="px-6 py-3 text-xs text-gray-700 uppercase bg-gray-50 text-center">{{ 'Email' }}</th>
                             @foreach(array_keys($hiddenCustomers->first()->latestState->state) as $header)
                                 @switch($header)
                                     @case('events')
@@ -166,17 +166,17 @@
                                         @break
                                     @default
                                         <th scope="col"
-                                            class="sticky top-0 px-6 py-3 text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 text-center">{{ ucfirst(trans(str_replace('_', ' ', $header))) }}</th>
+                                            class="sticky top-0 px-6 py-3 text-xs text-gray-700 uppercase bg-gray-50 text-center">{{ ucfirst(trans(str_replace('_', ' ', $header))) }}</th>
                                 @endswitch
                             @endforeach
-                            <th scope="col" class="sticky top-0 px-6 py-3 text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 text-center"></th>
+                            <th scope="col" class="sticky top-0 px-6 py-3 text-xs text-gray-700 uppercase bg-gray-50 text-center"></th>
                         </tr>
                         </thead>
                         <tbody>
                         @foreach ($hiddenCustomers as $hiddenCustomer)
-                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                            <tr class="bg-white border-b">
                                 <th scope="row"
-                                    class="px-6 py-4 font-bold text-gray-900 whitespace-nowrap dark:text-white text-center">
+                                    class="px-6 py-4 font-bold text-gray-900 whitespace-nowrap text-center">
                                     <a href="{{ route('customer-dashboard', ['id'=>$hiddenCustomer['id']]) }}">{{$hiddenCustomer['email']}}</a>
                                 </th>
                                 @foreach($hiddenCustomer->latestState->state as $key=>$value)
@@ -212,7 +212,7 @@
                                     <form method="POST" action="{{ route('hide-customer-state', $hiddenCustomer->id) }}">
                                         {{ csrf_field() }}
                                         <div class="form-group">
-                                            <button type="submit" onclick="return confirm('Are you sure you want to hide this user from the list?')" class="focus:outline-none text-white bg-blue-500 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium text-sm p-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-900">
+                                            <button type="submit" onclick="return confirm('Are you sure you want to hide this user from the list?')" class="focus:outline-none text-white bg-blue-500 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium text-sm p-2">
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                                     <path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.773 3.162 10.065 7.498a10.523 10.523 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88" />
                                                 </svg>
