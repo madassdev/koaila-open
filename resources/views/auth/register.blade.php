@@ -13,12 +13,10 @@
 
                 <div class="row mb-3">
                     <label for="name" class="block mb-2 text-sm font-medium text-gray-900">{{ __('Name') }}</label>
-
                     <div>
-
-                        @error('name')
-                            <span class="invalid-feedback" role="alert">
                         <input id="name" type="text" class="form-control @error('name') is-invalid @enderror bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
+                        @error('name')
+                        <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
                         @enderror
@@ -27,10 +25,8 @@
 
                 <div class="row mb-3">
                     <label for="email" class="block mb-2 text-sm font-medium text-gray-900">{{ __('Email Address') }}</label>
-
                     <div>
                         <input id="email" type="email" class="form-control @error('email') is-invalid @enderror bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5" name="email" value="{{ old('email') }}" required autocomplete="email">
-
                         @error('email')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -41,12 +37,10 @@
 
                 <div class="row mb-3">
                     <label for="company_name" class="block mb-2 text-sm font-medium text-gray-900">{{ __('Company Name') }}</label>
-
                     <div>
                         <input id="company_name" type="company_name" class="form-control @error('company_name') is-invalid @enderror bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5" name="company_name" value="{{ old('company_name') }}" required autocomplete="company-name">
-
                         @error('company_name')
-                        <span class="invalid-feedback" role="alert">
+                            <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
                             </span>
                         @enderror
@@ -56,10 +50,8 @@
 
                 <div class="row mb-3">
                     <label for="password" class="block mb-2 text-sm font-medium text-gray-900">{{ __('Password') }}</label>
-
                     <div>
                         <input id="password" type="password" class="form-control @error('password') is-invalid @enderror bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5" name="password" required autocomplete="current-password">
-
                         @error('password')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -70,7 +62,6 @@
 
                 <div class="row mb-3">
                     <label for="password-confirm" class="block mb-2 text-sm font-medium text-gray-900">{{ __('Confirm Password') }}</label>
-
                     <div>
                         <input id="password-confirm" type="password" class="form-control bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block w-full p-2.5" name="password_confirmation" required autocomplete="new-password">
                     </div>
