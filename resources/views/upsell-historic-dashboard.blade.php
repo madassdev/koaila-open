@@ -52,7 +52,7 @@
                                                 </th>
                                                 <th scope="row"
                                                     class="px-6 py-4 font-bold text-gray-900 whitespace-nowrap text-center">
-                                                    <a href="{{ route('customer-dashboard', ['email'=>$customer['email']]) }}">{{$customer['email']}}</a>
+                                                    <a href="{{ route('customer-dashboard', ['id'=>$customer['id']]) }}">{{$customer['email']}}</a>
                                                 </th>
                                             </tr>
                                         @endforeach
