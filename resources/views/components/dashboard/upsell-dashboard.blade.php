@@ -35,7 +35,7 @@
             </div>
             <div class="p-4 text-right">
                 <div class="flex justify-end items-center">
-                    <a href="{{route('upsell-download')}}"
+                    <a href="{{route('upsell-download', ['type'=>'visible'])}}"
                        target="_blank" class="py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200" v-track.upsell_user_list_download_click>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                              stroke="currentColor" class="w-6 h-6 inline">
@@ -138,7 +138,7 @@
                 </div>
                 <div class="p-4 text-right">
                     <div class="flex justify-end items-center">
-                        <a href="{{route('upsell-download')}}"
+                        <a href="{{route('upsell-download', ['type'=>'hidden'])}}"
                            target="_blank" class="py-2.5 px-5 mr-2 mb-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200" v-track.upsell_user_list_download_click>
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                                  stroke="currentColor" class="w-6 h-6 inline">
