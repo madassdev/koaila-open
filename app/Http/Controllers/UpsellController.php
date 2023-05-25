@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Customer;
 use App\Models\CustomerState;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -29,21 +30,9 @@ class UpsellController extends Controller
             return $result;
         });
 
-        $latestDate = Auth::user()->configuration()->first()?->customerStates()?->orderByDesc('date')->first()?->date;
-
-        $customers = null;
-
-        if ($latestDate) {
-            $customers = Auth::user()->configuration()
-                ->first()
-                ->customers()
-                ->whereHas('latestState', function ($q) use ($latestDate) {
-                    $latestDateWithoutSeconds = date('Y-m-d H:i:00', strtotime($latestDate));
-                    return $q->whereRaw("to_char(date, 'YYYY-MM-DD HH24:MI:00') = ?", [$latestDateWithoutSeconds]);
-                })
-                ->with('latestState')
-                ->get();
-        }
+        // Get the latest state of user's customers.
+        $user = Auth::user();
+        $customers = $this->getLatestState($user);
 
         return view('upsell-dashboard')->with([
             'results' => $results,
@@ -51,58 +40,50 @@ class UpsellController extends Controller
         ]);
     }
 
+    /**
+     * Get the latest state of user's customers.
+     * @param Request $request
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
     public function show()
     {
-        $latestDate = Auth::user()->configuration()->first()?->customerStates()?->orderByDesc('date')->first()?->date;
-        $customers = null;
-        if ($latestDate) {
-            $customers = Auth::user()->configuration()
-                ->first()
-                ->customers()
-                ->whereHas('latestState', function ($q) use ($latestDate) {
-                    $latestDateWithoutSeconds = date('Y-m-d H:i:00', strtotime($latestDate));
-                    return $q->whereRaw("to_char(date, 'YYYY-MM-DD HH24:MI:00') < ?", [$latestDateWithoutSeconds]);
-                })
-                ->with('latestState')
-                ->get();
-        }
+        $user = Auth::user();
+        $customers = $this->getLatestState($user);
+
         return view('upsell-historic-dashboard')->with([
             'customers' => $customers,
         ]);
     }
 
+    /**
+     * Download list of customers to upsell from the latest analysis.
+     * 
+     * @param Request $request
+     * @return \Symfony\Component\HttpFoundation\StreamedResponse
+     */
     public function download(Request $request)
     {
-        // Prepare filename
+        // Prepare filename.
         $currentDate = now()->format('d-m-Y');
         $filename = "Koaila-upsell-list-{$currentDate}.csv";
 
-        // Fetch data as it is on the index page
-        $latestDate = Auth::user()->configuration()->first()?->customerStates()?->orderByDesc('date')->first()?->date;
-        $customers = Auth::user()->configuration()
-            ->first()
-            ->customers()
-            ->whereHas('latestState', function ($q) use ($latestDate) {
-                $latestDateWithoutSeconds = date('Y-m-d H:i:00', strtotime($latestDate));
-                return $q->whereRaw("to_char(date, 'YYYY-MM-DD HH24:MI:00') = ?", [$latestDateWithoutSeconds]);
-            })
-            ->with('latestState')
-            ->get();
+        // Get the latest state of user's customers.
+        $customers = $this->getLatestState(Auth::user());
 
-        // Ensure hidden customers are only exported when specified
+        // Ensure hidden customers are only exported when specified.
         if ($request->type == "hidden") {
             $customers = $customers->whereNotNull('hidden_at');
         } else {
             $customers = $customers->whereNull('hidden_at');
         }
 
-        // Prepare file headers
+        // Prepare file headers.
         $columns = ['Email', 'Likelihood', 'User Creation Time', 'Time to Value'];
         $headers = array(
             'Content-Type' => 'text/csv',
         );
 
-        // Save data into csv file
+        // Save data into csv file.
         $callback = function () use ($columns, $customers) {
             $handle = fopen('php://output', 'w');
             fputcsv($handle, $columns);
@@ -122,7 +103,7 @@ class UpsellController extends Controller
 
     public function sendUpsellEmails()
     {
-        // Read CSV file and get the necessary information
+        // Read CSV file and get the necessary information.
         $csvFileData = Auth::user()->results()->whereIn('type', ['upsell'])->first();
         $csvFileData->data = $csvFileData->loadData();
 
@@ -131,7 +112,7 @@ class UpsellController extends Controller
         $upsell_prompt = str_replace("[pricing_page_url]", Auth::user()->configuration->pricing_page_url, $upsell_prompt);
 
         foreach ($csvFileData->data['rows'] as $row) {
-            //            Convert array containing user behaviour from csv file to string with key:value
+            //            Convert array containing user behaviour from csv file to string with key:value.
             $userAttributes = array_map(function ($value, $key) {
                 return $key . '="' . $value . '"';
             }, array_values($row), array_keys($row));
@@ -152,18 +133,29 @@ class UpsellController extends Controller
         return null;
     }
 
-    public function test()
+    /**
+     * Fetch the latest state of a user's customers.
+     * 
+     * @param User $user
+     * @return \Illuminate\Database\Eloquent\Collection $customers
+     */
+    public function getLatestState(User $user)
     {
-        return $this->computeUpsellStats(3, 'starter');
-    }
-    public function computeUpsellStats($customersCount, $plan)
-    {
-        // return 123;
-        $path = Storage::disk('public')->path('upsell-anonymised.csv');
-        return $path;
-        $prices = json_decodes(stripslashes(Storage::get("/users-pricing/pricing.json")), true);
-        $planPrice = $prices[Auth::user()->company_name]['plans'][$plan]['prices'][0]['amount'];
-        $upsellStats = ['predicted_MRR' => $customersCount * $planPrice, 'predicted_ARR' => $customersCount * $planPrice * 12,];
-        return $upsellStats;
+        $customers = null;
+        $latestDate = $user->configuration()->first()?->customerStates()?->orderByDesc('date')->first()?->date;
+
+        if ($latestDate) {
+            $customers = $user->configuration()
+                ->first()
+                ->customers()
+                ->whereHas('latestState', function ($q) use ($latestDate) {
+                    $latestDateWithoutSeconds = date('Y-m-d H:i:00', strtotime($latestDate));
+                    return $q->whereRaw("to_char(date, 'YYYY-MM-DD HH24:MI:00') = ?", [$latestDateWithoutSeconds]);
+                })
+                ->with('latestState')
+                ->get();
+        }
+
+        return $customers;
     }
 }
