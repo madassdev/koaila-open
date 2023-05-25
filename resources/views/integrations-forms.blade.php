@@ -50,6 +50,9 @@
                                 'stripe' => [
                                     'key' => 'API Key',
                                 ],
+                                'fullstory' => [
+                                    'key' => 'API Key',
+                                ],
                             ];
                             $oauth_authentication=[
                                 'hubspot'=> [

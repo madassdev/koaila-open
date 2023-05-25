@@ -33,8 +33,12 @@
                             'image' => 'stripe.jpeg',
                             'slug' => 'stripe',
                             'description' =>'Sync your Stripe data for more accurate results'
-                            ],
-                            [
+                            ],[
+                            'name' => 'Fullstory',
+                            'image' => 'fullstory.png',
+                            'slug' => 'fullstory',
+                            'description' =>'Sync your Fullstory to uncover upsell opportunities'
+                            ],[
                             'name' => 'Hubspot',
                             'image' => 'hubspot.png',
                             'slug' => 'hubspot',
