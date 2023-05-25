@@ -31,8 +31,7 @@ class UpsellController extends Controller
         });
 
         // Get the latest state of user's customers.
-        $user = Auth::user();
-        $customers = $this->getLatestState($user);
+        $customers = $this->getLatestState();
 
         return view('upsell-dashboard')->with([
             'results' => $results,
@@ -47,8 +46,7 @@ class UpsellController extends Controller
      */
     public function show()
     {
-        $user = Auth::user();
-        $customers = $this->getLatestState($user);
+        $customers = $this->getLatestState();
 
         return view('upsell-historic-dashboard')->with([
             'customers' => $customers,
@@ -68,7 +66,7 @@ class UpsellController extends Controller
         $filename = "Koaila-upsell-list-{$currentDate}.csv";
 
         // Get the latest state of user's customers.
-        $customers = $this->getLatestState(Auth::user());
+        $customers = $this->getLatestState();
 
         // Ensure hidden customers are only exported when specified.
         if ($request->type == "hidden") {
@@ -139,13 +137,13 @@ class UpsellController extends Controller
      * @param User $user
      * @return \Illuminate\Database\Eloquent\Collection $customers
      */
-    public function getLatestState(User $user)
+    public function getLatestState()
     {
         $customers = null;
-        $latestDate = $user->configuration()->first()?->customerStates()?->orderByDesc('date')->first()?->date;
+        $latestDate = Auth::user()->configuration()->first()?->customerStates()?->orderByDesc('date')->first()?->date;
 
         if ($latestDate) {
-            $customers = $user->configuration()
+            $customers = Auth::user()->configuration()
                 ->first()
                 ->customers()
                 ->whereHas('latestState', function ($q) use ($latestDate) {
