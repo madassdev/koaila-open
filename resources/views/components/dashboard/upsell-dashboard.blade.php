@@ -23,6 +23,7 @@
 @php
     $hiddenCustomers=$customers?->whereNotNull('hidden_at');
     $customers=$customers?->whereNull('hidden_at');
+    //$headerStates = array_keys($customers->first()->first()->latestState->state);
 @endphp
 
 @if($customers?->count())
@@ -48,82 +49,10 @@
             </div>
         </div>
 
-        <div class="flex flex-col h-screen">
-            <div class="flex grow overflow-x-auto">
-                <table class="relative w-full border text-sm text-left text-gray-500">
-                    <thead>
-                    <tr>
-                        <th scope="col"
-                            class="sticky top-0 px-6 py-3 text-xs text-gray-700 uppercase bg-gray-50 text-center">{{ 'Email' }}</th>
-                        @foreach(array_keys($customers->first()->latestState->state) as $header)
-                            @switch($header)
-                                @case('events')
-                                    @break
-                                @case('funnel_step')
-                                    @break
-                                @default
-                                    <th scope="col"
-                                        class="sticky top-0 px-6 py-3 text-xs text-gray-700 uppercase bg-gray-50 text-center">{{ ucfirst(trans(str_replace('_', ' ', $header))) }}</th>
-                            @endswitch
-                        @endforeach
-                        <th scope="col" class="sticky top-0 px-6 py-3 text-xs text-gray-700 uppercase bg-gray-50 text-center"></th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @foreach ($customers as $customer)
-                        <tr class="bg-white border-b">
-                            <th scope="row"
-                                class="px-6 py-4 font-bold text-gray-900 whitespace-nowrap text-center">
-                                <a href="{{ route('customer-dashboard', ['id'=>$customer['id']]) }}">{{$customer['email']}}</a>
-                            </th>
-                            @foreach($customer->latestState->state as $key=>$value)
-                                @if($key=='likelihood')
-                                    <td class="px-6 py-4 text-center text-2xl text-green-600">
-                                        <div class="flex items-center">
-                                            @foreach (range(1, $value) as $item)
-                                                <svg aria-hidden="true" class="w-5 h-5 text-yellow-400"
-                                                     fill="currentColor" viewBox="0 0 20 20"
-                                                     xmlns="http://www.w3.org/2000/svg"><title>Fourth star</title>
-                                                    <path
-                                                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                                                </svg>
-                                            @endforeach
-                                            @if(5-$value != 0)
-                                                @foreach(range(1, 5-$value) as $item)
-                                                    <svg aria-hidden="true" class="w-5 h-5 text-gray-200"
-                                                         fill="currentColor" viewBox="0 0 20 20"
-                                                         xmlns="http://www.w3.org/2000/svg"><title>Fourth star</title>
-                                                        <path
-                                                            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
-                                                    </svg>
-                                                @endforeach
-                                            @endif
-                                        </div>
-                                    </td>
-                                @elseif($key=='funnel_step')
-                                @elseif($key!='events')
-                                    <td class="px-6 py-4 text-center">{{$value}}</td>
-                                @endif
-                            @endforeach
-                            <td>
-                                <form method="POST" action="{{ route('hide-customer-state', $customer->id) }}">
-                                    {{ csrf_field() }}
-                                    <div class="form-group">
-                                        <button type="submit" onclick="return confirm('Are you sure you want to hide this user from the list?')" class="focus:outline-none text-white bg-blue-500 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium text-sm p-2">
-                                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
-                                                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                            </svg>
-                                        </button>
-                                    </div>
-                                </form>
-                            </td>
-                        </tr>
-                    @endforeach
-                    </tbody>
-                </table>
-            </div>
-        </div>
+        <upsell-navigation :data='{!!json_encode($customers)!!}'>
+        </upsell-navigation>
+
+        
     </div>
 </div>
 @endif

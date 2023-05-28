@@ -30,20 +30,52 @@ class UpsellController extends Controller
             return $result;
         });
 
-        // Get the latest state of user's customers.
+        $total_predicted_mrr = 0;
+        $total_predicted_arr = 0;
+        $number_of_users_to_upsell = 0;
+
+        // Get user's latest state.
         $customers = $this->getLatestState();
+        if ($customers) {
+            // Group customers by plan.
+            $customers = $customers->groupBy('latestState.predicted_plan');
+            $plans = collect();
+            foreach ($customers as $plan => $planCustomers) {
+                // Compute MRR and ARR for visible customers only.
+                $upsellStats = $this->computeUpsellStats($planCustomers->whereNull('hidden_at')->count(), $plan);
+                $total_predicted_mrr += $upsellStats["predicted_MRR"];
+                $total_predicted_arr += $upsellStats["predicted_ARR"];
+                $number_of_users_to_upsell += $planCustomers->count();
+                $singlePlan = ["name" => $plan, "customers" => $planCustomers, "stats" => $upsellStats];
+                $plans->push($singlePlan);
+            }
+
+            // Sort plans by price.
+            $customers = $plans->sortBy(function ($plan, $key) {
+                return $plan['stats']['plan_price'];
+            });
+        }
+        
+        // Prepare data for frontend.
+        $upsellStats = (object) ([
+            'data' => compact('total_predicted_mrr', 'total_predicted_arr', 'number_of_users_to_upsell')
+        ]);
 
         return view('upsell-dashboard')->with([
             'results' => $results,
             'customers' => $customers,
+            'upsellStats' => $upsellStats
         ]);
     }
 
-    /**
-     * Get the latest state of user's customers.
-     * @param Request $request
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
+    public function computeUpsellStats($customersCount, $plan)
+    {
+        $prices = json_decode(stripslashes(Storage::get("/users-pricing/pricing.json")), true);
+        $planPrice = $prices[Auth::user()->company_name]['plans'][$plan]['prices'][0]['amount'];
+        $upsellStats = ['predicted_MRR' => $customersCount * $planPrice, 'predicted_ARR' => $customersCount * $planPrice * 12,"plan_price" => $planPrice];
+        return $upsellStats;
+    }
+
     public function show()
     {
         $customers = $this->getLatestState();

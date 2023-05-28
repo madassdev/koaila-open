@@ -1,0 +1,153 @@
+<template>
+  <div class="flex space-x-2 mb-2">
+    <button
+      v-for="plan in plans"
+      :key="plan"
+      class="font-medium capitalize rounded-lg text-sm p-1 px-2"
+      :class="[
+        plan.name === activePlan.name ? activePlanStyle : inactivePlanStyle,
+      ]"
+      @click="makeActive(plan)"
+    >
+      {{ plan.name }}
+    </button>
+  </div>
+
+  <div class="flex flex-col">
+    <div class="flex">
+      <table class="w-full border text-sm text-left text-gray-500">
+        <thead>
+          <tr>
+            <th scope="col" :class="tableHeaderStyle">Email</th>
+            <th scope="col" :class="tableHeaderStyle">Likelihood</th>
+            <th scope="col" :class="tableHeaderStyle">User Creation time</th>
+            <th scope="col" :class="tableHeaderStyle">Time to Value</th>
+          </tr>
+        </thead>
+
+        <!-- Customers row -->
+        <tr
+          class="bg-white border-b"
+          v-for="customer in activePlan.customers"
+          :key="customer.id"
+        >
+          <td
+            scope="row"
+            class="px-6 py-4 font-bold text-gray-900 whitespace-nowrap text-center"
+          >
+            <a href="/1">{{ customer.email }}</a>
+          </td>
+          <td scope="row" :class="tableDataStyle">
+            <Stars :amount="customer.latest_state.state.likelihood" />
+          </td>
+
+          <td :class="tableDataStyle">
+            {{ customer.latest_state.state.user_creation_time }}
+          </td>
+
+          <td :class="tableDataStyle">
+            {{ customer.latest_state.state.time_to_value }}
+          </td>
+
+          <td>
+            <form
+              method="POST"
+              action="1"
+            >
+              <div class="form-group">
+                <button
+                  type="submit"
+                  onclick="return confirm('Are you sure you want to hide this user from the list?')"
+                  class="focus:outline-none text-white bg-blue-500 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium text-sm p-2"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="w-6 h-6"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"
+                    />
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </form>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <!-- <div
+      class="p-1"
+      v-for="customer in activePlan.customers"
+      :key="customer.id"
+    >
+      {{ customer.email }}
+    </div> -->
+  </div>
+</template>
+
+<script>
+import Stars from "./Stars.vue";
+export default {
+  props: { data: Object },
+  data() {
+    return {
+      plans: [],
+      planNames: [],
+      activePlan: { name: null, customers: [], stats: null },
+      activeCustomers: null,
+      activePlanStyle:
+        "text-white bg-blue-700 hover:bg-blue-800 focus:ring- focus:ring-blue-300 focus:outline-none",
+      inactivePlanStyle:
+        "text-gray-600 border hover:border hover:border-blue-700 border-gray-300 hover:text-blue-700",
+      tableHeaderStyle:
+        "px-6 py-3 text-xs text-gray-700 uppercase bg-gray-50 text-center",
+      tableDataStyle: "px-6 py-4 text-center",
+    };
+  },
+
+  // Process data from backend into usable data structures for the component.
+  mounted() {
+    // Extract plans from data.
+    const plans = Object.values(this.data);
+
+    // Compute total MRR/ARR from the stats (to be used for "All" nav option).
+    const allStats = plans.flatMap((plan) => plan.stats);
+    const totalStats = allStats.reduce(
+      (accumulator, plan) => {
+        accumulator.total_predicted_MRR += plan.predicted_MRR;
+        accumulator.total_predicted_ARR += plan.predicted_ARR;
+        return accumulator;
+      },
+      { total_predicted_MRR: 0, total_predicted_ARR: 0 }
+    );
+
+    // Combine all customers in each group into a single group for "All".
+    const allCustomers = plans.flatMap((plan) => plan.customers);
+
+    // Create an "All" group and add to the start of the plans array.
+    plans.unshift({ name: "all", customers: allCustomers, stats: totalStats });
+    this.plans = plans;
+    this.activePlan = plans[0];
+  },
+
+  methods: {
+    // Sets the state of the active plan in the navigation options.
+    makeActive(plan) {
+      console.log(plan.customers[0].latest_state.state);
+      this.activePlan = plan;
+    },
+  },
+  components: { Stars },
+};
+</script>

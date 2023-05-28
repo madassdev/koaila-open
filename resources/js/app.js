@@ -30,6 +30,9 @@ app.component('sankey-chart', SankeyChart);
 import DoughnutChart from './components/DoughnutChart.vue';
 app.component('doughnut-chart', DoughnutChart);
 
+import UpsellNavigation from './components/UpsellNavigation.vue';
+app.component('upsell-navigation', UpsellNavigation);
+
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
