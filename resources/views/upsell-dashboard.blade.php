@@ -23,7 +23,6 @@
 
             @php
                $saleFunnel = $results->firstWhere('type','sale_funnel');
-               $upsellStats = $results->firstWhere('type','upsell_stats');
                @endphp
 
             <div id="upsell_dashboard">

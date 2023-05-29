@@ -25,74 +25,80 @@
           </tr>
         </thead>
 
+        <!-- Empty data -->
+        <template v-if="activePlan.visibleCustomers.length === 0">
+          <tr>
+            <td colspan="4" class="p-5 text-center">No data</td>
+          </tr>
+        </template>
+
         <!-- Customers row -->
-        <tr
-          class="bg-white border-b"
-          v-for="customer in activePlan.customers"
-          :key="customer.id"
-        >
-          <td
-            scope="row"
-            class="px-6 py-4 font-bold text-gray-900 whitespace-nowrap text-center"
+        <template v-else>
+          <tr
+            class="bg-white border-b"
+            v-for="customer in activePlan.visibleCustomers"
+            :key="customer.id"
           >
-            <a href="/1">{{ customer.email }}</a>
-          </td>
-          <td scope="row" :class="tableDataStyle">
-            <Stars :amount="customer.latest_state.state.likelihood" />
-          </td>
-
-          <td :class="tableDataStyle">
-            {{ customer.latest_state.state.user_creation_time }}
-          </td>
-
-          <td :class="tableDataStyle">
-            {{ customer.latest_state.state.time_to_value }}
-          </td>
-
-          <td>
-            <form
-              method="POST"
-              action="1"
+            <td
+              scope="row"
+              class="px-6 py-4 font-bold text-gray-900 whitespace-nowrap text-center"
             >
-              <div class="form-group">
-                <button
-                  type="submit"
-                  onclick="return confirm('Are you sure you want to hide this user from the list?')"
-                  class="focus:outline-none text-white bg-blue-500 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium text-sm p-2"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke-width="1.5"
-                    stroke="currentColor"
-                    class="w-6 h-6"
+              <a href="`/customer-dashboard/` + customer.id">{{
+                customer.email
+              }}</a>
+            </td>
+            <td scope="row" :class="tableDataStyle">
+              <Stars :amount="customer.latest_state.state.likelihood" />
+            </td>
+
+            <td :class="tableDataStyle">
+              {{ customer.latest_state.state.user_creation_time }}
+            </td>
+
+            <td :class="tableDataStyle">
+              {{ customer.latest_state.state.time_to_value }}
+            </td>
+
+            <!-- Visibility toggle -->
+            <td>
+              <form
+                method="POST"
+                :action="`/hide-customer-state/` + customer.id"
+              >
+                <div class="form-group">
+                  <input type="hidden" name="_token" :value="csrfToken" />
+                  <button
+                    type="submit"
+                    onclick="return confirm('Are you sure you want to hide this user from the list?')"
+                    class="focus:outline-none text-white bg-blue-500 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium text-sm p-2"
                   >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"
-                    />
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                    />
-                  </svg>
-                </button>
-              </div>
-            </form>
-          </td>
-        </tr>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke-width="1.5"
+                      stroke="currentColor"
+                      class="w-6 h-6"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"
+                      />
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
+                    </svg>
+                  </button>
+                </div>
+              </form>
+            </td>
+          </tr>
+        </template>
       </table>
     </div>
-    <!-- <div
-      class="p-1"
-      v-for="customer in activePlan.customers"
-      :key="customer.id"
-    >
-      {{ customer.email }}
-    </div> -->
   </div>
 </template>
 
@@ -103,9 +109,15 @@ export default {
   data() {
     return {
       plans: [],
-      planNames: [],
-      activePlan: { name: null, customers: [], stats: null },
-      activeCustomers: null,
+      csrfToken: document
+        .querySelector('meta[name="csrf-token"]')
+        .getAttribute("content"),
+      activePlan: {
+        name: null,
+        customers: [],
+        visibleCustomers: [],
+        stats: null,
+      },
       activePlanStyle:
         "text-white bg-blue-700 hover:bg-blue-800 focus:ring- focus:ring-blue-300 focus:outline-none",
       inactivePlanStyle:
@@ -118,8 +130,13 @@ export default {
 
   // Process data from backend into usable data structures for the component.
   mounted() {
-    // Extract plans from data.
-    const plans = Object.values(this.data);
+    /**  Extract plans from data and sort by stats.plan_price.
+     * This is to arrange the navigtion tabs by the plan
+     */
+    const dataPlans = Object.values(this.data);
+    const plans = dataPlans.sort(
+      (a, b) => a.stats.plan_price - b.stats.plan_price
+    );
 
     // Compute total MRR/ARR from the stats (to be used for "All" nav option).
     const allStats = plans.flatMap((plan) => plan.stats);
@@ -132,20 +149,21 @@ export default {
       { total_predicted_MRR: 0, total_predicted_ARR: 0 }
     );
 
-    // Combine all customers in each group into a single group for "All".
+    // Combine all customers in each group into a single group for an "All" tab.
     const allCustomers = plans.flatMap((plan) => plan.customers);
 
     // Create an "All" group and add to the start of the plans array.
     plans.unshift({ name: "all", customers: allCustomers, stats: totalStats });
     this.plans = plans;
-    this.activePlan = plans[0];
+    this.makeActive(plans[0]);
   },
 
   methods: {
     // Sets the state of the active plan in the navigation options.
     makeActive(plan) {
-      console.log(plan.customers[0].latest_state.state);
       this.activePlan = plan;
+      const visibleCustomers = plan.customers.filter((c) => !c.hidden_at);
+      this.activePlan.visibleCustomers = visibleCustomers;
     },
   },
   components: { Stars },
