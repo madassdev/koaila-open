@@ -44,6 +44,7 @@
                                     'secret' => 'API Secret'
                                 ],
                                 'mixpanel' => [
+                                    'project_id'=>'Project ID',
                                     'key' => 'Service Account Name',
                                     'secret' => 'Service Account Secret'
                                 ],
