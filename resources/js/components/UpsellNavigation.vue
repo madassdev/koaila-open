@@ -13,15 +13,47 @@
     </button>
   </div>
 
+  <div class="p-3 flex space-x-4">
+    <div
+      class="p-2 border border-gray-300 rounded flex space-x-2 items-center justify-center"
+    >
+      <span>Predicted MRR:</span>
+      <span class="text-green-400"
+        >{{ numberFormat(activePlan.stats.predicted_MRR) }} USD</span
+      >
+    </div>
+    <div
+      class="p-2 border border-gray-300 rounded flex space-x-2 items-center justify-center"
+    >
+      <span>Predicted ARR:</span>
+      <span class="text-green-500"
+        >{{ numberFormat(activePlan.stats.predicted_ARR) }} USD</span
+      >
+    </div>
+    <div
+      class="p-2 border border-gray-300 rounded flex space-x-2 items-center justify-center"
+      v-if="activePlan.name != `all`"
+    >
+      <span>Plan price:</span>
+      <span class="text-green-500"
+        >{{ numberFormat(activePlan.stats.plan_price) }} USD</span
+      >
+    </div>
+  </div>
+
   <div class="flex flex-col">
     <div class="flex">
       <table class="w-full border text-sm text-left text-gray-500">
         <thead>
           <tr>
-            <th scope="col" :class="tableHeaderStyle">Email</th>
-            <th scope="col" :class="tableHeaderStyle">Likelihood</th>
-            <th scope="col" :class="tableHeaderStyle">User Creation time</th>
-            <th scope="col" :class="tableHeaderStyle">Time to Value</th>
+            <th
+              scope="col"
+              :class="tableHeaderStyle"
+              v-for="(headerName, index) in headerNames"
+              :key="index"
+            >
+              {{ headerName }}
+            </th>
           </tr>
         </thead>
 
@@ -116,8 +148,14 @@ export default {
         name: null,
         customers: [],
         visibleCustomers: [],
-        stats: null,
+        stats: { predicted_MRR: 0, predicted_ARR: 0, plan_price: 0 },
       },
+      headerNames: [
+        "Email",
+        "Likelihood",
+        "User Creation Time",
+        "Time to Value",
+      ],
       activePlanStyle:
         "text-white bg-blue-700 hover:bg-blue-800 focus:ring- focus:ring-blue-300 focus:outline-none",
       inactivePlanStyle:
@@ -142,11 +180,11 @@ export default {
     const allStats = plans.flatMap((plan) => plan.stats);
     const totalStats = allStats.reduce(
       (accumulator, plan) => {
-        accumulator.total_predicted_MRR += plan.predicted_MRR;
-        accumulator.total_predicted_ARR += plan.predicted_ARR;
+        accumulator.predicted_MRR += plan.predicted_MRR;
+        accumulator.predicted_ARR += plan.predicted_ARR;
         return accumulator;
       },
-      { total_predicted_MRR: 0, total_predicted_ARR: 0 }
+      { predicted_MRR: 0, predicted_ARR: 0 }
     );
 
     // Combine all customers in each group into a single group for an "All" tab.
@@ -164,6 +202,9 @@ export default {
       this.activePlan = plan;
       const visibleCustomers = plan.customers.filter((c) => !c.hidden_at);
       this.activePlan.visibleCustomers = visibleCustomers;
+    },
+    numberFormat(number) {
+      return parseFloat(number).toLocaleString();
     },
   },
   components: { Stars },

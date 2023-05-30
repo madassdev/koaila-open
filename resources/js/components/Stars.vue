@@ -23,10 +23,7 @@ export default {
   props: { amount: Number, total: { type: String, default: 5 } },
   methods: {
     getStarStyle(index) {
-      return {
-        "text-yellow-400": index <= this.amount,
-        "text-gray-100": index > this.amount,
-      };
+      return index <= this.amount ? "text-yellow-400" : "text-gray-100";
     },
   },
 };

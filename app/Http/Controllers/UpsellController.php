@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Customer;
 use App\Models\CustomerState;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -30,50 +31,74 @@ class UpsellController extends Controller
             return $result;
         });
 
-        $total_predicted_mrr = 0;
-        $total_predicted_arr = 0;
-        $number_of_users_to_upsell = 0;
-
         // Get user's latest state.
-        $customers = $this->getLatestState();
-        if ($customers) {
+        $customersState = $this->getLatestState();
+        if ($customersState) {
             // Group customers by plan.
-            $customers = $customers->groupBy('latestState.predicted_plan');
-            $plans = collect();
-            foreach ($customers as $plan => $planCustomers) {
-                // Compute MRR and ARR for visible customers only.
-                $upsellStats = $this->computeUpsellStats($planCustomers->whereNull('hidden_at')->count(), $plan);
-                $total_predicted_mrr += $upsellStats["predicted_MRR"];
-                $total_predicted_arr += $upsellStats["predicted_ARR"];
-                $number_of_users_to_upsell += $planCustomers->count();
-                $singlePlan = ["name" => $plan, "customers" => $planCustomers, "stats" => $upsellStats];
-                $plans->push($singlePlan);
-            }
+            list($plans, $upsellStats) = $this->getGroupedPlansData($customersState);
 
-            // Sort plans by price.
-            $customers = $plans->sortBy(function ($plan, $key) {
-                return $plan['stats']['plan_price'];
-            });
         }
-        
-        // Prepare data for frontend.
-        $upsellStats = (object) ([
-            'data' => compact('total_predicted_mrr', 'total_predicted_arr', 'number_of_users_to_upsell')
-        ]);
 
         return view('upsell-dashboard')->with([
             'results' => $results,
-            'customers' => $customers,
+            'plans' => $plans,
             'upsellStats' => $upsellStats
         ]);
     }
 
-    public function computeUpsellStats($customersCount, $plan)
+    /**
+     * Compute MRR and ARR values for a given plan with data in stored json file.
+     * 
+     * @param int $customersCount
+     * @param string $planName
+     * @return array ['predicted_MRR', 'predicted_ARR', 'plan_price' ]
+     */
+    public function computeUpsellStats(int $customersCount, string $planName)
     {
+        // Get prices from json file.
         $prices = json_decode(stripslashes(Storage::get("/users-pricing/pricing.json")), true);
-        $planPrice = $prices[Auth::user()->company_name]['plans'][$plan]['prices'][0]['amount'];
-        $upsellStats = ['predicted_MRR' => $customersCount * $planPrice, 'predicted_ARR' => $customersCount * $planPrice * 12,"plan_price" => $planPrice];
-        return $upsellStats;
+        
+        // Get planPrice and calculate MRR/ARR.
+        $planPrice = $prices[Auth::user()->company_name]['plans'][$planName]['prices'][0]['amount'];
+        
+        return ['predicted_MRR' => $customersCount * $planPrice, 'predicted_ARR' => $customersCount * $planPrice * 12, "plan_price" => $planPrice];
+    }
+
+    /**
+     * Groups customers into plans, calculates the MRR/ARR and sorts plans by plan_price.
+     * 
+     * @param Collection $customers
+     * @return array [$plans, $stats]
+     */
+    public function getGroupedPlansData(Collection $customers)
+    {
+        // Prepare stats data.
+        $total_predicted_mrr = 0;
+        $total_predicted_arr = 0;
+        $number_of_users_to_upsell = 0;
+
+        // Group and sort customers by plan.
+        $plans = $customers->groupBy('latestState.predicted_plan');
+
+        // Compute the stats for each plan, and update the stats data.
+        $plans = $plans->map(function ($planCustomers, $planName) use (&$total_predicted_mrr, &$total_predicted_arr, &$number_of_users_to_upsell) {
+
+            $upsellStats = $this->computeUpsellStats($planCustomers->whereNull('hidden_at')->count(), $planName);
+
+            // Update stats data
+            $total_predicted_mrr += $upsellStats["predicted_MRR"];
+            $total_predicted_arr += $upsellStats["predicted_ARR"];
+            $number_of_users_to_upsell += $planCustomers->count();
+
+            return ["name" => $planName, "customers" => $planCustomers, "stats" => $upsellStats];
+            
+        })->sortBy(function ($plan) {
+            return $plan['stats']['plan_price'];
+        });
+
+        $stats = compact('total_predicted_mrr', 'total_predicted_arr', 'number_of_users_to_upsell');
+
+        return [$plans, $stats];
     }
 
     public function show()
