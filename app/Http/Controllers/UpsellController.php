@@ -85,7 +85,7 @@ class UpsellController extends Controller
 
             $upsellStats = $this->computeUpsellStats($planCustomers->whereNull('hidden_at')->count(), $planName);
 
-            // Update stats data
+            // Update stats data.
             $total_predicted_mrr += $upsellStats["predicted_MRR"];
             $total_predicted_arr += $upsellStats["predicted_ARR"];
             $number_of_users_to_upsell += $planCustomers->count();

@@ -52,8 +52,8 @@
             </div>
         </div>
 
-        <upsell-navigation :data='{!!json_encode($plans)!!}'>
-        </upsell-navigation>
+        <customer-upsell-list-by-plan :data='{!!json_encode($plans)!!}'>
+        </customer-upsell-list-by-plan>
 
         
     </div>
