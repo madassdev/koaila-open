@@ -23,12 +23,11 @@
 
             @php
                $saleFunnel = $results->firstWhere('type','sale_funnel');
-               $upsellStats = $results->firstWhere('type','upsell_stats');
                @endphp
 
             <div id="upsell_dashboard">
                 <x-dashboard.timeline :sale-funnel='$saleFunnel' customerStep=""/>
-                <x-dashboard.upsell-dashboard :upsell-stats='$upsellStats' :customers='$customers' />
+                <x-dashboard.upsell-dashboard :upsell-stats='$upsellStats' :plans='$plans' />
             </div>
 
             @if(empty($customers))
