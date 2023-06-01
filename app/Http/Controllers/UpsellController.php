@@ -35,13 +35,13 @@ class UpsellController extends Controller
         $customersState = $this->getLatestState();
         if ($customersState) {
             // Group customers by plan.
-            list($plans, $upsellStats) = $this->getGroupedPlansData($customersState);
+            list($customersByPlans, $upsellStats) = $this->getGroupedPlansData($customersState);
 
         }
 
         return view('upsell-dashboard')->with([
             'results' => $results,
-            'plans' => $plans,
+            'customersByPlans' => $customersByPlans,
             'upsellStats' => $upsellStats
         ]);
     }

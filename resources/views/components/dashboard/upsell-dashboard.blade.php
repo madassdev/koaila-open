@@ -1,35 +1,15 @@
-@props(['upsellStats','upsell', 'plans'])
-
-@if($upsellStats)
-    <div class="grid lg:grid-cols-3 md:grid-cols-1 gap-4 mt-4 h-auto">
-        <div class="bg-white rounded p-4">
-            <h1 class="text-lg font-semibold text-gray-900 text-center">{{$upsellStats['number_of_users_to_upsell']}} users to upsell</h1>
-        </div>
-        <div class="bg-white rounded p-4">
-            <h1 class="text-lg font-semibold text-center">
-                <span class="text-gray-900">Predicted MRR:</span>
-                <span class="text-green-500"> + {{$upsellStats['total_predicted_mrr']}} USD</span>
-            </h1>
-        </div>
-        <div class="bg-white rounded p-4">
-            <h1 class="text-lg font-semibold text-center">
-                <span class="text-gray-900">Predicted ARR:</span>
-                <span class="text-green-500"> + {{$upsellStats['total_predicted_arr']}} USD</span>
-            </h1>
-        </div>
-    </div>
-@endif
+@props(['upsellStats','upsell', 'customersByPlans'])
 
 @php
     // Extract all hidden  customers in each group and flatten to a single array
-    $hiddenCustomers=$plans?->map(function($plan){
+    $hiddenCustomers=$customersByPlans?->map(function($plan){
         return $plan['customers']->filter(function($customer){
             return $customer->hidden_at;
         });
     })->flatten();
 @endphp
 
-@if($plans?->count())
+@if($customersByPlans?->count())
 <div class="bg-white rounded mt-4" id="upsell-table">
     <div class="p-4">
         <div class="grid grid-cols-2 gap-4">
@@ -52,7 +32,7 @@
             </div>
         </div>
 
-        <customer-upsell-list-by-plan :data='{!!json_encode($plans)!!}'>
+        <customer-upsell-list-by-plan :data='{!!json_encode($customersByPlans)!!}'>
         </customer-upsell-list-by-plan>
 
         
