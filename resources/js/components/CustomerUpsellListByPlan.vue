@@ -13,7 +13,7 @@
     </button>
   </div>
 
-  <div class="p-3 flex space-x-8 mb-8">
+  <div class="p-3 flex space-x-8 mb-8" v-if="activePlan.stats.predicted_ARR > 0">
     <div :class="statsCardStyle + ' flex font-bold text-lg'">
       <span
         >{{ activePlan.visibleCustomers.length }} User{{

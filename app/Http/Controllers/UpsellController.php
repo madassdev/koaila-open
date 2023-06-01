@@ -57,11 +57,29 @@ class UpsellController extends Controller
     {
         // Get prices from json file.
         $prices = json_decode(stripslashes(Storage::get("/users-pricing/pricing.json")), true);
-        
-        // Get planPrice and calculate MRR/ARR.
-        $planPrice = $prices[Auth::user()->company_name]['plans'][$planName]['prices'][0]['amount'];
-        
-        return ['predicted_MRR' => $customersCount * $planPrice, 'predicted_ARR' => $customersCount * $planPrice * 12, "plan_price" => $planPrice];
+
+        // Get plans in pricing.json and determine stats based on plans availability.
+        $plans = $prices[Auth::user()->company_name]['plans'];
+        $planExists = array_key_exists($planName, $plans);
+        if ($planExists) {
+            // Get planPrice and calculate MRR/ARR.
+            $planPrice = $prices[Auth::user()->company_name]['plans'][$planName]['prices'][0]['amount'];
+            return [
+                'predicted_MRR' => $customersCount * $planPrice,
+                'predicted_ARR' => $customersCount * $planPrice * 12,
+                "plan_price" => $planPrice,
+                'plan_exists' => true
+            ];
+        } else {
+            // Plan does not exist in pricing.json, default stats to 0.
+            return [
+                'predicted_MRR' => 0,
+                'predicted_ARR' => 0,
+                'plan_price' => 0,
+                'plan_exists' => false
+            ];
+        }
+
     }
 
     /**
@@ -91,7 +109,7 @@ class UpsellController extends Controller
             $number_of_users_to_upsell += $planCustomers->count();
 
             return ["name" => $planName, "customers" => $planCustomers, "stats" => $upsellStats];
-            
+
         })->sortBy(function ($plan) {
             return $plan['stats']['plan_price'];
         });
