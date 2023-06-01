@@ -13,31 +13,35 @@
     </button>
   </div>
 
-  <div class="p-3 flex space-x-4">
-    <div
-      class="p-2 border border-gray-300 rounded flex space-x-2 items-center justify-center"
-    >
-      <span>Predicted MRR:</span>
-      <span class="text-green-400"
-        >{{ numberFormat(activePlan.stats.predicted_MRR) }} USD</span
+  <div class="p-3 flex space-x-8 mb-8">
+    <div :class="statsCardStyle + ' flex font-bold text-lg'">
+      <span class=""
+        >{{ activePlan.visibleCustomers.length }} User{{
+          activePlan.visibleCustomers.length > 1 ? "s" : ""
+        }}
+        to upsell</span
       >
     </div>
-    <div
-      class="p-2 border border-gray-300 rounded flex space-x-2 items-center justify-center"
-    >
-      <span>Predicted ARR:</span>
-      <span class="text-green-500"
-        >{{ numberFormat(activePlan.stats.predicted_ARR) }} USD</span
-      >
+    <div :class="statsCardStyle">
+      <span class="text-xs">Predicted MRR:</span>
+      <p class="text-green-500 text-2xl font-bold">
+        {{ numberFormat(activePlan.stats.predicted_MRR) }}
+        <span class="text-xs"> USD </span>
+      </p>
     </div>
-    <div
-      class="p-2 border border-gray-300 rounded flex space-x-2 items-center justify-center"
-      v-if="activePlan.name != `all`"
-    >
-      <span>Plan price:</span>
-      <span class="text-green-500"
-        >{{ numberFormat(activePlan.stats.plan_price) }} USD</span
-      >
+    <div :class="statsCardStyle">
+      <span class="text-xs">Predicted ARR:</span>
+      <p class="text-green-500 text-2xl font-bold">
+        {{ numberFormat(activePlan.stats.predicted_ARR) }}
+        <span class="text-xs"> USD </span>
+      </p>
+    </div>
+    <div :class="statsCardStyle" v-if="activePlan.name != `all`">
+      <span class="text-xs">Plan price:</span>
+      <p class="text-green-500 text-2xl font-bold">
+        {{ numberFormat(activePlan.stats.plan_price) }}
+        <span class="text-xs"> USD </span>
+      </p>
     </div>
   </div>
 
@@ -75,7 +79,7 @@
               scope="row"
               class="px-6 py-4 font-bold text-gray-900 whitespace-nowrap text-center"
             >
-              <a href="`/customer-dashboard/` + customer.id">{{
+              <a :href="`/customer-dashboard/` + customer.id">{{
                 customer.email
               }}</a>
             </td>
@@ -163,6 +167,8 @@ export default {
       tableHeaderStyle:
         "px-6 py-3 text-xs text-gray-700 uppercase bg-gray-50 text-center",
       tableDataStyle: "px-6 py-4 text-center",
+      statsCardStyle:
+        "p-3 border border-gray-300 rounded space-y-2 items-center justify-center w-full",
     };
   },
 

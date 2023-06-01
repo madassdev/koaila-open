@@ -30,7 +30,7 @@
                 <x-dashboard.upsell-dashboard :upsell-stats='$upsellStats' :plans='$plans' />
             </div>
 
-            @if(empty($customers))
+            @if(empty($plans))
                 <x-dashboard.empty-dashboard/>
             @endif
 
