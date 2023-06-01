@@ -26,4 +26,9 @@ class CustomerState extends Model
     {
         return $this->belongsTo(Customer::class);
     }
+    
+    public function saleFunnel()
+    {
+        return $this->belongsTo(SaleFunnel::class, 'funnel_id');
+    }
 }
