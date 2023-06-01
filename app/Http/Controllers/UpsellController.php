@@ -31,6 +31,10 @@ class UpsellController extends Controller
             return $result;
         });
 
+        // Prepare data for frontend. 
+        $upsellStats = null;
+        $customersByPlans = null;
+
         // Get user's latest state.
         $customersState = $this->getLatestState();
         if ($customersState) {
