@@ -27,10 +27,10 @@
 
             <div id="upsell_dashboard">
                 <x-dashboard.timeline :sale-funnel='$saleFunnel' customerStep=""/>
-                <x-dashboard.upsell-dashboard :upsell-stats='$upsellStats' :plans='$plans' />
+                <x-dashboard.upsell-dashboard :upsell-stats='$upsellStats' :customersByPlans='$customersByPlans' />
             </div>
 
-            @if(empty($plans))
+            @if(empty($customersByPlans))
                 <x-dashboard.empty-dashboard/>
             @endif
 

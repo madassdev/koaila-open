@@ -15,7 +15,7 @@
 
   <div class="p-3 flex space-x-8 mb-8">
     <div :class="statsCardStyle + ' flex font-bold text-lg'">
-      <span class=""
+      <span
         >{{ activePlan.visibleCustomers.length }} User{{
           activePlan.visibleCustomers.length > 1 ? "s" : ""
         }}
