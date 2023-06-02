@@ -13,7 +13,10 @@
     </button>
   </div>
 
-  <div class="p-3 flex space-x-8 mb-8">
+  <div
+    class="p-3 flex space-x-8 mb-8"
+    v-if="activePlan.stats.plan_exists"
+  >
     <div :class="statsCardStyle + ' flex font-bold text-lg'">
       <span
         >{{ activePlan.visibleCustomers.length }} User{{
@@ -184,13 +187,21 @@ export default {
 
     // Compute total MRR/ARR from the stats (to be used for "All" nav option).
     const allStats = plans.flatMap((plan) => plan.stats);
+
+    // Check if all plans do not exist the data, and set the plan_exists key accordingly.
+    const plansThatExist = plans.filter((p) => p.stats.plan_exists);
+    
     const totalStats = allStats.reduce(
       (accumulator, plan) => {
         accumulator.predicted_MRR += plan.predicted_MRR;
         accumulator.predicted_ARR += plan.predicted_ARR;
         return accumulator;
       },
-      { predicted_MRR: 0, predicted_ARR: 0 }
+      {
+        predicted_MRR: 0,
+        predicted_ARR: 0,
+        plan_exists: Boolean(plansThatExist.length),
+      }
     );
 
     // Combine all customers in each group into a single group for an "All" tab.
