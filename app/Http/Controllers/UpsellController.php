@@ -59,7 +59,7 @@ class UpsellController extends Controller
         $prices = json_decode(stripslashes(Storage::get("/users-pricing/pricing.json")), true);
 
         // Get plans in pricing.json and determine stats based on plans availability.
-        $plans = $prices[Auth::user()->company_name]['plans'];
+        $plans = @$prices[Auth::user()->company_name]['plans']??[];
         if (array_key_exists($planName, $plans)) {
             // Get planPrice and calculate MRR/ARR.
             $planPrice = $prices[Auth::user()->company_name]['plans'][$planName]['prices'][0]['amount'];
