@@ -116,11 +116,12 @@
                   <input type="hidden" name="_token" :value="csrfToken" />
                   <button
                     type="submit"
-                    onclick="return confirm('Are you sure you want to hide this user from the list?')"
+                    onclick="return confirm('Are you sure?')"
                     class="focus:outline-none text-white bg-blue-500 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium text-sm p-2"
                   >
-                  <EyeIcon :hidden="activePlan.name == 'hidden'"/>
-                    
+                    <HideUnhideToggleIcon
+                      :hidden="activePlan.name == 'hidden'"
+                    />
                   </button>
                 </div>
               </form>
@@ -134,7 +135,7 @@
 
 <script>
 import Stars from "./Stars.vue";
-import EyeIcon from "./EyeIcon.vue";
+import HideUnhideToggleIcon from "./HideUnhideToggleIcon.vue";
 export default {
   props: { data: Object },
   data() {
@@ -227,6 +228,6 @@ export default {
       return parseFloat(number).toLocaleString();
     },
   },
-  components: { Stars, EyeIcon },
+  components: { Stars, HideUnhideToggleIcon },
 };
 </script>
