@@ -1,5 +1,5 @@
 <template>
-  <div class="flex items-center justify-between">
+  <div class="flex items-center justify-between px-4">
     <div class="flex space-x-2 mb-2">
       <button
         v-for="plan in plans"
@@ -24,7 +24,7 @@
     </button>
   </div>
 
-  <div class="p-3 flex space-x-8 mb-8" v-if="activePlan.stats.plan_exists">
+  <div class="p-4 flex space-x-8" v-if="activePlan.stats.plan_exists">
     <div :class="statsCardStyle + ' flex font-bold text-lg'">
       <span
         >{{ activePlan.customers.length }} User{{
@@ -56,7 +56,7 @@
     </div>
   </div>
 
-  <div class="flex flex-col">
+  <div class="flex flex-col p-4">
     <div class="flex">
       <table class="w-full border text-sm text-left text-gray-500">
         <thead>
@@ -88,7 +88,7 @@
           >
             <td
               scope="row"
-              class="px-6 py-4 font-bold text-gray-900 whitespace-nowrap text-center"
+              class="px-6 py-4 font-bold whitespace-nowrap text-center"
             >
               <a :href="`/customer-dashboard/` + customer.id">{{
                 customer.email
@@ -205,7 +205,9 @@ export default {
 
     // Create an "All" group and add to the start of the plans array.
     plans.unshift({ name: "all", customers: allCustomers, stats: totalStats });
-    this.plans = plans;
+
+    // Use only groups that have a plan name
+    this.plans = plans.filter(p=>p.name != '');
     this.makeActive(plans[0]);
   },
 
