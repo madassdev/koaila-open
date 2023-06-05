@@ -69,7 +69,9 @@
             >
               {{ headerName }}
             </th>
-            <th :class="tableHeaderStyle"></th>
+            <th :class="tableHeaderStyle">
+              {{ activePlan.name == "hidden" ? "Unhide" : "Hide" }}
+            </th>
           </tr>
         </thead>
 
@@ -115,7 +117,7 @@
                 method="POST"
                 :action="`/hide-customer-state/` + customer.id"
               >
-                <div class="form-group">
+                <div class="form-group flex justify-center items-center">
                   <input type="hidden" name="_token" :value="csrfToken" />
                   <button
                     type="submit"
