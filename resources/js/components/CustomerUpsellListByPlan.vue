@@ -1,26 +1,34 @@
 <template>
-  <div class="flex space-x-2 mb-2">
+  <div class="flex items-center justify-between">
+    <div class="flex space-x-2 mb-2">
+      <button
+        v-for="plan in plans"
+        :key="plan"
+        class="font-medium capitalize rounded-lg text-sm p-1 px-2"
+        :class="[
+          plan.name === activePlan.name ? activePlanStyle : inactivePlanStyle,
+        ]"
+        @click="makeActive(plan)"
+      >
+        {{ plan.name }}
+      </button>
+    </div>
     <button
-      v-for="plan in plans"
-      :key="plan"
-      class="font-medium capitalize rounded-lg text-sm p-1 px-2"
+      class="font-medium capitalize rounded-lg text-sm p-1 px-2 mb-2"
       :class="[
-        plan.name === activePlan.name ? activePlanStyle : inactivePlanStyle,
+        activePlan.name === 'hidden' ? activePlanStyle : inactivePlanStyle,
       ]"
-      @click="makeActive(plan)"
+      @click="showHiddenCustomers()"
     >
-      {{ plan.name }}
+      Hidden
     </button>
   </div>
 
-  <div
-    class="p-3 flex space-x-8 mb-8"
-    v-if="activePlan.stats.plan_exists"
-  >
+  <div class="p-3 flex space-x-8 mb-8" v-if="activePlan.stats.plan_exists">
     <div :class="statsCardStyle + ' flex font-bold text-lg'">
       <span
-        >{{ activePlan.visibleCustomers.length }} User{{
-          activePlan.visibleCustomers.length > 1 ? "s" : ""
+        >{{ activePlan.customers.length }} User{{
+          activePlan.customers.length > 1 ? "s" : ""
         }}
         to upsell</span
       >
@@ -65,7 +73,7 @@
         </thead>
 
         <!-- Empty data -->
-        <template v-if="activePlan.visibleCustomers.length === 0">
+        <template v-if="activePlan.customers.length === 0">
           <tr>
             <td colspan="4" class="p-5 text-center">No data</td>
           </tr>
@@ -75,7 +83,7 @@
         <template v-else>
           <tr
             class="bg-white border-b"
-            v-for="customer in activePlan.visibleCustomers"
+            v-for="customer in activePlan.customers"
             :key="customer.id"
           >
             <td
@@ -108,28 +116,12 @@
                   <input type="hidden" name="_token" :value="csrfToken" />
                   <button
                     type="submit"
-                    onclick="return confirm('Are you sure you want to hide this user from the list?')"
+                    onclick="return confirm('Are you sure?')"
                     class="focus:outline-none text-white bg-blue-500 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium text-sm p-2"
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke-width="1.5"
-                      stroke="currentColor"
-                      class="w-6 h-6"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"
-                      />
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                      />
-                    </svg>
+                    <HideUnhideToggleIcon
+                      :hidden="activePlan.name == 'hidden'"
+                    />
                   </button>
                 </div>
               </form>
@@ -143,6 +135,7 @@
 
 <script>
 import Stars from "./Stars.vue";
+import HideUnhideToggleIcon from "./HideUnhideToggleIcon.vue";
 export default {
   props: { data: Object },
   data() {
@@ -154,9 +147,9 @@ export default {
       activePlan: {
         name: null,
         customers: [],
-        visibleCustomers: [],
         stats: { predicted_MRR: 0, predicted_ARR: 0, plan_price: 0 },
       },
+      hiddenCustomers: [],
       headerNames: [
         "Email",
         "Likelihood",
@@ -190,7 +183,7 @@ export default {
 
     // Check if all plans do not exist the data, and set the plan_exists key accordingly.
     const plansThatExist = plans.filter((p) => p.stats.plan_exists);
-    
+
     const totalStats = allStats.reduce(
       (accumulator, plan) => {
         accumulator.predicted_MRR += plan.predicted_MRR;
@@ -207,6 +200,9 @@ export default {
     // Combine all customers in each group into a single group for an "All" tab.
     const allCustomers = plans.flatMap((plan) => plan.customers);
 
+    // Get all hidden users
+    this.hiddenCustomers = allCustomers.filter((c) => c.hidden_at);
+
     // Create an "All" group and add to the start of the plans array.
     plans.unshift({ name: "all", customers: allCustomers, stats: totalStats });
     this.plans = plans;
@@ -218,12 +214,20 @@ export default {
     makeActive(plan) {
       this.activePlan = plan;
       const visibleCustomers = plan.customers.filter((c) => !c.hidden_at);
-      this.activePlan.visibleCustomers = visibleCustomers;
+      this.activePlan.customers = visibleCustomers;
+    },
+    // Displays only hidden customers.
+    showHiddenCustomers() {
+      this.activePlan = {
+        name: "hidden",
+        customers: this.hiddenCustomers,
+        stats: { plan_exists: false },
+      };
     },
     numberFormat(number) {
       return parseFloat(number).toLocaleString();
     },
   },
-  components: { Stars },
+  components: { Stars, HideUnhideToggleIcon },
 };
 </script>
