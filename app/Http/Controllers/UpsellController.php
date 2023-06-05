@@ -31,7 +31,7 @@ class UpsellController extends Controller
             return $result;
         });
 
-        // Prepare data for frontend. 
+        // Prepare data for frontend.
         $upsellStats = null;
         $customersByPlans = null;
 
@@ -52,7 +52,7 @@ class UpsellController extends Controller
 
     /**
      * Compute MRR and ARR values for a given plan with data in stored json file.
-     * 
+     *
      * @param int $customersCount
      * @param string $planName
      * @return array ['predicted_MRR', 'predicted_ARR', 'plan_price' ]
@@ -60,34 +60,33 @@ class UpsellController extends Controller
     public function computeUpsellStats(int $customersCount, string $planName)
     {
         // Get prices from json file.
-        $prices = json_decode(stripslashes(Storage::get("/users-pricing/pricing.json")), true);
-
-        // Get plans in pricing.json and determine stats based on plans availability.
-        $plans = @$prices[Auth::user()->company_name]['plans']??[];
-        if (array_key_exists($planName, $plans)) {
-            // Get planPrice and calculate MRR/ARR.
-            $planPrice = $prices[Auth::user()->company_name]['plans'][$planName]['prices'][0]['amount'];
-            return [
-                'predicted_MRR' => $customersCount * $planPrice,
-                'predicted_ARR' => $customersCount * $planPrice * 12,
-                "plan_price" => $planPrice,
-                'plan_exists' => true
-            ];
-        } else {
-            // Plan does not exist in pricing.json, default stats to 0.
-            return [
-                'predicted_MRR' => 0,
-                'predicted_ARR' => 0,
-                'plan_price' => 0,
-                'plan_exists' => false
-            ];
+        $pricing_data_file_path = stripslashes("/users-pricing/pricing.json");
+        if (Storage::exists($pricing_data_file_path)) {
+            $prices = json_decode(Storage::get($pricing_data_file_path), true);
+            // Get plans in pricing.json and determine stats based on plans availability.
+            $plans = @$prices[Auth::user()->company_name]['plans'] ?? [];
+            if (array_key_exists($planName, $plans)) {
+                // Get planPrice and calculate MRR/ARR.
+                $planPrice = $prices[Auth::user()->company_name]['plans'][$planName]['prices'][0]['amount'];
+                return [
+                    'predicted_MRR' => $customersCount * $planPrice,
+                    'predicted_ARR' => $customersCount * $planPrice * 12,
+                    "plan_price" => $planPrice,
+                    'plan_exists' => true
+                ];
+            }
         }
-
+        return [
+            'predicted_MRR' => 0,
+            'predicted_ARR' => 0,
+            'plan_price' => 0,
+            'plan_exists' => false
+        ];
     }
 
     /**
      * Groups customers into plans, calculates the MRR/ARR and sorts plans by plan_price.
-     * 
+     *
      * @param Collection $customers
      * @return array [$plans, $stats]
      */
@@ -133,7 +132,7 @@ class UpsellController extends Controller
 
     /**
      * Download list of customers to upsell from the latest analysis.
-     * 
+     *
      * @param Request $request
      * @return \Symfony\Component\HttpFoundation\StreamedResponse
      */
@@ -211,7 +210,7 @@ class UpsellController extends Controller
 
     /**
      * Fetch the latest state of a user's customers.
-     * 
+     *
      * @param User $user
      * @return \Illuminate\Database\Eloquent\Collection $customers
      */
