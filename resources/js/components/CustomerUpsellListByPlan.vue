@@ -69,6 +69,7 @@
             >
               {{ headerName }}
             </th>
+            <th :class="tableHeaderStyle"></th>
           </tr>
         </thead>
 
@@ -95,7 +96,9 @@
               }}</a>
             </td>
             <td scope="row" :class="tableDataStyle">
-              <Stars :amount="customer.latest_state.state.likelihood" />
+              <div class="flex items-center justify-center">
+                <Stars :amount="customer.latest_state.state.likelihood" />
+              </div>
             </td>
 
             <td :class="tableDataStyle">
@@ -207,7 +210,7 @@ export default {
     plans.unshift({ name: "all", customers: allCustomers, stats: totalStats });
 
     // Use only groups that have a plan name
-    this.plans = plans.filter(p=>p.name != '');
+    this.plans = plans.filter((p) => p.name != "");
     this.makeActive(plans[0]);
   },
 
