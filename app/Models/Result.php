@@ -21,16 +21,7 @@ class Result extends Model
         switch($this->type) {
             case 'upsell_stats':
             case 'sale_funnel':
-            case 'feature_adoption':
             case 'time_to_value':
-            case 'waumau':
-            case 'daumau':
-                $filePath = "/results/".$this->filename;
-                if (Storage::exists($filePath)){
-                        $str = Storage::get($filePath);
-                        return json_decode($str, true);
-                    }
-                return null;
             case 'upsell':
                 $upsell_filePath = "/results/".$this->filename;
                 if (Storage::exists($upsell_filePath)){
