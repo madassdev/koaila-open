@@ -26,7 +26,7 @@ class UpsellController extends Controller
      */
     public function index()
     {
-        $results = Auth::user()->results()->whereIn('type', ['sale_funnel', 'upsell_stats'])->get()->map(function ($result) {
+        $results = Auth::user()->results()->whereIn('type', ['sale_funnel'])->get()->map(function ($result) {
             $result->data = $result->loadData();
             return $result;
         });
