@@ -27,7 +27,6 @@ class Result extends Model
                     return json_decode($str, true);
                 }
                 return null;
-            case 'time_to_value':
             case 'upsell':
                 $upsell_filePath = "/results/" . $this->filename;
                 if (Storage::exists($upsell_filePath)) {
