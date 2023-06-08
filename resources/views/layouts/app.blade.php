@@ -95,6 +95,11 @@
                                 </a>
 
                                 <a class="dropdown-item inline-flex items-center py-3"
+                                   href="{{ route('settings.index')}}">
+                                    <p class="px-3">{{ __('Account') }}</p>
+                                </a>
+                                
+                                <a class="dropdown-item inline-flex items-center py-3"
                                    href="{{ url('https://illustrious-perch-600.notion.site/Getting-started-10min-37dd19cc7503474a8409893aebacaaa6') }}"
                                    target="_blank">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"

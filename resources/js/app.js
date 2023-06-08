@@ -33,6 +33,9 @@ app.component('doughnut-chart', DoughnutChart);
 import CustomerUpsellListByPlan from './components/CustomerUpsellListByPlan.vue';
 app.component('customer-upsell-list-by-plan', CustomerUpsellListByPlan);
 
+import UserProfileSettings from './components/UserProfileSettings.vue';
+app.component('user-profile-settings', UserProfileSettings);
+
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
