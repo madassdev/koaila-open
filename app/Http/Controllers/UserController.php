@@ -17,42 +17,32 @@ class UserController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function settings()
+    public function index()
     {
         $user = Auth::user();
-        return view('settings', compact('user'));
+        return view('userAccount', compact('user'));
     }
 
     /**
-     * Updates user profile info like name and company name.
+     * Updates user profile info like name, company name and email address.
      *
      * @param  \App\Http\Requests\UserPersonalInfoUpdateRequest  $request
      * @return \Illuminate\Http\RedirectResponse
      */
     public function savePersonalInfoSettings(UserPersonalInfoUpdateRequest $request)
     {
-        // Save user personal info [name, company_name].
+        // Set user personal info [name, company_name].
         $user = Auth::user();
         $user->name = $request->name;
         $user->company_name = $request->company_name;
-        $user->save();
-
-        return redirect()->back()->with('message', 'Account Information saved successfully!');
-    }
-
-    /**
-     * Updates user email address.
-     *
-     * @param  \App\Http\Requests\UserEmailUpdateRequest  $request
-     * @return \Illuminate\Http\RedirectResponse
-     */
-    public function saveEmailSettings(UserEmailUpdateRequest $request)
-    {
-        // Save user email.
-        $user = Auth::user();
-        $user->email = $request->new_email;
-        $user->save();
         
+        // Set user email to the new email provided.
+        if ($request->new_email) {
+            $user->email = $request->new_email;
+        }
+
+        $user->save();
+
         return redirect()->back()->with('message', 'Account Information saved successfully!');
     }
 

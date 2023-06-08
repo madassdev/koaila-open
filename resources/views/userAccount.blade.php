@@ -3,9 +3,7 @@
     <div class="mb-4">
         <p class="font-bold text-2xl">Account settings</p>
         <p class="text-gray-500 text-xs">
-            Manage your account settings and update your personal information
-            here. Customize your profile, change your password, and update other
-            account details to ensure a seamless experience.
+            Manage your account settings and update your personal information and password here.
         </p>
     </div>
     <div class="card">
@@ -30,12 +28,12 @@
             route('settings.email.save'), "password" =>
             route('settings.password.save'), ]; @endphp
 
-            <user-profile-settings
+            <user-account-settings
                 :user="{{ json_encode($user) }}"
                 :errors="{{json_encode($errors->messages())}}"
                 :routes="{{ json_encode($routes) }}"
                 :old-values="{{ json_encode(old()) }}"
-            ></user-profile-settings>
+            ></user-account-settings>
         </div>
     </div>
 </div>

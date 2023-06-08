@@ -35,7 +35,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/customer-dashboard/{id}', [App\Http\Controllers\CustomerController::class, 'show'])->name('customer-dashboard');
     Route::get('/upsell-historic-dashboard', [App\Http\Controllers\UpsellController::class, 'show'])->name('upsell-historic-dashboard');
     Route::post('/hide-customer-state/{customer_id}', [App\Http\Controllers\CustomerController::class, 'toggleVisibility'])->name('hide-customer-state');
-    Route::get('/account-settings', [App\Http\Controllers\UserController::class, 'settings'])->name('settings.index');
+    Route::get('/account-settings', [App\Http\Controllers\UserController::class, 'index'])->name('settings.index');
     Route::post('/account-settings/personal-info', [App\Http\Controllers\UserController::class, 'savePersonalInfoSettings'])->name('settings.personalInfo.save');
     Route::post('/account-settings/email', [App\Http\Controllers\UserController::class, 'saveEmailSettings'])->name('settings.email.save');
     Route::post('/account-settings/password', [App\Http\Controllers\UserController::class, 'savePasswordSettings'])->name('settings.password.save');
