@@ -91,6 +91,7 @@
                 id="current_email"
                 type="email"
                 class="form-control bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block p-2.5"
+                :class="errors?.current_email?.length && 'is-invalid'"
                 name="current_email"
                 v-model="currentEmail"
                 :required="true"
@@ -103,6 +104,7 @@
                 id="new_email"
                 type="email"
                 class="form-control bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-600 focus:border-blue-600 block p-2.5"
+                :class="errors?.new_email?.length && 'is-invalid'"
                 name="new_email"
                 v-model="newEmail"
                 :required="true"
@@ -243,42 +245,42 @@ export default {
         .getAttribute("content"),
     };
   },
-  
+
   mounted() {
-  // Check if there are any errors related to profile info (name or company_name).
-  if (
-    this.errors.hasOwnProperty("name") ||
-    this.errors.hasOwnProperty("company_name")
-  ) {
-    // Set isEditingProfileInfo flag to true.
-    this.isEditingProfileInfo = true;
+    // Check if there are any errors related to profile info (name or company_name).
+    if (
+      this.errors.hasOwnProperty("name") ||
+      this.errors.hasOwnProperty("company_name")
+    ) {
+      // Set isEditingProfileInfo flag to true.
+      this.isEditingProfileInfo = true;
 
-    // Set the name and companyName values to the old values.
-    this.name = this.oldValues.name;
-    this.companyName = this.oldValues.company_name;
-  }
+      // Set the name and companyName values to the old values.
+      this.name = this.oldValues.name;
+      this.companyName = this.oldValues.company_name;
+    }
 
-  // Check if there are any errors related to email (current_email or new_email).
-  if (
-    this.errors.hasOwnProperty("current_email") ||
-    this.errors.hasOwnProperty("new_email")
-  ) {
-    // Set isEditingEmail flag to true.
-    this.isEditingEmail = true;
+    // Check if there are any errors related to email (current_email or new_email).
+    if (
+      this.errors.hasOwnProperty("current_email") ||
+      this.errors.hasOwnProperty("new_email")
+    ) {
+      // Set isEditingEmail flag to true.
+      this.isEditingEmail = true;
 
-    // Set the currentEmail and newEmail values to the old values.
-    this.currentEmail = this.oldValues.current_email;
-    this.newEmail = this.oldValues.new_email;
-  }
+      // Set the currentEmail and newEmail values to the old values.
+      this.currentEmail = this.oldValues.current_email;
+      this.newEmail = this.oldValues.new_email;
+    }
 
-  // Check if there are any errors related to password (current_password or new_password).
-  if (
-    this.errors.hasOwnProperty("current_password") ||
-    this.errors.hasOwnProperty("new_password")
-  ) {
-    // Set isEditingPassword flag to true.
-    this.isEditingPassword = true;
-  }
-},
+    // Check if there are any errors related to password (current_password or new_password).
+    if (
+      this.errors.hasOwnProperty("current_password") ||
+      this.errors.hasOwnProperty("new_password")
+    ) {
+      // Set isEditingPassword flag to true.
+      this.isEditingPassword = true;
+    }
+  },
 };
 </script>
