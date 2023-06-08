@@ -17,21 +17,27 @@ class Result extends Model
         'filename',
     ];
 
-    public function loadData() {
-        switch($this->type) {
-            case 'upsell_stats':
+    public function loadData()
+    {
+        switch ($this->type) {
             case 'sale_funnel':
+                $filePath = "/results/" . $this->filename;
+                if (Storage::exists($filePath)) {
+                    $str = Storage::get($filePath);
+                    return json_decode($str, true);
+                }
+                return null;
             case 'time_to_value':
             case 'upsell':
-                $upsell_filePath = "/results/".$this->filename;
-                if (Storage::exists($upsell_filePath)){
+                $upsell_filePath = "/results/" . $this->filename;
+                if (Storage::exists($upsell_filePath)) {
                     $csv = Storage::get($upsell_filePath);
                     $rows = preg_split("/\r\n|\n|\r/", $csv);
-                    $headers = str_getcsv(array_shift($rows),',');
+                    $headers = str_getcsv(array_shift($rows), ',');
                     $csv = array();
                     foreach ($rows as $row) {
-                        $row=str_getcsv($row, ',');
-                        if(count($row)===count($headers)){
+                        $row = str_getcsv($row, ',');
+                        if (count($row) === count($headers)) {
                             $csv[] = array_combine($headers, $row);
                         }
 
@@ -43,7 +49,7 @@ class Result extends Model
                 }
                 return null;
             default:
-                throw new Exception('Unknown result type: '.$this->type);
+                throw new Exception('Unknown result type: ' . $this->type);
         }
     }
 
