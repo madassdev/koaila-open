@@ -51,8 +51,8 @@
                                 'stripe' => [
                                     'key' => 'API Key',
                                 ],
-                                'fullstory' => [
-                                    'key' => 'API Key',
+                                'segment' => [
+                                    'key' => 'Segment workspace ID',
                                 ],
                             ];
                             $oauth_authentication=[
