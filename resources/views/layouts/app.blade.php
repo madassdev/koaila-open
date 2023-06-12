@@ -24,7 +24,7 @@
     <body>
         <div id="app" class="min-h-screen flex flex-col">
             <div
-                class="fixed top-0 left-0 right-0 z-50 w-full h-12 flex items-center px-6 bg-gray-900 shadow-sm"
+                class="fixed top-0 left-0 right-0 z-50 w-full h-12 flex items-center px-6 bg-white shadow-sm"
             >
             <div class="flex items-center justify-between w-full">
 
@@ -34,8 +34,8 @@
 
                 <div class="space-x-4">
                     @guest
-                    <a href="{{route('login')}}" class="text-gray-300 hover:text-white">Login</a>
-                    <a href="{{route('register')}}" class="text-gray-300 hover:text-white">Sign Up</a>
+                    <a href="{{route('login')}}" class="text-gray-600 hover:text-blue-600">Login</a>
+                    <a href="{{route('register')}}" class="text-gray-600 hover:text-blue-600">Sign Up</a>
                     @endguest
                 </div>
             </div>
