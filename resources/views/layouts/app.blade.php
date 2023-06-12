@@ -26,13 +26,23 @@
             <div
                 class="fixed top-0 left-0 right-0 z-50 w-full h-12 flex items-center px-6 bg-gray-900 shadow-sm"
             >
-                <!-- {{-- Topbar Items go here --}} -->
+            <div class="flex items-center justify-between w-full">
+
                 <div class="space-x-2 flex items-center">
                     <img src="{{ asset('logo-square.png') }}" class="w-8 h-8" />
-                    <!-- <span class="text-2xl font-bold text-white">Koaila</span> -->
+                </div>
+
+                <div class="space-x-4">
+                    @guest
+                    <a href="{{route('login')}}" class="text-gray-300 hover:text-white">Login</a>
+                    <a href="{{route('register')}}" class="text-gray-300 hover:text-white">Sign Up</a>
+                    @endguest
                 </div>
             </div>
+            </div>
+            @auth
             <x-layouts.sidebar />
+            @endauth
             <div class="mt-12 ml-56 p-3" id="yield">@yield('content')</div>
         </div>
 
