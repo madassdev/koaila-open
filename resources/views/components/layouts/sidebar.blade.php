@@ -24,14 +24,12 @@
                     class="flex items-center space-x-2 text-gray-400 hover:text-white"
                     href="{{ route('upsell-dashboard') }}"
                 >
-                    @svg('bolt', '', 'currentColor')
                     <span>{{ __("Upsell") }}</span>
                 </a>
                 <a
                     class="flex items-center space-x-2 text-gray-400 hover:text-white"
                     href="{{ route('upsell-historic-dashboard') }}"
                 >
-                    @svg('clock', '', 'currentColor')
                     <span>{{ __("Upsell History") }}</span>
                 </a>
             </div>
@@ -55,14 +53,12 @@
                     class="flex items-center space-x-2 text-gray-400 hover:text-white"
                     href="{{ route('integrations') }}"
                 >
-                    @svg('squares-plus', '', 'currentColor')
                     <span>{{ __("Integrations") }}</span>
                 </a>
                 <a
                     class="flex items-center space-x-2 text-gray-400 hover:text-white"
                     href="{{ route('configuration') }}"
                 >
-                    @svg('adjustments-horizontal', '', 'currentColor')
                     <span>{{ __("Configuration") }}</span>
                 </a>
             </div>
