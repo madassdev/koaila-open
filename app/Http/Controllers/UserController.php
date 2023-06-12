@@ -31,17 +31,9 @@ class UserController extends Controller
      */
     public function savePersonalInfoSettings(UserPersonalInfoUpdateRequest $request)
     {
-        // Set user personal info [name, company_name].
+        // Update user personal info [name, company_name].
         $user = Auth::user();
-        $user->name = $request->name;
-        $user->company_name = $request->company_name;
-        
-        // Set user email to the new email provided.
-        if ($request->new_email) {
-            $user->email = $request->new_email;
-        }
-
-        $user->save();
+        $user->update($request->validated());
 
         return redirect()->back()->with('message', 'Account Information saved successfully!');
     }

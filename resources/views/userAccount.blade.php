@@ -23,10 +23,13 @@
             >
                 <p>{{ session()->get('message') }}</p>
             </div>
-            @endif @php $routes = [ "personal_info" =>
-            route('settings.personalInfo.save'), "email" =>
-            route('settings.email.save'), "password" =>
-            route('settings.password.save'), ]; @endphp
+            @endif 
+            @php 
+                $routes = [ 
+                    "personal_info" => route('settings.personalInfo.save'),
+                    "password" => route('settings.password.save'), 
+                ]; 
+            @endphp
 
             <user-account-settings
                 :user="{{ json_encode($user) }}"

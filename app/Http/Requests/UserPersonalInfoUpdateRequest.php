@@ -26,15 +26,7 @@ class UserPersonalInfoUpdateRequest extends FormRequest
         return [
             'name' => 'required|string|min:3',
             'company_name' => 'required|string|min:3',
-            'current_email' => [
-                'required',
-                function ($attribute, $value, $fail) {
-                    if ($value != auth()->user()->email) {
-                        $fail('The current email is incorrect.');
-                    }
-                }
-            ],
-            'new_email' => ['nullable', 'email', 'unique:users,email']
+            'email' =>'required|email|unique:users,email,'.auth()->user()->id,
         ];
     }
 }

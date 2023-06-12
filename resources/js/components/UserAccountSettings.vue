@@ -36,32 +36,16 @@
           </div>
         </div>
         <div class="flex">
-          <label for="company_name" class="w-60 font-bold">
-            Email address
-          </label>
-          <div class="flex-1 space-y-2">
-            <div class="space-y-1">
-              <label> Current email </label>
-              <InputField
-                id="current_email"
-                type="email"
-                :isError="errors?.current_email?.length"
-                name="current_email"
-                :required="true"
-                :value="currentEmail"
-              />
-            </div>
-
-            <div class="space-y-1">
-              <label> New email </label>
-              <InputField
-                id="new_email"
-                type="email"
-                :isError="errors?.new_email?.length"
-                name="new_email"
-                :value="newEmail"
-              />
-            </div>
+          <label for="email" class="w-60 font-bold"> Email address </label>
+          <div class="flex-1">
+            <InputField
+              id="email"
+              type="email"
+              :isError="errors?.current_email?.length"
+              name="email"
+              :required="true"
+              :value="currentEmail"
+            />
           </div>
         </div>
         <div class="space-x-4 w-full">
