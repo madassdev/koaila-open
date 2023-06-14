@@ -56,7 +56,33 @@
     </div>
   </div>
 
-  <div class="flex flex-col p-4">
+  <div class="flex flex-col p-4 space-y-2">
+    <div class="flex items-center justify-end">
+      <div class="flex items-center text-gray-600 space-x-2 text-xs">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="w-6 h-6"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 01-.659 1.591l-5.432 5.432a2.25 2.25 0 00-.659 1.591v2.927a2.25 2.25 0 01-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 00-.659-1.591L3.659 7.409A2.25 2.25 0 013 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0112 3z"
+          />
+        </svg>
+        <select
+          class="rounded border border-gray-300 p-1 ring-0 focus:outline-none"
+          v-model="contactFilter"
+        >
+          <option value="all">All</option>
+          <option value="contacted">Contacted</option>
+          <option value="not_contacted">Not Contacted</option>
+        </select>
+      </div>
+    </div>
     <div class="flex">
       <table class="w-full border text-sm text-left text-gray-500">
         <thead>
@@ -84,54 +110,64 @@
 
         <!-- Customers row -->
         <template v-else>
-          <tr
-            class="bg-white border-b"
-            v-for="customer in activePlan.customers"
-            :key="customer.id"
-          >
-            <td
-              scope="row"
-              class="px-6 py-4 font-bold whitespace-nowrap text-center"
+          <template v-for="customer in activePlan.customers" :key="customer.id">
+            <tr
+              class="bg-white border-b"
+              v-if="
+                contactFilter == 'all'
+                  ? true
+                  : contactFilter == 'contacted'
+                  ? customer.contacted
+                  : !customer.contacted
+              "
             >
-              <a :href="`/customer-dashboard/` + customer.id">{{
-                customer.email
-              }}</a>
-            </td>
-            <td scope="row" :class="tableDataStyle">
-              <div class="flex items-center justify-center">
-                <Stars :amount="customer.latest_state.state.likelihood" />
-              </div>
-            </td>
-
-            <td :class="tableDataStyle">
-              {{ customer.latest_state.state.user_creation_time }}
-            </td>
-
-            <td :class="tableDataStyle">
-              {{ customer.latest_state.state.time_to_value }}
-            </td>
-
-            <!-- Visibility toggle -->
-            <td>
-              <form
-                method="POST"
-                :action="`/hide-customer-state/` + customer.id"
+              <td
+                scope="row"
+                class="px-6 py-4 font-bold whitespace-nowrap text-center"
               >
-                <div class="form-group flex justify-center items-center">
-                  <input type="hidden" name="_token" :value="csrfToken" />
-                  <button
-                    type="submit"
-                    onclick="return confirm('Are you sure?')"
-                    class="focus:outline-none text-white bg-blue-500 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium text-sm p-2"
-                  >
-                    <HideUnhideToggleIcon
-                      :hidden="activePlan.name == 'hidden'"
-                    />
-                  </button>
+                <a :href="`/customer-dashboard/` + customer.id">{{
+                  customer.email
+                }}</a>
+              </td>
+              <td scope="row" :class="tableDataStyle">
+                <div class="flex items-center justify-center">
+                  <Stars :amount="customer.latest_state.state.likelihood" />
                 </div>
-              </form>
-            </td>
-          </tr>
+              </td>
+
+              <td :class="tableDataStyle">
+                {{ customer.latest_state.state.user_creation_time }}
+              </td>
+
+              <td :class="tableDataStyle">
+                {{ customer.latest_state.state.time_to_value }}
+              </td>
+              <td :class="tableDataStyle">
+                <CustomerContactedStateToggler :customer="customer" />
+              </td>
+
+              <!-- Visibility toggle -->
+              <td>
+                <form
+                  method="POST"
+                  :action="`/hide-customer-state/` + customer.id"
+                >
+                  <div class="form-group flex justify-center items-center">
+                    <input type="hidden" name="_token" :value="csrfToken" />
+                    <button
+                      type="submit"
+                      onclick="return confirm('Are you sure?')"
+                      class="focus:outline-none text-white bg-blue-500 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium text-sm p-2"
+                    >
+                      <HideUnhideToggleIcon
+                        :hidden="activePlan.name == 'hidden'"
+                      />
+                    </button>
+                  </div>
+                </form>
+              </td>
+            </tr>
+          </template>
         </template>
       </table>
     </div>
@@ -141,6 +177,7 @@
 <script>
 import Stars from "./Stars.vue";
 import HideUnhideToggleIcon from "./HideUnhideToggleIcon.vue";
+import CustomerContactedStateToggler from "./CustomerContactedStateToggler.vue";
 export default {
   props: { data: Object },
   data() {
@@ -154,12 +191,14 @@ export default {
         customers: [],
         stats: { predicted_MRR: 0, predicted_ARR: 0, plan_price: 0 },
       },
+      contactFilter: "all",
       hiddenCustomers: [],
       headerNames: [
         "Email",
         "Likelihood",
         "User Creation Time",
         "Time to Value",
+        "Contacted",
       ],
       activePlanStyle:
         "text-white bg-blue-700 hover:bg-blue-800 focus:ring- focus:ring-blue-300 focus:outline-none",
@@ -214,6 +253,11 @@ export default {
     // Use only groups that have a plan name
     this.plans = plans.filter((p) => p.name != "");
     this.makeActive(plans[0]);
+
+    // Set filter states
+    const params = new URLSearchParams(window.location.search);
+    const currentFilter = params.get("contacted_status");
+    this.contactFilter = currentFilter || "all";
   },
 
   methods: {
@@ -235,6 +279,6 @@ export default {
       return parseFloat(number).toLocaleString();
     },
   },
-  components: { Stars, HideUnhideToggleIcon },
+  components: { Stars, HideUnhideToggleIcon, CustomerContactedStateToggler },
 };
 </script>

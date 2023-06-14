@@ -62,4 +62,15 @@ class User extends Authenticatable
     {
         return $this->hasOne(Configuration::class);
     }
+
+/**
+ * Determine if the authenticated user owns the given customer.
+ *
+ * @param  \App\Models\Customer  $customer
+ * @return bool
+ */
+    public function ownsCustomer(Customer $customer): bool
+    {
+        return $this->configuration()->where('id',$customer->config_id)->exists();
+    }
 }

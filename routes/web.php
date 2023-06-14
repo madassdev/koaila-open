@@ -34,6 +34,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/customer-dashboard/{id}', [App\Http\Controllers\CustomerController::class, 'show'])->name('customer-dashboard');
     Route::get('/upsell-historic-dashboard', [App\Http\Controllers\UpsellController::class, 'show'])->name('upsell-historic-dashboard');
     Route::post('/hide-customer-state/{customer_id}', [App\Http\Controllers\CustomerController::class, 'toggleVisibility'])->name('hide-customer-state');
+    Route::post('/update-customer-contacted-state/{customer_id}', [App\Http\Controllers\CustomerController::class, 'toggleContactedState'])->name('toggle-customer-contacted-state');
 
     Route::group(['as'=>'oauth.'], function () {
         Route::get('oauth/{driver}/redirect', [\App\Http\Controllers\OAuth\OAuthController::class, 'redirect'])->name('redirect');
