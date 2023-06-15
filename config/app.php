@@ -123,6 +123,8 @@ return [
 
     'key' => env('APP_KEY'),
 
+    'api_auth_key' => env('API_AUTH_KEY'), // This is the key to be used for API requests.
+
     'cipher' => 'AES-256-CBC',
 
     /*

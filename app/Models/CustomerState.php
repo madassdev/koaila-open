@@ -14,6 +14,7 @@ class CustomerState extends Model
         'email',
         'date',
         'plans',
+        'predicted_plan',
         'funnel_id',
         'state',
     ];
