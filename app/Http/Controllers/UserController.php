@@ -31,11 +31,11 @@ class UserController extends Controller
      */
     public function savePersonalInfoSettings(UserPersonalInfoUpdateRequest $request)
     {
-        // Update user personal info [name, company_name].
+        // Update user personal info [name, company_name, email].
         $user = Auth::user();
         $user->update($request->validated());
 
-        return redirect()->back()->with('message', 'Account Information saved successfully!');
+        return redirect()->back()->with('message', 'Account Information saved successfully.');
     }
 
     /**
@@ -51,6 +51,6 @@ class UserController extends Controller
         $user->password = Hash::make($request->new_password);
         $user->save();
 
-        return redirect()->back()->with('message', 'Account Information saved successfully!');
+        return redirect()->back()->with('message', 'Account password changed successfully.');
     }
 }
