@@ -2,7 +2,7 @@
   <div class="flex items-center space-x-4">
     <button
       @click="scrollToPrevious"
-      class="text-xs transform rotate-180 rounded-full opacity-80 hover:opacity-100 bg-gray-500 hover:bg-gray-900 transition-all ease-in-out text-white flex items-center justify-center p-2 cursor-pointer"
+      class="text-xs transform rotate-180 rounded-full border border-black transition-all ease-in text-gray-900 flex items-center justify-center p-2 cursor-pointer"
     >
       <ChevronRight />
     </button>
@@ -20,11 +20,16 @@
         <div class="flex items-center">
           <hr class="w-16" />
           <div
-            class="z-10 flex items-center justify-center w-6 h-6 bg-blue-100 rounded-full ring-0 ring-gray-100 shrink-0"
+            class="z-10 flex items-center justify-center w-6 h-6 rounded-full ring-0 ring-gray-100 shrink-0"
+            :class="
+              step === customerStep
+                ? 'bg-green-100 text-green-800'
+                : 'bg-blue-100 text-blue-800'
+            "
           >
             <svg
               aria-hidden="true"
-              class="w-3 h-3 text-blue-800"
+              class="w-3 h-3"
               fill="currentColor"
               viewBox="0 0 20 20"
               xmlns="http://www.w3.org/2000/svg"
@@ -45,7 +50,7 @@
     </div>
     <button
       @click="scrollToNext"
-      class="text-xs rounded-full opacity-80 hover:opacity-100 bg-gray-500 hover:bg-gray-900 transition-all ease-in-out text-white flex items-center justify-center p-2 cursor-pointer"
+      class="text-xs rounded-full border border-black transition-all ease-in text-gray-900 flex items-center justify-center p-2 cursor-pointer"
     >
       <ChevronRight />
     </button>
@@ -54,16 +59,31 @@
 <script>
 import ChevronRight from "./Icons/ChevronRight.vue";
 export default {
-  props: { saleFunnelData: Array },
+  props: { saleFunnelData: Array, customerStep: String },
   data() {
     return {
       items: this.saleFunnelData,
       activeSlide: 0,
-      scrollWidth: 280,
+      cardWidth: 152,
     };
   },
   mounted() {
-    console.log("tt", this.saleFunnelData);
+    if (this.customerStep) {
+      let activeStepPosition = this.saleFunnelData.findIndex(
+        (f) => f == this.customerStep
+      );
+
+      // Calculate position that falls in center of the view.
+      const cardRow = this.$refs.cardRow;
+      const rowWidth = cardRow.offsetWidth;
+      const elementsInView = rowWidth / this.cardWidth;
+      const midElementPosition = elementsInView - Math.round(elementsInView / 2);
+      
+      // Position active funnel step element and scroll in place.
+      const activePositionOffset = Math.max(activeStepPosition - midElementPosition);
+      this.activeSlide = activePositionOffset;
+      this.scrollToActiveSlide();
+    }
   },
 
   methods: {
@@ -92,8 +112,9 @@ export default {
     // Scrolls smoothly to active slide.
     scrollToActiveSlide() {
       const cardRow = this.$refs.cardRow;
-      const scrollLeft = this.scrollWidth * this.activeSlide;
-
+      const scrollLeft = this.cardWidth * this.activeSlide;
+      const tv = 152 * 8;
+      console.log(scrollLeft, tv);
       // Reset active slide value.
       this.updateActiveSlideInView();
 
@@ -104,7 +125,7 @@ export default {
     // Resets activeSlide state to amount of scroll in interaction other than button click.
     updateActiveSlideInView() {
       const scrollAmount = this.$refs.cardRow.scrollLeft;
-      this.activeSlide = scrollAmount / this.scrollWidth;
+      this.activeSlide = scrollAmount / this.cardWidth;
     },
 
     // Enables dragging on the sale funnel container.

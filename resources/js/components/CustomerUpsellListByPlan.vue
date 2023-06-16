@@ -24,7 +24,7 @@
     </button>
   </div>
   <div class="p-4">
-    <SaleFunnelContainer :sale-funnel-data="saleFunnelData" />
+    <SaleFunnelTimeline :sale-funnel-data="saleFunnelData" />
   </div>
 
   <div class="p-4 flex space-x-8" v-if="activePlan.stats.plan_exists">
@@ -144,7 +144,7 @@
 <script>
 import Stars from "./Stars.vue";
 import HideUnhideToggleIcon from "./HideUnhideToggleIcon.vue";
-import SaleFunnelContainer from "./SaleFunnelContainer.vue";
+import SaleFunnelTimeline from "./SaleFunnelTimeline.vue";
 export default {
   props: { data: Object, saleFunnelData: Object },
   data() {
@@ -239,6 +239,6 @@ export default {
       return parseFloat(number).toLocaleString();
     },
   },
-  components: { Stars, HideUnhideToggleIcon, SaleFunnelContainer },
+  components: { Stars, HideUnhideToggleIcon, SaleFunnelTimeline },
 };
 </script>
