@@ -11,10 +11,7 @@
 
         <!-- Fonts -->
         <link rel="dns-prefetch" href="//fonts.gstatic.com" />
-        <link
-            href="https://fonts.bunny.net/css?family=Nunito"
-            rel="stylesheet"
-        />
+        <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet"/>
         <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 
         <!-- Scripts -->
