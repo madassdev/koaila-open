@@ -43,7 +43,7 @@
             @auth
             <x-layouts.sidebar />
             @endauth
-            <div class="mt-12 ml-56 p-3" id="yield">@yield('content')</div>
+            <div class="mt-12 @auth ml-56 @endauth p-3" id="yield">@yield('content')</div>
         </div>
 
         @if(\Illuminate\Support\Facades\Auth::check())
