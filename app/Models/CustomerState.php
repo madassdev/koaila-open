@@ -14,6 +14,7 @@ class CustomerState extends Model
         'email',
         'date',
         'plans',
+        'predicted_plan',
         'funnel_id',
         'state',
     ];
@@ -27,7 +28,7 @@ class CustomerState extends Model
     {
         return $this->belongsTo(Customer::class);
     }
-    
+
     public function saleFunnel()
     {
         return $this->belongsTo(SaleFunnel::class, 'funnel_id');

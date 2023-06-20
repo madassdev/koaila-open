@@ -40,73 +40,43 @@ class ImportUpsellListCommand extends Command
             return Command::FAILURE;
         }
         $upsell_filePath = $this->argument('file_path');
-        $csv = [];
         if (Storage::exists($upsell_filePath)) {
-            $csv_file = Storage::get($upsell_filePath);
-            $rows = preg_split("/\r\n|\n|\r/", $csv_file);
-            $headers = str_getcsv(array_shift($rows), ',');
-            foreach ($rows as $row) {
-                $row = str_getcsv($row, ',');
-                if (count($row) === count($headers)) {
-                    $csv[] = array_combine($headers, $row);
+            $customersData = json_decode(Storage::get($upsell_filePath), true);
+            foreach ($customersData as $customerData) {
+                if(!str_contains(substr($customerData['email'], strpos($customerData['email'], '@') + 1), $this->argument("company_name"))){
+                    $customer = $this->importCustomer($customerData, $configId);
+                    $this->importCustomerState($customerData, $customer->id);
                 }
             }
         }
-
-        $this->withProgressBar($csv, function($row) use ($configId) {
-            $customer = $this->importCustomer($row, $configId);
-            echo('ok');
-            $this->importCustomerState($row, $customer->id);
-        });
 
         return Command::SUCCESS;
     }
 
     private function importCustomer($customerData, $configId) {
-        if($this->argument('company_name')=='microtica') {
-            $stripe_id = '';
-            $usage_tracking_id = '';
-        } else{
-            $stripe_id = $customerData['stripe_id'];
-            $usage_tracking_id = intval($customerData['amplitude_id']);
-        }
-
+        $stripe_id = '';
+        $usage_tracking_id = '';
         return Customer::firstOrCreate([
             'config_id' => $configId,
-            'email' => strtolower($customerData['distinct_id']),
+            'email' => $customerData['email'],
             'stripe_id' => $stripe_id,
             'usage_tracking_id' => $usage_tracking_id,
         ]);
     }
 
     private function importCustomerState($customerData, $customerID) {
-        $events=[];
-        foreach ($customerData as $key=>$value)
-            if(!in_array($key, array(
-                '',
-                'email',
-                'funnel_step',
-                'funnel step',
-                'likelihood',
-                'user_creation_time',
-                'time_to_value',
-                'plan',
-                'stripe_id',
-                'amplitude_id'
-                )))
-                $events[$key] = $value;
         $states = [
-            'funnel_step'=> $customerData['funnel step'],
-            'likelihood'=>$customerData['likelihood'],
-            'user_creation_time' => $customerData['user_creation_time'],
-            'time_to_value'=> $customerData['time_to_value'],
-            'events' => array_slice($customerData, 7),
+            'funnel_step'=> $customerData['states']['funnel_step'],
+            'likelihood'=>$customerData['states']['likelihood'],
+            'user_creation_time' => $customerData['states']['user_creation_time'],
+            'time_to_value'=> $customerData['states']['time_to_value'],
+            'events' => $customerData['states']['events'],
         ];
         CustomerState::create([
             'customer_id' => $customerID,
-            'email' => strtolower($customerData['distinct_id']),
             'date' => date('Y-m-d H:i:s'),
-            'plans' => $customerData['plan'],
+            'plans' => $customerData['current_plan'],
+            'predicted_plan'=>$customerData['predicted_plan'],
             'state' => $states,
         ]);
     }
