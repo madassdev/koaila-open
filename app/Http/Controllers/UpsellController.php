@@ -38,7 +38,7 @@ class UpsellController extends Controller
         }
 
         $customersByPlans = $customersByPlans->map(function ($customersByPlan) {
-            $customersByPlan['sale_funnel'] = SaleFunnel::findOrFail($customersByPlan['customers']->first()->latestState->funnel_id)->data;
+            $customersByPlan['sale_funnel'] = SaleFunnel::find($customersByPlan['customers']?->first()?->latestState?->funnel_id)?->data;
             return $customersByPlan;
         });
 

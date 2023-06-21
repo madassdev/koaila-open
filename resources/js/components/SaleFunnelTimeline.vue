@@ -14,7 +14,7 @@
     >
       <div
         class="bordser border-teal-400 space-y-4 flex flex-col items-center"
-        v-for="(step, i) in items"
+        v-for="(step, i) in saleFunnelData"
         :key="i"
       >
         <div class="flex items-center">
@@ -103,7 +103,7 @@ export default {
       }
     },
     scrollToNext() {
-      if (this.activeSlide < this.items.length - 1) {
+      if (this.activeSlide  < this.saleFunnelData.length - 1) {
         this.activeSlide++;
         this.scrollToActiveSlide();
       }
@@ -114,7 +114,7 @@ export default {
       const cardRow = this.$refs.cardRow;
       const scrollLeft = this.cardWidth * this.activeSlide;
       const tv = 152 * 8;
-      console.log(scrollLeft, tv);
+
       // Reset active slide value.
       this.updateActiveSlideInView();
 
