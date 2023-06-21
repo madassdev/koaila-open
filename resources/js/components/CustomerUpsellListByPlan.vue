@@ -55,89 +55,88 @@
       </p>
     </div>
   </div>
-
+  
+  <div class="p-4" v-if="activePlan.name !== 'all'">
+    <SaleFunnelTimeline :sale-funnel-data="activePlan.sale_funnel" />
+  </div>
   <div class="flex flex-col p-4">
-      <div class="p-4">
-          <SaleFunnelTimeline :sale-funnel-data="activePlan.sale_funnel" />
-      </div>
-      <h1>{{activePlan.sale_funnel}}</h1>
-      <div class="flex">
-          <table class="w-full border text-sm text-left text-gray-500">
-            <thead>
-              <tr>
-                <th
-                  scope="col"
-                  :class="tableHeaderStyle"
-                  v-for="(headerName, index) in headerNames"
-                  :key="index"
-                >
-                  {{ headerName }}
-                </th>
-                <th :class="tableHeaderStyle">
-                  {{ activePlan.name == "hidden" ? "Unhide" : "Hide" }}
-                </th>
-              </tr>
-            </thead>
+    <div class="flex">
+      <table class="w-full border text-sm text-left text-gray-500">
+        <thead>
+          <tr>
+            <th
+              scope="col"
+              :class="tableHeaderStyle"
+              v-for="(headerName, index) in headerNames"
+              :key="index"
+            >
+              {{ headerName }}
+            </th>
+            <th :class="tableHeaderStyle">
+              {{ activePlan.name == "hidden" ? "Unhide" : "Hide" }}
+            </th>
+          </tr>
+        </thead>
 
-            <!-- Empty data -->
-            <template v-if="activePlan.customers.length === 0">
-              <tr>
-                <td colspan="4" class="p-5 text-center">No data</td>
-              </tr>
-            </template>
+        <!-- Empty data -->
+        <template v-if="activePlan.customers.length === 0">
+          <tr>
+            <td colspan="4" class="p-5 text-center">No data</td>
+          </tr>
+        </template>
 
-            <!-- Customers row -->
-            <template v-else>
-              <tr
-                class="bg-white border-b"
-                v-for="customer in activePlan.customers"
-                :key="customer.id"
+        <!-- Customers row -->
+        <template v-else>
+          <tr
+            class="bg-white border-b"
+            v-for="customer in activePlan.customers"
+            :key="customer.id"
+          >
+            <td
+              scope="row"
+              class="px-6 py-4 font-bold whitespace-nowrap text-center"
+            >
+              <a :href="`/customer-dashboard/` + customer.id">{{
+                customer.email
+              }}</a>
+            </td>
+            <td scope="row" :class="tableDataStyle">
+              <div class="flex items-center justify-center">
+                <Stars :amount="customer.latest_state.state.likelihood" />
+              </div>
+            </td>
+
+            <td :class="tableDataStyle">
+              {{ customer.latest_state.state.user_creation_time }}
+            </td>
+
+            <td :class="tableDataStyle">
+              {{ customer.latest_state.state.time_to_value }}
+            </td>
+
+            <!-- Visibility toggle -->
+            <td>
+              <form
+                method="POST"
+                :action="`/hide-customer-state/` + customer.id"
               >
-                <td
-                  scope="row"
-                  class="px-6 py-4 font-bold whitespace-nowrap text-center"
-                >
-                  <a :href="`/customer-dashboard/` + customer.id">{{
-                    customer.email
-                  }}</a>
-                </td>
-                <td scope="row" :class="tableDataStyle">
-                  <div class="flex items-center justify-center">
-                    <Stars :amount="customer.latest_state.state.likelihood" />
-                  </div>
-                </td>
-
-                <td :class="tableDataStyle">
-                  {{ customer.latest_state.state.user_creation_time }}
-                </td>
-
-                <td :class="tableDataStyle">
-                  {{ customer.latest_state.state.time_to_value }}
-                </td>
-
-                <!-- Visibility toggle -->
-                <td>
-                  <form
-                    method="POST"
-                    :action="`/hide-customer-state/` + customer.id"
+                <div class="form-group flex justify-center items-center">
+                  <input type="hidden" name="_token" :value="csrfToken" />
+                  <button
+                    type="submit"
+                    onclick="return confirm('Are you sure?')"
+                    class="focus:outline-none text-white bg-blue-500 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium text-sm p-2"
                   >
-                    <div class="form-group flex justify-center items-center">
-                      <input type="hidden" name="_token" :value="csrfToken" />
-                      <button
-                        type="submit"
-                        onclick="return confirm('Are you sure?')"
-                        class="focus:outline-none text-white bg-blue-500 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium text-sm p-2"
-                      >
-                        <HideUnhideToggleIcon
-                          :hidden="activePlan.name == 'hidden'"
-                        />
-                      </button>
-                    </div>
-                  </form>
-                </td>
-              </tr>
-            </template>
-          </table>
+                    <HideUnhideToggleIcon
+                      :hidden="activePlan.name == 'hidden'"
+                    />
+                  </button>
+                </div>
+              </form>
+            </td>
+          </tr>
+        </template>
+      </table>
     </div>
   </div>
 </template>
@@ -158,7 +157,7 @@ export default {
         name: null,
         customers: [],
         stats: { predicted_MRR: 0, predicted_ARR: 0, plan_price: 0 },
-        sale_funnel:[]
+        sale_funnel: [],
       },
       hiddenCustomers: [],
       headerNames: [
@@ -208,13 +207,13 @@ export default {
       }
     );
 
-      // Combine all customers in each group into a single group for an "All" tab.
+    // Combine all customers in each group into a single group for an "All" tab.
     const allCustomers = plans.flatMap((plan) => plan.customers);
 
     // Get all hidden users
     this.hiddenCustomers = allCustomers.filter((c) => c.hidden_at);
 
-      // Create an "All" group and add to the start of the plans array.
+    // Create an "All" group and add to the start of the plans array.
     plans.unshift({ name: "all", customers: allCustomers, stats: totalStats });
 
     // Use only groups that have a plan name
