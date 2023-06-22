@@ -25,7 +25,9 @@
                     @php
                        $funnelStep= $customer->first()->latestState->state['funnel_step'];
                     @endphp
-                    <x-dashboard.timeline :sale-funnel='$saleFunnel' :customer-step='$funnelStep'/>
+                    <div class="py-4">
+                        <sale-funnel-timeline  :sale-funnel-data='{!!json_encode($saleFunnel->data)!!}' :customer-step="'{{$funnelStep}}'"/>
+                    </div>
                 </div>
 
                 <div class="grid lg:grid-cols-3 md:grid-cols-1 gap-4 mt-4 h-auto">

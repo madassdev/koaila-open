@@ -34,10 +34,10 @@
                             'slug' => 'stripe',
                             'description' =>'Sync your Stripe data for more accurate results'
                             ],[
-                            'name' => 'Fullstory',
-                            'image' => 'fullstory.png',
-                            'slug' => 'fullstory',
-                            'description' =>'Sync your Fullstory to uncover upsell opportunities'
+                            'name' => 'Segment',
+                            'image' => 'segment.png',
+                            'slug' => 'segment',
+                            'description' =>'Add a destination in Segment to send your data to Koaila'
                             ],[
                             'name' => 'Hubspot',
                             'image' => 'hubspot.png',

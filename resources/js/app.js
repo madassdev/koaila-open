@@ -36,6 +36,9 @@ app.component('customer-upsell-list-by-plan', CustomerUpsellListByPlan);
 import UserAccountSettings from './components/UserAccountSettings.vue';
 app.component('user-account-settings', UserAccountSettings);
 
+import SaleFunnelTimeline from './components/SaleFunnelTimeline.vue';
+app.component('sale-funnel-timeline', SaleFunnelTimeline);
+
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue

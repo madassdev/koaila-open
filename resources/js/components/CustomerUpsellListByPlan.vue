@@ -23,6 +23,9 @@
       Hidden
     </button>
   </div>
+  <div class="p-4">
+    <SaleFunnelTimeline :sale-funnel-data="saleFunnelData" />
+  </div>
 
   <div class="p-4 flex space-x-8" v-if="activePlan.stats.plan_exists">
     <div :class="statsCardStyle + ' flex font-bold text-lg'">
@@ -141,8 +144,9 @@
 <script>
 import Stars from "./Stars.vue";
 import HideUnhideToggleIcon from "./HideUnhideToggleIcon.vue";
+import SaleFunnelTimeline from "./SaleFunnelTimeline.vue";
 export default {
-  props: { data: Object },
+  props: { data: Object, saleFunnelData: Object },
   data() {
     return {
       plans: [],
@@ -235,6 +239,6 @@ export default {
       return parseFloat(number).toLocaleString();
     },
   },
-  components: { Stars, HideUnhideToggleIcon },
+  components: { Stars, HideUnhideToggleIcon, SaleFunnelTimeline },
 };
 </script>

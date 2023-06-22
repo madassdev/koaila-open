@@ -16,7 +16,7 @@ class IntegrationRequest extends FormRequest
     {
         switch($this->route('type')){
             case 'stripe':
-            case 'fullstory':
+            case 'segment':
                 return [
                 'key' => ['required','string'],
                 ];
