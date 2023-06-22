@@ -10,7 +10,7 @@ class SaleFunnel extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id',
+        'config_id',
         'data'
     ];
 
@@ -18,11 +18,11 @@ class SaleFunnel extends Model
         'data' => 'array'
     ];
 
-    public function user()
+    public function configuration()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Configuration::class);
     }
-    
+
     public function states()
     {
         return $this->hasMany(CustomerState::class,'funnel_id');

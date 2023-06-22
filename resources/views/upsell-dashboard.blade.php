@@ -26,18 +26,10 @@
                 </div>
             </div>
 
-            @php $saleFunnel = $results->firstWhere('type','sale_funnel');
-            @endphp
-
             <div id="upsell_dashboard">
-                <!-- <x-dashboard.timeline
-                    :sale-funnel="$saleFunnel"
-                    customerStep=""
-                /> -->
                 <x-dashboard.upsell-dashboard
                     :upsell-stats="$upsellStats"
                     :customersByPlans="$customersByPlans"
-                    :saleFunnelData="$saleFunnel->data"
                 />
             </div>
 

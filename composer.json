@@ -65,7 +65,8 @@
         "laravel": {
             "dont-discover": [],
             "commands": [
-                "App\\Console\\Commands\\ImportUpsellListCommand"
+                "App\\Console\\Commands\\ImportUpsellListCommand",
+                "App\\Console\\Commands\\ImportSaleFunnelCommand"
             ]
         }
     },

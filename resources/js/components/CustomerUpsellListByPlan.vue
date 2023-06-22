@@ -23,9 +23,6 @@
       Hidden
     </button>
   </div>
-  <div class="p-4">
-    <SaleFunnelTimeline :sale-funnel-data="saleFunnelData" />
-  </div>
 
   <div class="p-4 flex space-x-8" v-if="activePlan.stats.plan_exists">
     <div :class="statsCardStyle + ' flex font-bold text-lg'">
@@ -58,7 +55,10 @@
       </p>
     </div>
   </div>
-
+  
+  <div class="p-4" v-if="activePlan.name !== 'all'">
+    <SaleFunnelTimeline :sale-funnel-data="activePlan.sale_funnel" />
+  </div>
   <div class="flex flex-col p-4">
     <div class="flex">
       <table class="w-full border text-sm text-left text-gray-500">
@@ -157,6 +157,7 @@ export default {
         name: null,
         customers: [],
         stats: { predicted_MRR: 0, predicted_ARR: 0, plan_price: 0 },
+        sale_funnel: [],
       },
       hiddenCustomers: [],
       headerNames: [
