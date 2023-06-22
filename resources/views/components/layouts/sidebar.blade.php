@@ -80,7 +80,7 @@
             <div class="space-y-2 nav-collapsed p-3">
                 <a
                     class="flex items-center space-x-2 text-gray-400 hover:text-white"
-                    href="{{ route('account-settings.index') }}"
+                    href="{{ route('settings.index') }}"
                 >
                     <span>{{ __("Profile") }}</span>
                 </a>
