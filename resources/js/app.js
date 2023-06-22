@@ -33,6 +33,9 @@ app.component('doughnut-chart', DoughnutChart);
 import CustomerUpsellListByPlan from './components/CustomerUpsellListByPlan.vue';
 app.component('customer-upsell-list-by-plan', CustomerUpsellListByPlan);
 
+import UserAccountSettings from './components/UserAccountSettings.vue';
+app.component('user-account-settings', UserAccountSettings);
+
 import SaleFunnelTimeline from './components/SaleFunnelTimeline.vue';
 app.component('sale-funnel-timeline', SaleFunnelTimeline);
 
