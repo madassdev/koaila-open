@@ -64,6 +64,29 @@
             </div>
         </div>
 
+        <div class="w-full">
+            <div
+                class="flex items-center justify-between cursor-pointer space-x-2 toggler uppercase"
+            >
+                <div class="flex items-center space-x-2">
+                    @svg('account-circle','', 'currentColor')
+
+                    <span>{{ __("Account") }}</span>
+                </div>
+                <span class="toggleIcon transform rotate-180">
+                    @svg('chevron-right', '', 'currentColor')
+                </span>
+            </div>
+            <div class="space-y-2 nav-collapsed p-3">
+                <a
+                    class="flex items-center space-x-2 text-gray-400 hover:text-white"
+                    href="{{ route('account-settings.index') }}"
+                >
+                    <span>{{ __("Profile") }}</span>
+                </a>
+            </div>
+        </div>
+
         <div
             class="flex items-center cursor-pointer space-x-2 toggler uppercase"
         >
