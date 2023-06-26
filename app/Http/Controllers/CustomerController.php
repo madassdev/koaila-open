@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Customer;
 use App\Models\CustomerState;
+use App\Models\SaleFunnel;
 use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Http\Request;
@@ -20,10 +21,8 @@ class CustomerController extends Controller
     {
         $customer = Auth::user()->configuration()->first()->customers()->where('id', $id)->with('states')->get();
 
-        $saleFunnel = Auth::user()->results()->whereIn('type', ['sale_funnel'])->get()->map(function ($result) {
-            $result->data = $result->loadData();
-            return $result;
-        })->firstWhere('type', 'sale_funnel');
+        // Fetch  customer's sale funnel data
+        $saleFunnel = SaleFunnel::find($customer->first()->latestState->funnel_id);
 
         return view('customer-dashboard')->with([
             'customer' => $customer,

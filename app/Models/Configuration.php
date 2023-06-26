@@ -46,6 +46,11 @@ class Configuration extends Model
         return $this->hasManyThrough(CustomerState::class,Customer::class,'config_id','customer_id');
     }
 
+    public function saleFunnels()
+    {
+        return $this->hasMany(SaleFunnel::class);
+    }
+
     protected static function booted(): void
     {
         static::creating(function (Configuration $config) {

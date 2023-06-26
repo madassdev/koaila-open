@@ -1,4 +1,4 @@
-@props(['upsellStats','upsell', 'customersByPlans'])
+@props(['upsellStats', 'customersByPlans'])
 
 @php
     // Extract all hidden  customers in each group and flatten to a single array
@@ -35,7 +35,7 @@
         <customer-upsell-list-by-plan :data='{!!json_encode($customersByPlans)!!}'>
         </customer-upsell-list-by-plan>
 
-        
+
     </div>
 </div>
 @endif

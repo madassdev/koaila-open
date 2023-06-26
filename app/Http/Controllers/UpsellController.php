@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Customer;
-use App\Models\CustomerState;
+use App\Models\SaleFunnel;
 use App\Models\User;
+
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
-
 use Illuminate\Http\Request;
+
 use Response;
 
 class UpsellController extends Controller
@@ -26,11 +26,6 @@ class UpsellController extends Controller
      */
     public function index()
     {
-        $results = Auth::user()->results()->whereIn('type', ['sale_funnel'])->get()->map(function ($result) {
-            $result->data = $result->loadData();
-            return $result;
-        });
-
         // Prepare data for frontend.
         $upsellStats = null;
         $customersByPlans = null;
@@ -40,11 +35,14 @@ class UpsellController extends Controller
         if ($customersState) {
             // Group customers by plan.
             list($customersByPlans, $upsellStats) = $this->getGroupedPlansData($customersState);
-
         }
 
+        $customersByPlans = $customersByPlans->map(function ($customersByPlan) {
+            $customersByPlan['sale_funnel'] = SaleFunnel::find($customersByPlan['customers']?->first()?->latestState?->funnel_id)?->data;
+            return $customersByPlan;
+        });
+
         return view('upsell-dashboard')->with([
-            'results' => $results,
             'customersByPlans' => $customersByPlans,
             'upsellStats' => $upsellStats
         ]);
@@ -65,9 +63,9 @@ class UpsellController extends Controller
             $prices = json_decode(Storage::get($pricing_data_file_path), true);
             // Get plans in pricing.json and determine stats based on plans availability.
             $plans = @$prices[Auth::user()->company_name]['plans'] ?? [];
-            if (array_key_exists($planName, $plans)) {
+            if (in_array(strtolower($planName), array_keys($plans))) {
                 // Get planPrice and calculate MRR/ARR.
-                $planPrice = $prices[Auth::user()->company_name]['plans'][$planName]['prices'][0]['amount'];
+                $planPrice = $prices[Auth::user()->company_name]['plans'][strtolower($planName)]['prices'][0]['amount'];
                 return [
                     'predicted_MRR' => $customersCount * $planPrice,
                     'predicted_ARR' => $customersCount * $planPrice * 12,

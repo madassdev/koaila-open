@@ -53,11 +53,6 @@ class User extends Authenticatable
         return $this->hasMany(Result::class);
     }
 
-    public function funnels()
-    {
-        return $this->hasMany(SaleFunnel::class);
-    }
-
     public function configuration()
     {
         return $this->hasOne(Configuration::class);
