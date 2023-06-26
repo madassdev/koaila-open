@@ -14,7 +14,6 @@ return new class extends Migration
     public function up()
     {
         Schema::table('customers', function (Blueprint $table) {
-            //
             $table->boolean('contacted')->nullable();
         });
     }
@@ -27,7 +26,6 @@ return new class extends Migration
     public function down()
     {
         Schema::table('customers', function (Blueprint $table) {
-            //
             $table->dropColumn('contacted');
         });
     }

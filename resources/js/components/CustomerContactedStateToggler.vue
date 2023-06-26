@@ -1,17 +1,7 @@
 <template>
-  <form
-    method="POST"
-    ref="contactUpdateForm"
-    :action="`/update-customer-contacted-state/` + customer.id"
-  >
+  <form method="POST" ref="contactUpdateForm" :action="`/update-customer-contacted-state/` + customer.id">
     <input type="hidden" name="_token" :value="csrfToken" />
-    <input
-      type="checkbox"
-      v-model="isChecked"
-      name="contacted"
-      id=""
-      @change="updateContactStatus"
-    />
+    <input type="checkbox" v-model="isChecked" name="contacted" id="" @change="updateContactStatus" />
   </form>
 </template>
 
@@ -29,14 +19,8 @@ export default {
   methods: {
     // Updates the backend after confirmation
     updateContactStatus() {
-      const confirmation = confirm("Are you sure?");
-      if (confirmation) {
-        // Submit tne form
-        this.$refs.contactUpdateForm.submit();
-      } else {
-        // Reset checkbox state
-        this.isChecked = !this.isChecked;
-      }
+      // Submit tne form
+      this.$refs.contactUpdateForm.submit();
     },
   },
 };
