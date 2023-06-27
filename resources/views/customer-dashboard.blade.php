@@ -25,9 +25,11 @@
                     @php
                        $funnelStep= $customer->first()->latestState->state['funnel_step'];
                     @endphp
+                    @if($saleFunnel?->data)
                     <div class="py-4">
-                        <sale-funnel-timeline  :sale-funnel-data='{!!json_encode($saleFunnel->data)!!}' :customer-step="'{{$funnelStep}}'"/>
+                        <sale-funnel-timeline  :sale-funnel-data='{!!json_encode($saleFunnel?->data)!!}' :customer-step="'{{$funnelStep}}'"/>
                     </div>
+                    @endif
                 </div>
 
                 <div class="grid lg:grid-cols-3 md:grid-cols-1 gap-4 mt-4 h-auto">
