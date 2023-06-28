@@ -59,7 +59,7 @@ class User extends Authenticatable
     {
         return $this->hasOne(Configuration::class);
     }
-    
+
     public function organization()
     {
         return $this->belongsTo(Organization::class);
@@ -83,6 +83,6 @@ class User extends Authenticatable
      */
     public function getIsAdminAttribute()
     {
-        return $this->role == $this->organization::$adminRole;
+        return $this->role == Organization::$adminRole;
     }
 }

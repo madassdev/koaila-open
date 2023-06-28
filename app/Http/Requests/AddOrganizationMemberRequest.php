@@ -14,7 +14,7 @@ class AddOrganizationMemberRequest extends FormRequest
      */
     public function authorize()
     {
-        return auth()->user()->role ==  'admin';
+        return auth()->user()->role ==  Organization::$adminRole;
     }
 
     /**

@@ -84,12 +84,15 @@
                 >
                     <span>{{ __("Profile") }}</span>
                 </a>
+                @php $is_admin = !auth()->user()->organization_id || auth()->user()->is_admin @endphp
+                @if($is_admin)
                 <a
-                class="flex items-center space-x-2 text-gray-400 hover:text-white"
-                href="{{ route('organization-settings.index') }}"
-            >
-                <span>{{ __("Organization") }}</span>
-            </a>
+                    class="flex items-center space-x-2 text-gray-400 hover:text-white"
+                    href="{{ route('organization-settings.index') }}"
+                >
+                    <span>{{ __("Organization") }}</span>
+                </a>
+                @endif
             </div>
         </div>
 
