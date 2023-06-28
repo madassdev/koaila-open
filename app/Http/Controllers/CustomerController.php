@@ -60,6 +60,26 @@ class CustomerController extends Controller
     }
 
     /**
+     * Updates customer contacted status.
+     *
+     * @param int $customerId
+     * @return \Illuminate\Routing\Redirector
+     * 
+     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+
+     */
+    public function toggleContactedState($customerId)
+    {
+        $customer = Customer::findOrFail($customerId);
+        $this->authorize('toggleContactedState', $customer);
+
+        $customer->update(['contacted' => !$customer->contacted]);
+
+        return redirect()->route('upsell-dashboard');
+    }
+
+    /**
      * Assign customer to a member in same organization as authenticated user.
      *
      * @param \App\Http\Requests\AssignCustomerToMemberRequest $request

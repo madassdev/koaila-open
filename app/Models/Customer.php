@@ -14,6 +14,7 @@ class Customer extends Model
         'usage_tracking_id',
         'email',
         'hidden_at',
+        'contacted'
     ];
 
     public function states()

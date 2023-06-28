@@ -38,12 +38,12 @@ class UpsellController extends Controller
         if ($customersState) {
             // Group customers by plan.
             list($customersByPlans, $upsellStats) = $this->getGroupedPlansData($customersState);
-        }
 
-        $customersByPlans = $customersByPlans->map(function ($customersByPlan) {
-            $customersByPlan['sale_funnel'] = SaleFunnel::find($customersByPlan['customers']?->first()?->latestState?->funnel_id)?->data;
-            return $customersByPlan;
-        });
+            $customersByPlans = $customersByPlans->map(function ($customersByPlan) {
+                $customersByPlan['sale_funnel'] = SaleFunnel::find($customersByPlan['customers']?->first()?->latestState?->funnel_id)?->data;
+                return $customersByPlan;
+            });
+        }
 
         if($user->is_admin){
             // Fetch members of organization to be used when assigning customers on the frontend.
@@ -236,8 +236,8 @@ class UpsellController extends Controller
                 ->first()
                 ->customers()
                 ->whereHas('latestState', function ($q) use ($latestDate) {
-                    $latestDateWithoutSeconds = date('Y-m-d H:i:00', strtotime($latestDate));
-                    return $q->whereRaw("to_char(date, 'YYYY-MM-DD HH24:MI:00') = ?", [$latestDateWithoutSeconds]);
+                    $latestDateDay = date('Y-m-d', strtotime($latestDate));
+                    return $q->whereDate('date', $latestDateDay);
                 })
                 ->with('latestState', 'user');
             if (!$user->is_admin) {

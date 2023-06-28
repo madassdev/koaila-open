@@ -73,66 +73,76 @@
 
         <!-- Customers row -->
         <template v-else>
-          <tr class="bg-white border-b" v-for="customer in activePlan.customers" :key="customer.id">
-            <td scope="row" class="px-6 py-4 font-bold whitespace-nowrap text-center">
-              <a :href="`/customer-dashboard/` + customer.id">{{
-                customer.email
-              }}</a>
-            </td>
-            <td scope="row" :class="tableDataStyle">
-              <div class="flex items-center justify-center">
-                <Stars :amount="customer.latest_state.state.likelihood" />
-              </div>
-            </td>
+          <template v-for="customer in activePlan.customers" :key="customer.id">
+            <tr class="bg-white border-b" v-if="contactFilter == 'all'
+                ? true
+                : contactFilter == 'contacted'
+                  ? customer.contacted
+                  : !customer.contacted
+              ">
+              <td scope="row" class="px-6 py-4 font-bold whitespace-nowrap text-center">
+                <a :href="`/customer-dashboard/` + customer.id">{{
+                  customer.email
+                }}</a>
+              </td>
+              <td scope="row" :class="tableDataStyle">
+                <div class="flex items-center justify-center">
+                  <Stars :amount="customer.latest_state.state.likelihood" />
+                </div>
+              </td>
 
-            <td :class="tableDataStyle">
-              {{ customer.latest_state.state.user_creation_time }}
-            </td>
+              <td :class="tableDataStyle">
+                {{ customer.latest_state.state.user_creation_time }}
+              </td>
 
-            <td :class="tableDataStyle">
-              {{ customer.latest_state.state.time_to_value }}
-            </td>
+              <td :class="tableDataStyle">
+                {{ customer.latest_state.state.time_to_value }}
+              </td>
+              <td :class="tableDataStyle">
+                <CustomerContactedStateToggler :customer="customer" />
+              </td>
 
-            <!-- Assign or reassign user to an organozation member. -->
-            <td :class="tableDataStyle" v-if="user.role == 'admin'">
-              <div v-if="customer.user" class="space-y-1">
-                <p>
-                  {{ customer.user?.email }}
-                </p>
-                <div class="flex justify-center">
+              <!-- Assign or reassign user to an organozation member. -->
+              <td :class="tableDataStyle" v-if="user.role == 'admin'">
+                <div v-if="customer.user" class="space-y-1">
+                  <p>
+                    {{ customer.user?.email }}
+                  </p>
+                  <div class="flex justify-center">
+                    <button @click="assignCustomer(customer)"
+                      class="p-1 px-2 text-xs border text-orange-500 border-gray-300 rounded flex space-x-1 items-center justify-center">
+                      <ArrowUTurnLeft class="w-3 h-3" />
+                      <span>
+                        Reassign
+                      </span>
+                    </button>
+                  </div>
+                </div>
+                <div v-else="customer.user" class="flex items-center justify-center">
                   <button @click="assignCustomer(customer)"
-                    class="p-1 px-2 text-xs border text-orange-500 border-gray-300 rounded flex space-x-1 items-center justify-center">
-                    <ArrowUTurnLeft class="w-3 h-3" />
+                    class="p-1 px-2 text-xs border border-gray-300 rounded flex space-x-1 items-center justify-center">
+                    <UserPlus class="w-3 h-3" />
                     <span>
-                      Reassign
+                      Assign
                     </span>
                   </button>
                 </div>
-              </div>
-              <div v-else="customer.user" class="flex items-center justify-center">
-                <button @click="assignCustomer(customer)"
-                  class="p-1 px-2 text-xs border border-gray-300 rounded flex space-x-1 items-center justify-center">
-                  <UserPlus class="w-3 h-3" />
-                  <span>
-                    Assign
-                  </span>
-                </button>
-              </div>
-            </td>
+              </td>
 
-            <!-- Visibility toggle -->
-            <td>
-              <form method="POST" :action="`/hide-customer-state/` + customer.id">
-                <div class="form-group flex justify-center items-center">
-                  <input type="hidden" name="_token" :value="csrfToken" />
-                  <button type="submit" onclick="return confirm('Are you sure?')"
-                    class="focus:outline-none text-white bg-blue-500 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium text-sm p-2">
-                    <HideUnhideToggleIcon :hidden="activePlan.name == 'hidden'" />
-                  </button>
-                </div>
-              </form>
-            </td>
-          </tr>
+              <!-- Visibility toggle -->
+              <td>
+                <form method="POST" :action="`/hide-customer-state/` + customer.id">
+                  <div class="form-group flex justify-center items-center">
+                    <input type="hidden" name="_token" :value="csrfToken" />
+                    <button type="submit" onclick="return confirm('Are you sure?')"
+                      class="focus:outline-none text-white bg-blue-500 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium text-sm p-2">
+                      <HideUnhideToggleIcon :hidden="activePlan.name == 'hidden'" />
+                    </button>
+                  </div>
+                </form>
+              </td>
+            </tr>
+          </template>
         </template>
       </table>
     </div>
@@ -147,11 +157,12 @@ import Stars from "./Stars.vue";
 import { UserPlus, ArrowUTurnLeft } from './Icons/Index.vue'
 import HideUnhideToggleIcon from "./HideUnhideToggleIcon.vue";
 import SaleFunnelTimeline from "./SaleFunnelTimeline.vue";
+import CustomerContactedStateToggler from "./CustomerContactedStateToggler.vue";
 import AssignCustomerToMember from "./AssignCustomerToMember.vue";
 import ModalWrapper from "./ModalWrapper.vue";
 
 export default {
-  components: { Stars, HideUnhideToggleIcon, SaleFunnelTimeline, UserPlus, ModalWrapper, AssignCustomerToMember, ArrowUTurnLeft },
+  components: { Stars, HideUnhideToggleIcon, SaleFunnelTimeline, UserPlus, ModalWrapper, AssignCustomerToMember, ArrowUTurnLeft, CustomerContactedStateToggler },
   props: { user: Object, data: Object, saleFunnelData: Object, routes: Array, members: Array },
   data() {
     return {
@@ -165,6 +176,7 @@ export default {
         stats: { predicted_MRR: 0, predicted_ARR: 0, plan_price: 0 },
         sale_funnel: [],
       },
+      contactFilter: "all",
       assignCustomerModal: false,
       customerToAssign: null,
       hiddenCustomers: [],
@@ -173,6 +185,7 @@ export default {
         "Likelihood",
         "User Creation Time",
         "Time to Value",
+        "Contacted",
       ],
       activePlanStyle:
         "text-white bg-blue-700 hover:bg-blue-800 focus:ring- focus:ring-blue-300 focus:outline-none",
@@ -227,6 +240,11 @@ export default {
     // Use only groups that have a plan name
     this.plans = plans.filter((p) => p.name != "");
     this.makeActive(plans[0]);
+
+    // Set filter states
+    const params = new URLSearchParams(window.location.search);
+    const currentFilter = params.get("contacted_status");
+    this.contactFilter = currentFilter || "all";
   },
 
   methods: {
