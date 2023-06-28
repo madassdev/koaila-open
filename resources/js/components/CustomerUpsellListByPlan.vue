@@ -1,37 +1,25 @@
 <template>
   <div class="flex items-center justify-between px-4">
     <div class="flex space-x-2 mb-2">
-      <button
-        v-for="plan in plans"
-        :key="plan"
-        class="font-medium capitalize rounded-lg text-sm p-1 px-2"
-        :class="[
-          plan.name === activePlan.name ? activePlanStyle : inactivePlanStyle,
-        ]"
-        @click="makeActive(plan)"
-      >
+      <button v-for="plan in plans" :key="plan" class="font-medium capitalize rounded-lg text-sm p-1 px-2" :class="[
+        plan.name === activePlan.name ? activePlanStyle : inactivePlanStyle,
+      ]" @click="makeActive(plan)">
         {{ plan.name }}
       </button>
     </div>
-    <button
-      class="font-medium capitalize rounded-lg text-sm p-1 px-2 mb-2"
-      :class="[
-        activePlan.name === 'hidden' ? activePlanStyle : inactivePlanStyle,
-      ]"
-      @click="showHiddenCustomers()"
-    >
+    <button class="font-medium capitalize rounded-lg text-sm p-1 px-2 mb-2" :class="[
+      activePlan.name === 'hidden' ? activePlanStyle : inactivePlanStyle,
+    ]" @click="showHiddenCustomers()">
       Hidden
     </button>
   </div>
 
   <div class="p-4 flex space-x-8" v-if="activePlan.stats.plan_exists">
     <div :class="statsCardStyle + ' flex font-bold text-lg'">
-      <span
-        >{{ activePlan.customers.length }} User{{
-          activePlan.customers.length > 1 ? "s" : ""
-        }}
-        to upsell</span
-      >
+      <span>{{ activePlan.customers.length }} User{{
+        activePlan.customers.length > 1 ? "s" : ""
+      }}
+        to upsell</span>
     </div>
     <div :class="statsCardStyle">
       <span class="text-xs">Predicted MRR:</span>
@@ -55,7 +43,7 @@
       </p>
     </div>
   </div>
-  
+
   <div class="p-4" v-if="activePlan.name !== 'all'">
     <SaleFunnelTimeline :sale-funnel-data="activePlan.sale_funnel" />
   </div>
@@ -64,13 +52,11 @@
       <table class="w-full border text-sm text-left text-gray-500">
         <thead>
           <tr>
-            <th
-              scope="col"
-              :class="tableHeaderStyle"
-              v-for="(headerName, index) in headerNames"
-              :key="index"
-            >
+            <th scope="col" :class="tableHeaderStyle" v-for="(headerName, index) in headerNames" :key="index">
               {{ headerName }}
+            </th>
+            <th :class="tableHeaderStyle" v-if="user.role == 'admin'">
+              Assigned to
             </th>
             <th :class="tableHeaderStyle">
               {{ activePlan.name == "hidden" ? "Unhide" : "Hide" }}
@@ -87,15 +73,8 @@
 
         <!-- Customers row -->
         <template v-else>
-          <tr
-            class="bg-white border-b"
-            v-for="customer in activePlan.customers"
-            :key="customer.id"
-          >
-            <td
-              scope="row"
-              class="px-6 py-4 font-bold whitespace-nowrap text-center"
-            >
+          <tr class="bg-white border-b" v-for="customer in activePlan.customers" :key="customer.id">
+            <td scope="row" class="px-6 py-4 font-bold whitespace-nowrap text-center">
               <a :href="`/customer-dashboard/` + customer.id">{{
                 customer.email
               }}</a>
@@ -114,22 +93,41 @@
               {{ customer.latest_state.state.time_to_value }}
             </td>
 
+            <!-- Assign or reassign user to an organozation member. -->
+            <td :class="tableDataStyle" v-if="user.role == 'admin'">
+              <div v-if="customer.user" class="space-y-1">
+                <p>
+                  {{ customer.user?.email }}
+                </p>
+                <div class="flex justify-center">
+                  <button @click="assignCustomer(customer)"
+                    class="p-1 px-2 text-xs border text-orange-500 border-gray-300 rounded flex space-x-1 items-center justify-center">
+                    <ArrowUTurnLeft class="w-3 h-3" />
+                    <span>
+                      Reassign
+                    </span>
+                  </button>
+                </div>
+              </div>
+              <div v-else="customer.user" class="flex items-center justify-center">
+                <button @click="assignCustomer(customer)"
+                  class="p-1 px-2 text-xs border border-gray-300 rounded flex space-x-1 items-center justify-center">
+                  <UserPlus class="w-3 h-3" />
+                  <span>
+                    Assign
+                  </span>
+                </button>
+              </div>
+            </td>
+
             <!-- Visibility toggle -->
             <td>
-              <form
-                method="POST"
-                :action="`/hide-customer-state/` + customer.id"
-              >
+              <form method="POST" :action="`/hide-customer-state/` + customer.id">
                 <div class="form-group flex justify-center items-center">
                   <input type="hidden" name="_token" :value="csrfToken" />
-                  <button
-                    type="submit"
-                    onclick="return confirm('Are you sure?')"
-                    class="focus:outline-none text-white bg-blue-500 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium text-sm p-2"
-                  >
-                    <HideUnhideToggleIcon
-                      :hidden="activePlan.name == 'hidden'"
-                    />
+                  <button type="submit" onclick="return confirm('Are you sure?')"
+                    class="focus:outline-none text-white bg-blue-500 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium text-sm p-2">
+                    <HideUnhideToggleIcon :hidden="activePlan.name == 'hidden'" />
                   </button>
                 </div>
               </form>
@@ -139,14 +137,22 @@
       </table>
     </div>
   </div>
+  <ModalWrapper :isOpen="assignCustomerModal" @close="assignCustomerModal = false" width="w-[40vw]" height="h-fit">
+    <AssignCustomerToMember :customer="customerToAssign" :members="members" :routes="routes" />
+  </ModalWrapper>
 </template>
 
 <script>
 import Stars from "./Stars.vue";
+import { UserPlus, ArrowUTurnLeft } from './Icons/Index.vue'
 import HideUnhideToggleIcon from "./HideUnhideToggleIcon.vue";
 import SaleFunnelTimeline from "./SaleFunnelTimeline.vue";
+import AssignCustomerToMember from "./AssignCustomerToMember.vue";
+import ModalWrapper from "./ModalWrapper.vue";
+
 export default {
-  props: { data: Object, saleFunnelData: Object },
+  components: { Stars, HideUnhideToggleIcon, SaleFunnelTimeline, UserPlus, ModalWrapper, AssignCustomerToMember, ArrowUTurnLeft },
+  props: { user: Object, data: Object, saleFunnelData: Object, routes: Array, members: Array },
   data() {
     return {
       plans: [],
@@ -159,6 +165,8 @@ export default {
         stats: { predicted_MRR: 0, predicted_ARR: 0, plan_price: 0 },
         sale_funnel: [],
       },
+      assignCustomerModal: false,
+      customerToAssign: null,
       hiddenCustomers: [],
       headerNames: [
         "Email",
@@ -236,10 +244,16 @@ export default {
         stats: { plan_exists: false },
       };
     },
+
+    // Set selected customer as customer to assign and open the modal.
+    assignCustomer(customer) {
+      this.customerToAssign = customer;
+      this.assignCustomerModal = true;
+    },
+
     numberFormat(number) {
       return parseFloat(number).toLocaleString();
     },
   },
-  components: { Stars, HideUnhideToggleIcon, SaleFunnelTimeline },
 };
 </script>

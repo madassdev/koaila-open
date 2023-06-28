@@ -22,6 +22,8 @@ class User extends Authenticatable
         'email',
         'password',
         'company_name',
+        'role',
+        'organization_id'
     ];
 
     /**
@@ -56,5 +58,25 @@ class User extends Authenticatable
     public function configuration()
     {
         return $this->hasOne(Configuration::class);
+    }
+
+    public function organization()
+    {
+        return $this->belongsTo(Organization::class);
+    }
+
+    public function customers()
+    {
+        return $this->hasMany(Customer::class);
+    }
+
+    /**
+     * Getter for the "is_admin" attribute of the user. This is determined from the value in "role" column.
+     *
+     * @return bool
+     */
+    public function getIsAdminAttribute()
+    {
+        return $this->role == $this->organization::$adminRole;
     }
 }

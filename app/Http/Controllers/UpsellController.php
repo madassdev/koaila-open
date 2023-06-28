@@ -26,9 +26,12 @@ class UpsellController extends Controller
      */
     public function index()
     {
+        $user = auth()->user();
+
         // Prepare data for frontend.
         $upsellStats = null;
         $customersByPlans = null;
+        $organizationMembers = [];
 
         // Get user's latest state.
         $customersState = $this->getLatestState();
@@ -42,9 +45,15 @@ class UpsellController extends Controller
             return $customersByPlan;
         });
 
+        if($user->is_admin){
+            // Fetch members of organization to be used when assigning customers on the frontend.
+            $organizationMembers = User::whereOrganizationId($user->id)->get();
+        }
+
         return view('upsell-dashboard')->with([
             'customersByPlans' => $customersByPlans,
-            'upsellStats' => $upsellStats
+            'upsellStats' => $upsellStats,
+            'members' => $organizationMembers
         ]);
     }
 
@@ -214,19 +223,28 @@ class UpsellController extends Controller
      */
     public function getLatestState()
     {
+        $user = Auth::user();
         $customers = null;
-        $latestDate = Auth::user()->configuration()->first()?->customerStates()?->orderByDesc('date')->first()?->date;
+
+        // Use the organization owner's user account, or use authenticated user when organization is not yet setup. 
+        $organizationAccount = $user->organization?->owner ?? $user;
+        $latestDate = $organizationAccount->configuration()->first()?->customerStates()?->orderByDesc('date')->first()?->date;
 
         if ($latestDate) {
-            $customers = Auth::user()->configuration()
+            // Fetch customers.
+            $query = $organizationAccount->configuration()
                 ->first()
                 ->customers()
                 ->whereHas('latestState', function ($q) use ($latestDate) {
                     $latestDateWithoutSeconds = date('Y-m-d H:i:00', strtotime($latestDate));
                     return $q->whereRaw("to_char(date, 'YYYY-MM-DD HH24:MI:00') = ?", [$latestDateWithoutSeconds]);
                 })
-                ->with('latestState')
-                ->get();
+                ->with('latestState', 'user');
+            if (!$user->is_admin) {
+                // Fetch only customers assigned to member.
+                $query = $query->whereUserId($user->id);
+            }
+            $customers = $query->get();
         }
 
         return $customers;

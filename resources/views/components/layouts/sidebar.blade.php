@@ -84,6 +84,12 @@
                 >
                     <span>{{ __("Profile") }}</span>
                 </a>
+                <a
+                class="flex items-center space-x-2 text-gray-400 hover:text-white"
+                href="{{ route('organization-settings.index') }}"
+            >
+                <span>{{ __("Organization") }}</span>
+            </a>
             </div>
         </div>
 

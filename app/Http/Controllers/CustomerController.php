@@ -1,21 +1,37 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\Http\Requests\AssignCustomerToMemberRequest;
 use App\Models\Customer;
-use App\Models\CustomerState;
 use App\Models\SaleFunnel;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Http\Request;
 
 class CustomerController extends Controller
 {
+    /**
+     * Shows details of a customer.
+     *
+     * @param int $id
+     * @return \Illuminate\Contracts\Support\Renderable
+     * 
+     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+
+    */
     public function show($id)
     {
-        $customer = Auth::user()->configuration()->first()->customers()->where('id', $id)->with('states')->get();
+        // Use the organization owner's user account, or use authenticated user when organization is not yet setup. 
+        $organizationAccount = Auth::user()->organization?->owner ?? Auth::user();
+        $customer = $organizationAccount->configuration()->first()->customers()->where('id', $id)->with('states')->firstOrFail();
 
-        // Fetch  customer's sale funnel data
-        $saleFunnel = SaleFunnel::find($customer->first()->latestState->funnel_id);
+        $this->authorize('showCustomerInfo', $customer);
+
+        // Fetch  customer's sale funnel data.
+        $saleFunnel = SaleFunnel::find($customer->latestState->funnel_id);
 
         return view('customer-dashboard')->with([
             'customer' => $customer,
@@ -23,13 +39,55 @@ class CustomerController extends Controller
         ]);
     }
 
-    public function toggleVisibility($customerId){
+    /**
+    * Toggles a customer's visibility on the dashboard.
+    *
+    * @param int $customerId
+    * @return \Illuminate\Http\RedirectResponse 
+    * 
+    * @throws \Illuminate\Auth\Access\AuthorizationException
+
+   */
+    public function toggleVisibility($customerId)
+    {
         $customer = Customer::findOrFail($customerId);
         $this->authorize('toggleVisibility', $customer);
 
         $hiddenAt = $customer->hidden_at == null ? now() : null;
-        $customer->update(['hidden_at'=> $hiddenAt]);
+        $customer->update(['hidden_at' => $hiddenAt]);
 
         return redirect()->route('upsell-dashboard');
+    }
+
+    /**
+     * Assign customer to a member in same organization as authenticated user.
+     *
+     * @param \App\Http\Requests\AssignCustomerToMemberRequest $request
+     * @return \Illuminate\Http\RedirectResponse 
+     * 
+     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+
+    */
+    public function assignToMember(AssignCustomerToMemberRequest $request)
+    {
+        $user = auth()->user();
+        $customer = Customer::findOrFail($request->customer_id);
+
+        // Ensure user can assign the customer to a member in their organization.
+        $this->authorize('assignToMember', $customer);
+
+        if ($request->member_id) {
+            // Member must belong to authenticated user's organization.
+            $member = User::whereId($request->member_id)->whereOrganizationId($user->organization_id)->firstOrFail();
+            $customer->user_id = $member->id;
+        } else {
+            // Make customer unassigned to any user.
+            $customer->user_id = null;
+        }
+
+        $customer->save();
+
+        return back()->with('message', 'Customer updated successfully.');
     }
 }

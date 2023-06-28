@@ -1,4 +1,4 @@
-@props(['upsellStats', 'customersByPlans'])
+@props(['upsellStats', 'customersByPlans', 'members'])
 
 @php
     // Extract all hidden  customers in each group and flatten to a single array
@@ -32,7 +32,16 @@
             </div>
         </div>
 
-        <customer-upsell-list-by-plan :data='{!!json_encode($customersByPlans)!!}'>
+        @php
+        $routes = ['assign_customer_to_member' => route('customers.member.assign')];
+        @endphp
+
+        <customer-upsell-list-by-plan 
+            :data='{!!json_encode($customersByPlans)!!}'
+            :user="{{ json_encode(auth()->user()) }}"
+            :routes="{{ json_encode($routes) }}"
+            :members="{{ json_encode($members) }}"
+        >
         </customer-upsell-list-by-plan>
 
 

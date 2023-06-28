@@ -37,6 +37,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/account-settings', [App\Http\Controllers\UserController::class, 'index'])->name('settings.index');
     Route::post('/account-settings/personal-info', [App\Http\Controllers\UserController::class, 'savePersonalInfoSettings'])->name('settings.personalInfo.save');
     Route::post('/account-settings/password', [App\Http\Controllers\UserController::class, 'savePasswordSettings'])->name('settings.password.save');
+    Route::get('/organization-settings', [App\Http\Controllers\OrganizationController::class, 'index'])->name('organization-settings.index');
+    Route::post('/organization-settings', [App\Http\Controllers\OrganizationController::class, 'store'])->name('organization-settings.create');
+    Route::post('/organization-settings/add-member', [App\Http\Controllers\OrganizationController::class, 'addMember'])->name('organization-settings.members.add');
+    Route::post('/customers/assign', [App\Http\Controllers\CustomerController::class, 'assignToMember'])->name('customers.member.assign');
 
     Route::group(['as'=>'oauth.'], function () {
         Route::get('oauth/{driver}/redirect', [\App\Http\Controllers\OAuth\OAuthController::class, 'redirect'])->name('redirect');

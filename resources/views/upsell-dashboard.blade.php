@@ -6,6 +6,13 @@
             <div class="alert alert-success" role="alert">
                 {{ session("status") }}
             </div>
+            @endif @if(session()->has('message'))
+            <div
+                class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mb-4"
+                role="alert"
+            >
+                <p>{{ session()->get('message') }}</p>
+            </div>
             @endif
             <div class="flex flex-wrap">
                 <div class="py-4">
@@ -30,6 +37,7 @@
                 <x-dashboard.upsell-dashboard
                     :upsell-stats="$upsellStats"
                     :customersByPlans="$customersByPlans"
+                    :members="$members"
                 />
             </div>
 
