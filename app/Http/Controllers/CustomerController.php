@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\Customer;
 use App\Models\CustomerState;
 use App\Models\SaleFunnel;
@@ -10,6 +11,12 @@ use Illuminate\Http\Request;
 
 class CustomerController extends Controller
 {
+    /**
+     * Shows a customer's details
+     *
+     * @param int $id
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
     public function show($id)
     {
         $customer = Auth::user()->configuration()->first()->customers()->where('id', $id)->with('states')->get();
@@ -23,12 +30,43 @@ class CustomerController extends Controller
         ]);
     }
 
-    public function toggleVisibility($customerId){
+    /**
+     * Updates customer visibility status.
+     *
+     * @param int $customerId
+     * @return \Illuminate\Routing\Redirector
+     * 
+     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+
+     */
+    public function toggleVisibility($customerId)
+    {
         $customer = Customer::findOrFail($customerId);
         $this->authorize('toggleVisibility', $customer);
 
         $hiddenAt = $customer->hidden_at == null ? now() : null;
-        $customer->update(['hidden_at'=> $hiddenAt]);
+        $customer->update(['hidden_at' => $hiddenAt]);
+
+        return redirect()->route('upsell-dashboard');
+    }
+
+    /**
+     * Updates customer contacted status.
+     *
+     * @param int $customerId
+     * @return \Illuminate\Routing\Redirector
+     * 
+     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
+     * @throws \Illuminate\Auth\Access\AuthorizationException
+
+     */
+    public function toggleContactedState($customerId)
+    {
+        $customer = Customer::findOrFail($customerId);
+        $this->authorize('toggleContactedState', $customer);
+
+        $customer->update(['contacted' => !$customer->contacted]);
 
         return redirect()->route('upsell-dashboard');
     }

@@ -37,6 +37,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/account-settings', [App\Http\Controllers\UserController::class, 'index'])->name('settings.index');
     Route::post('/account-settings/personal-info', [App\Http\Controllers\UserController::class, 'savePersonalInfoSettings'])->name('settings.personalInfo.save');
     Route::post('/account-settings/password', [App\Http\Controllers\UserController::class, 'savePasswordSettings'])->name('settings.password.save');
+    Route::post('/update-customer-contacted-state/{customer_id}', [App\Http\Controllers\CustomerController::class, 'toggleContactedState'])->name('toggle-customer-contacted-state');
 
     Route::group(['as'=>'oauth.'], function () {
         Route::get('oauth/{driver}/redirect', [\App\Http\Controllers\OAuth\OAuthController::class, 'redirect'])->name('redirect');

@@ -12,6 +12,11 @@ class CustomerPolicy
 
     public function toggleVisibility(User $user, Customer $customer): bool
     {
-        return $user->configuration()->where('id',$customer->config_id)->exists();
+        return $user->ownsCustomer($customer);
+    }
+
+    public function toggleContactedState(User $user, Customer $customer): bool
+    {
+        return $user->ownsCustomer($customer);
     }
 }
