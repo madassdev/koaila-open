@@ -35,12 +35,12 @@ class UpsellController extends Controller
         if ($customersState) {
             // Group customers by plan.
             list($customersByPlans, $upsellStats) = $this->getGroupedPlansData($customersState);
-
-            $customersByPlans = $customersByPlans->map(function ($customersByPlan) {
-                $customersByPlan['sale_funnel'] = SaleFunnel::find($customersByPlan['customers']?->first()?->latestState?->funnel_id)?->data;
-                return $customersByPlan;
-            });
         }
+
+        $customersByPlans = $customersByPlans->map(function ($customersByPlan) {
+            $customersByPlan['sale_funnel'] = SaleFunnel::find($customersByPlan['customers']?->first()?->latestState?->funnel_id)?->data;
+            return $customersByPlan;
+        });
 
         return view('upsell-dashboard')->with([
             'customersByPlans' => $customersByPlans,
@@ -121,7 +121,11 @@ class UpsellController extends Controller
 
     public function show()
     {
-        $customers = $this->getLatestState();
+        $customers = Auth::user()->configuration()
+            ->first()
+            ->customers()
+            ->with('latestState')
+            ->get();
 
         return view('upsell-historic-dashboard')->with([
             'customers' => $customers,
