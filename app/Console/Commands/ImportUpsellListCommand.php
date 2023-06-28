@@ -18,7 +18,7 @@ class ImportUpsellListCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'import:upsell-list {company_name} {config_id} {file_path}';
+    protected $signature = 'import:upsell-list {company_name} {config_id} {file_path} {funnel_id}';
 
     /**
      * The console command description.
@@ -78,6 +78,7 @@ class ImportUpsellListCommand extends Command
             'plans' => $customerData['current_plan'],
             'predicted_plan'=>$customerData['predicted_plan'],
             'state' => $states,
+            'funnel_id'=>$this->argument('funnel_id')
         ]);
     }
 }

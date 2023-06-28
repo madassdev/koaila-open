@@ -88,7 +88,7 @@
                                         <table id="{{$state['date']}}" style="display:none" class="relative w-full border text-sm text-left text-gray-500F">
                                                 <thead>
                                                     <tr class="bg-white border-b">
-                                                        @foreach($state['state']['events']['sales_funnel_events'] as $key=>$value)
+                                                        @foreach($state['state']['events'] as $key=>$value)
                                                             @if($value !== 0)
                                                                 <th scope="col" class="px-6 py-4 font-bold text-gray-900 whitespace-nowrap text-center">
                                                                     {{ ucfirst(trans(str_replace('_', ' ', $key))) }}
@@ -99,7 +99,7 @@
                                                 </thead>
                                                 <tbody>
                                                     <tr class="bg-white border-b">
-                                                        @foreach($state['state']['events']['sales_funnel_events'] as $key=>$value)
+                                                        @foreach($state['state']['events'] as $key=>$value)
                                                             @if($value !== 0)
                                                             <td class="px-6 py-4 text-center">{{$value}}</td>
                                                             @endif
