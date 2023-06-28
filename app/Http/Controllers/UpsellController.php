@@ -222,8 +222,8 @@ class UpsellController extends Controller
                 ->first()
                 ->customers()
                 ->whereHas('latestState', function ($q) use ($latestDate) {
-                    $latestDateWithoutSeconds = date('Y-m-d H:i:00', strtotime($latestDate));
-                    return $q->whereRaw("to_char(date, 'YYYY-MM-DD HH24:MI:00') = ?", [$latestDateWithoutSeconds]);
+                    $latestDateDay = date('Y-m-d', strtotime($latestDate));
+                    return $q->whereDate('date', $latestDateDay);
                 })
                 ->with('latestState')
                 ->get();
