@@ -15,7 +15,8 @@
 </div>
 @endif @php $routes = [ "create_organization" =>
 route('organization-settings.create'), "add_member" =>
-route('organization-settings.members.add'), ]; @endphp
+route('organization-settings.members.add'),"update_member" =>
+route('organization-settings.members.update'), ]; @endphp
 <div class="container">
     <organization-settings
         :user="{{ json_encode(auth()->user()) }}"

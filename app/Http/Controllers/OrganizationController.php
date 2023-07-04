@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\AddOrganizationMemberRequest;
 use App\Http\Requests\SaveOrganizationRequest;
+use App\Http\Requests\UpdateOrganizationMemberRequest;
 use App\Models\Organization;
 use App\Models\User;
 use App\Notifications\OragnizationMemberInvitedNotification;
@@ -97,5 +98,18 @@ class OrganizationController extends Controller
         $member->notify(new OragnizationMemberInvitedNotification($user, $generatedPassword));
 
         return back()->with('message', 'Member invited successfully.');
+    }
+
+    public function  updateMember(UpdateOrganizationMemberRequest $request)
+    {
+        $user  = auth()->user();
+        $this->authorize('isOrganizationAdmin', $user->organization);
+
+        // Fine member and Update their role
+        $member = User::findOrFail($request->member_id);
+        $member->role  =  $request->role;
+        $member->save();
+
+        return back()->with('message', 'Member updated successfully.');
     }
 }

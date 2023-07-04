@@ -41,6 +41,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/organization-settings', [App\Http\Controllers\OrganizationController::class, 'index'])->name('organization-settings.index');
     Route::post('/organization-settings', [App\Http\Controllers\OrganizationController::class, 'store'])->name('organization-settings.create');
     Route::post('/organization-settings/add-member', [App\Http\Controllers\OrganizationController::class, 'addMember'])->name('organization-settings.members.add');
+    Route::post('/organization-settings/update-member', [App\Http\Controllers\OrganizationController::class, 'updateMember'])->name('organization-settings.members.update');
     Route::post('/customers/assign', [App\Http\Controllers\CustomerController::class, 'assignToMember'])->name('customers.member.assign');
 
     Route::group(['as'=>'oauth.'], function () {
