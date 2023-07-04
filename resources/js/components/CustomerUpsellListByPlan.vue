@@ -1,37 +1,25 @@
 <template>
   <div class="flex items-center justify-between px-4">
     <div class="flex space-x-2 mb-2">
-      <button
-        v-for="plan in plans"
-        :key="plan"
-        class="font-medium capitalize rounded-lg text-sm p-1 px-2"
-        :class="[
-          plan.name === activePlan.name ? activePlanStyle : inactivePlanStyle,
-        ]"
-        @click="makeActive(plan)"
-      >
+      <button v-for="plan in plans" :key="plan" class="font-medium capitalize rounded-lg text-sm p-1 px-2" :class="[
+        plan.name === activePlan.name ? activePlanStyle : inactivePlanStyle,
+      ]" @click="makeActive(plan)">
         {{ plan.name }}
       </button>
     </div>
-    <button
-      class="font-medium capitalize rounded-lg text-sm p-1 px-2 mb-2"
-      :class="[
-        activePlan.name === 'hidden' ? activePlanStyle : inactivePlanStyle,
-      ]"
-      @click="showHiddenCustomers()"
-    >
+    <button class="font-medium capitalize rounded-lg text-sm p-1 px-2 mb-2" :class="[
+      activePlan.name === 'hidden' ? activePlanStyle : inactivePlanStyle,
+    ]" @click="showHiddenCustomers()">
       Hidden
     </button>
   </div>
 
   <div class="p-4 flex space-x-8" v-if="activePlan.stats.plan_exists">
     <div :class="statsCardStyle + ' flex font-bold text-lg'">
-      <span
-        >{{ activePlan.customers.length }} User{{
-          activePlan.customers.length > 1 ? "s" : ""
-        }}
-        to upsell</span
-      >
+      <span>{{ activePlan.customers.length }} User{{
+        activePlan.customers.length > 1 ? "s" : ""
+      }}
+        to upsell</span>
     </div>
     <div :class="statsCardStyle">
       <span class="text-xs">Predicted MRR:</span>
@@ -55,21 +43,32 @@
       </p>
     </div>
   </div>
-  
+
   <div class="p-4" v-if="activePlan.name !== 'all'">
     <SaleFunnelTimeline :sale-funnel-data="activePlan.sale_funnel" />
+  </div>
+  <div class="flex flex-col px-4 space-y-2">
+    <div class="flex items-center justify-end">
+      <div class="flex items-center text-gray-600 space-x-2 text-xs">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+          class="w-6 h-6">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M12 3c2.755 0 5.455.232 8.083.678.533.09.917.556.917 1.096v1.044a2.25 2.25 0 01-.659 1.591l-5.432 5.432a2.25 2.25 0 00-.659 1.591v2.927a2.25 2.25 0 01-1.244 2.013L9.75 21v-6.568a2.25 2.25 0 00-.659-1.591L3.659 7.409A2.25 2.25 0 013 5.818V4.774c0-.54.384-1.006.917-1.096A48.32 48.32 0 0112 3z" />
+        </svg>
+        <select class="rounded border border-gray-300 p-1 ring-0 focus:outline-none" v-model="contactFilter">
+          <option value="all">All</option>
+          <option value="contacted">Contacted</option>
+          <option value="not_contacted">Not Contacted</option>
+        </select>
+      </div>
+    </div>
   </div>
   <div class="flex flex-col p-4">
     <div class="flex">
       <table class="w-full border text-sm text-left text-gray-500">
         <thead>
           <tr>
-            <th
-              scope="col"
-              :class="tableHeaderStyle"
-              v-for="(headerName, index) in headerNames"
-              :key="index"
-            >
+            <th scope="col" :class="tableHeaderStyle" v-for="(headerName, index) in headerNames" :key="index">
               {{ headerName }}
             </th>
             <th :class="tableHeaderStyle">
@@ -88,20 +87,13 @@
         <!-- Customers row -->
         <template v-else>
           <template v-for="customer in activePlan.customers" :key="customer.id">
-            <tr
-              class="bg-white border-b"
-              v-if="
-                contactFilter == 'all'
-                  ? true
-                  : contactFilter == 'contacted'
-                  ? customer.contacted
-                  : !customer.contacted
-              "
-            >
-              <td
-                scope="row"
-                class="px-6 py-4 font-bold whitespace-nowrap text-center"
-              >
+            <tr class="bg-white border-b" v-if="contactFilter == 'all'
+              ? true
+              : contactFilter == 'contacted'
+                ? customer.contacted
+                : !customer.contacted
+              ">
+              <td scope="row" class="px-6 py-4 font-bold whitespace-nowrap text-center">
                 <a :href="`/customer-dashboard/` + customer.id">{{
                   customer.email
                 }}</a>
@@ -125,20 +117,12 @@
 
               <!-- Visibility toggle -->
               <td>
-                <form
-                  method="POST"
-                  :action="`/hide-customer-state/` + customer.id"
-                >
+                <form method="POST" :action="`/hide-customer-state/` + customer.id">
                   <div class="form-group flex justify-center items-center">
                     <input type="hidden" name="_token" :value="csrfToken" />
-                    <button
-                      type="submit"
-                      onclick="return confirm('Are you sure?')"
-                      class="focus:outline-none text-white bg-blue-500 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium text-sm p-2"
-                    >
-                      <HideUnhideToggleIcon
-                        :hidden="activePlan.name == 'hidden'"
-                      />
+                    <button type="submit" onclick="return confirm('Are you sure?')"
+                      class="focus:outline-none text-white bg-blue-500 hover:bg-blue-700 focus:ring-4 focus:ring-blue-300 font-medium text-sm p-2">
+                      <HideUnhideToggleIcon :hidden="activePlan.name == 'hidden'" />
                     </button>
                   </div>
                 </form>
