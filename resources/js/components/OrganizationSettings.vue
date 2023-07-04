@@ -75,9 +75,9 @@
             </td>
 
             <td class="flex items-center justify-center space-x-4 p-3">
-              <button class="p-1 px-2 rounded border border-gray-600">
+              <!-- <button class="p-1 px-2 rounded border border-gray-600">
                 <Delete class="w-4 h-4 text-red-600" />
-              </button>
+              </button> -->
               <button @click="editMember(member)" class="p-1 px-2 rounded border border-gray-600">
                 <Pencil class="w-4 h-4 text-blue-600" />
               </button>
