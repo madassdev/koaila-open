@@ -6,6 +6,7 @@ use App\Http\Requests\AssignCustomerToMemberRequest;
 use App\Models\Customer;
 use App\Models\SaleFunnel;
 use App\Models\User;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Http\Request;
@@ -25,8 +26,8 @@ class CustomerController extends Controller
     public function show($id)
     {
         // Use the organization owner's user account, or use authenticated user when organization is not yet setup. 
-        $organizationAccount = Auth::user()->organization?->owner ?? Auth::user();
-        $customer = $organizationAccount->configuration()->first()->customers()->where('id', $id)->with('states')->firstOrFail();
+        $account = Auth::user()->organization?->owner ?? Auth::user();
+        $customer = $account->configuration()->first()->customers()->where('id', $id)->with('states')->firstOrFail();
 
         $this->authorize('showCustomerInfo', $customer);
 
@@ -89,9 +90,8 @@ class CustomerController extends Controller
      * @throws \Illuminate\Auth\Access\AuthorizationException
 
     */
-    public function assignToMember(AssignCustomerToMemberRequest $request)
+    public function assignToMember(AssignCustomerToMemberRequest $request, Authenticatable $user)
     {
-        $user = auth()->user();
         $customer = Customer::findOrFail($request->customer_id);
 
         // Ensure user can assign the customer to a member in their organization.

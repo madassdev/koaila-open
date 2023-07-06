@@ -22,9 +22,7 @@ return new class extends Migration {
 
         // Add organization_id and role to users table.
         Schema::table('users', function (Blueprint $table) {
-            $table->foreignIdFor(Organization::class, 'organization_id')->nullable();
-            $table->string('role')->nullable(); //  admin, member.
-            $table->boolean('invite_accepted')->default(false);
+            
         });
     }
 
@@ -36,12 +34,5 @@ return new class extends Migration {
     public function down()
     {
         Schema::dropIfExists('organizations');
-
-        // Remove organization_id and role from users table.
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('organization_id');
-            $table->dropColumn('role');
-            $table->dropColumn('invite_accepted');
-        });
     }
 };

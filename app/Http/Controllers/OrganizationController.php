@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateOrganizationMemberRequest;
 use App\Models\Organization;
 use App\Models\User;
 use App\Notifications\OragnizationMemberInvitedNotification;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\Request;
 
 class OrganizationController extends Controller
@@ -17,9 +18,8 @@ class OrganizationController extends Controller
      * 
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
+    public function index(Authenticatable $user)
     {
-        $user = auth()->user();
 
         if ($user->organization) {
             // User must be an admin.
@@ -43,10 +43,9 @@ class OrganizationController extends Controller
      * @throws \Illuminate\Auth\Access\AuthorizationException
 
     */
-    public function store(SaveOrganizationRequest $request)
+    public function store(SaveOrganizationRequest $request, Authenticatable $user)
     {
         // Create organization for first time user or update existing user's organization.
-        $user = auth()->user();
 
         if (!$user->organization) {
             // Create and attach user to new organization.
@@ -77,9 +76,8 @@ class OrganizationController extends Controller
      * @throws \Illuminate\Auth\Access\AuthorizationException
 
     */
-    public function addMember(AddOrganizationMemberRequest $request)
+    public function addMember(AddOrganizationMemberRequest $request, Authenticatable $user)
     {
-        $user = auth()->user();
 
         $this->authorize('isOrganizationAdmin', $user->organization);
 
@@ -100,12 +98,11 @@ class OrganizationController extends Controller
         return back()->with('message', 'Member invited successfully.');
     }
 
-    public function  updateMember(UpdateOrganizationMemberRequest $request)
+    public function updateMember(UpdateOrganizationMemberRequest $request, Authenticatable $user)
     {
-        $user  = auth()->user();
         $this->authorize('isOrganizationAdmin', $user->organization);
 
-        // Fine member and Update their role
+        // Find member and Update their role.
         $member = User::findOrFail($request->member_id);
         $member->role  =  $request->role;
         $member->save();

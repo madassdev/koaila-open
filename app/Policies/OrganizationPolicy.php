@@ -20,7 +20,7 @@ class OrganizationPolicy
      */
     public function isOrganizationAdmin(User $user, Organization $organization)
     {
-        // Customer must belong to user, and user must be admin of their organization.
+        // User must be admin of their organization.
         return $user->role == $organization::$adminRole;
     }
 }

@@ -58,7 +58,7 @@ class OragnizationMemberInvitedNotification extends Notification
                 </p>
             </div>"
         );
-        
+
         return (new MailMessage)
             ->subject(ucfirst($this->user->company_name) . " - Invitation to collaborate")
             ->greeting('Accept invitation.')
@@ -69,16 +69,5 @@ class OragnizationMemberInvitedNotification extends Notification
             ->action('Login to dashboard', url(route('login')));
     }
 
-    /**
-     * Get the array representation of the notification.
-     *
-     * @param  mixed  $notifiable
-     * @return array
-     */
-    public function toArray($notifiable)
-    {
-        return [
-            //
-        ];
-    }
+    
 }

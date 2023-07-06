@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\SaleFunnel;
 use App\Models\User;
-
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -24,10 +24,8 @@ class UpsellController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
+    public function index(Authenticatable $user)
     {
-        $user = auth()->user();
-
         // Prepare data for frontend.
         $upsellStats = null;
         $customersByPlans = null;
@@ -227,12 +225,12 @@ class UpsellController extends Controller
         $customers = null;
 
         // Use the organization owner's user account, or use authenticated user when organization is not yet setup. 
-        $organizationAccount = $user->organization?->owner ?? $user;
-        $latestDate = $organizationAccount->configuration()->first()?->customerStates()?->orderByDesc('date')->first()?->date;
+        $account = $user->organization?->owner ?? $user;
+        $latestDate = $account->configuration()->first()?->customerStates()?->orderByDesc('date')->first()?->date;
 
         if ($latestDate) {
             // Fetch customers.
-            $query = $organizationAccount->configuration()
+            $query = $account->configuration()
                 ->first()
                 ->customers()
                 ->whereHas('latestState', function ($q) use ($latestDate) {
