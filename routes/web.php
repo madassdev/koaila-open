@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\User;
+use App\Notifications\OragnizationMemberInvitedNotification;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -44,7 +46,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/organization-settings/update-member', [App\Http\Controllers\OrganizationController::class, 'updateMember'])->name('organization-settings.members.update');
     Route::post('/customers/assign', [App\Http\Controllers\CustomerController::class, 'assignToMember'])->name('customers.member.assign');
 
-    Route::group(['as'=>'oauth.'], function () {
+    Route::group(['as' => 'oauth.'], function () {
         Route::get('oauth/{driver}/redirect', [\App\Http\Controllers\OAuth\OAuthController::class, 'redirect'])->name('redirect');
         Route::get('oauth/{driver}/callback', [\App\Http\Controllers\OAuth\OAuthController::class, 'handleCallback'])->name('callback');
     });
@@ -52,4 +54,9 @@ Route::middleware(['auth'])->group(function () {
 
 Route::get('/debug-sentry', function () {
     throw new Exception('My first Sentry error!');
+});
+
+Route::get('/mail-preview', function () {
+    $user = User::first();
+    return (new OragnizationMemberInvitedNotification($user, str()->random(8)))->toMail($user);
 });

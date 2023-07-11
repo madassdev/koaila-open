@@ -7,6 +7,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\HtmlString;
 
 class OragnizationMemberInvitedNotification extends Notification
@@ -62,12 +63,7 @@ class OragnizationMemberInvitedNotification extends Notification
         return (new MailMessage)
             ->subject(ucfirst($this->user->company_name) . " - Invitation to collaborate")
             ->greeting('Accept invitation.')
-            ->line('You have been invited to collaborate on ' . ucfirst($this->user->company_name))
-            ->line('Here is your login details:')
-            ->line($loginDetailsContent)
-            ->line('Please make sure to change your password as soon as you login to your dashboard.')
-            ->action('Login to dashboard', url(route('login')));
-    }
+            ->markdown('mail.notification.organization_member_invitation', ['user' => $this->user, 'generated_password' => $this->generatedPassword]);
 
-    
+    }
 }
