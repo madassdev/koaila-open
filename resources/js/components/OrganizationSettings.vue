@@ -88,130 +88,56 @@
     </div>
   </div>
 
-  <ModalWrapper :isOpen="createOrganizationModal" @close="createOrganizationModal = false" width="w-[40vw]"
-    height="h-fit">
-    <div class="p-3 mx-auto">
-      <p class="font-bold text-lg">Setup your organization</p>
+  <ModalWrapper :isOpen="createOrganizationModal" @close="createOrganizationModal = false" width="w-[40vw]" height="h-fit">
+    <ChangeOrganizationSettings 
+      :routes="routes" 
+      :errors="errors" 
+      :oldValues="oldValues" 
+      :csrfToken="csrfToken"
+      :organization="organization"
+       />
+  </ModalWrapper>
 
-      <form class="w-full" :action="routes.create_organization" method="post">
-        <input type="hidden" name="_token" :value="csrfToken" />
-        <div class="space-y-4 mt-6">
-          <div class="space-y-1">
-            <label for="name" class="flex-1 font-bold">
-              Oraganization name:
-            </label>
-            <div class="flex-1">
-              <InputField :value="name" :isError="errors?.name?.length" id="name" type="text" name="name"
-                :required="true" />
-            </div>
-          </div>
-          <div class="space-y-1">
-            <label for="number_of_employees" class="flex-1 font-bold">
-              Number of employees:
-            </label>
-            <div class="flex-1">
-              <select name="number_of_employees"
-                class="rounded border border-gray-300 p-2.5 w-full ring-0 focus:outline-none" v-model="numberOfEmployees"
-                :required="true">
-                <option v-for="(option, i) in numberOfEmployeesOptions" :key="i" :value="option.value">
-                  {{ option.title }}
-                </option>
-              </select>
-            </div>
-          </div>
-          <div class="space-x-4 w-full">
-            <div class="w-60"></div>
-            <div class="flex-1 flex items-center justify-end">
-              <div class="space-x-4">
-                <button class="bg-blue-700 text-white p-2 rounded px-4">
-                  Save
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </form>
-    </div>
-  </ModalWrapper>
   <ModalWrapper :isOpen="addMemberModal" @close="addMemberModal = false" width="w-[40vw]" height="h-fit">
-    <div class="px-8 space-y-4 mb-8">
-      <p class="font-bold text-xl">Invite member to your organization</p>
-      <div class="p-3 bg-gray-100 rounded">
-        <p class="text-xs">
-          Add someone to join your organization by inviting them to join.
-          We will send an invite link to their email address.
-        </p>
-      </div>
-      <form :action="routes.add_member" method="post" class="space-y-4 w-full mx-auto">
-        <input type="hidden" name="_token" :value="csrfToken" />
-        <div class="">
-          <label>Email address</label>
-          <div class="flex-1">
-            <InputField :value="newMemberEmail" :isError="errors?.email?.length" id="name" type="email" name="email"
-              class="w-full" :required="true" />
-            <span v-if="errors?.email?.length" class="text-xs text-red-600">{{ errors?.email[0] }}</span>
-          </div>
-        </div>
-        <div class="w-full">
-          <label>Select role</label>
-          <select name="role" class="uppercase rounded border border-gray-300 p-2.5 w-full ring-0 focus:outline-none"
-            v-model="newMemberRole" :required="true">
-            <option disabled>SELECT ROLE</option>
-            <option v-for="(role, i) in availableRoles" :key="i" :value="role" class="uppercase">
-              {{ role }}
-            </option>
-          </select>
-        </div>
-        <div class="w-full flex justify-end">
-          <button class="p-2.5 px-4 bg-blue-600 text-white rounded">
-            Add member
-          </button>
-        </div>
-      </form>
-    </div>
+    <AddOrganizationMember 
+      :availableRoles="availableRoles" 
+      :routes="routes" 
+      :errors="errors" 
+      :oldValues="oldValues" 
+      :newMemberRole="newMemberRole"
+      :csrfToken="csrfToken"
+      :newMemberEmail="newMemberEmail" />
   </ModalWrapper>
+
   <ModalWrapper :isOpen="editMemberModal" @close="editMemberModal = false" width="w-[40vw]" height="h-fit">
-    <div class="px-8 space-y-4 mb-8">
-      <p class="font-bold text-xl">Update member in your organization</p>
-      <form :action="routes.update_member" method="post" class="space-y-4 w-full mx-auto">
-        <input type="hidden" name="_token" :value="csrfToken" />
-        <input type="hidden" name="member_id" :value="memberToEdit.id" />
-        <div class="">
-          <label>Email address</label>
-          <div class="flex-1">
-            <InputField :isError="errors?.email?.length" id="name" type="email" name="email" class="w-full bg-gray-300"
-              :required="true" :value="memberToEdit.email" :disabled="true" />
-            <span v-if="errors?.email?.length" class="text-xs text-red-600">{{ errors?.email[0] }}</span>
-          </div>
-        </div>
-        <div class="w-full">
-          <label>Select role</label>
-          <select name="role" class="uppercase rounded border border-gray-300 p-2.5 w-full ring-0 focus:outline-none"
-            v-model="newMemberRole" :required="true">
-            <option v-for="(role, i) in availableRoles" :key="i" :value="role" class="uppercase">
-              {{ role }}
-            </option>
-          </select>
-        </div>
-        <div class="w-full flex justify-end">
-          <button class="p-2.5 px-4 bg-blue-600 text-white rounded">
-            Update
-          </button>
-        </div>
-      </form>
-    </div>
+    <EditOrganizationMember 
+      :availableRoles="availableRoles" 
+      :routes="routes" 
+      :errors="errors" 
+      :newMemberRole="newMemberRole"
+      :csrfToken="csrfToken"
+      :memberToEdit="memberToEdit" />
   </ModalWrapper>
 </template>
 
 <script>
-import InputField from "@/components/InputField.vue";
 import ModalWrapper from "@/components/ModalWrapper.vue";
+import AddOrganizationMember from "@/components/OrganizationSettings/AddOrganizationMember.vue";
+import EditOrganizationMember from "@/components/OrganizationSettings/EditOrganizationMember.vue";
+import ChangeOrganizationSettings from "@/components/OrganizationSettings/ChangeOrganizationSettings.vue";
 import { Pencil, Delete, Cog8, Plus } from '@/components/Icons/Index.vue'
 
 export default {
   components: {
-    InputField, ModalWrapper, Delete, Pencil, Cog8, Plus
-  },
+    ModalWrapper,
+    Delete,
+    Pencil,
+    Cog8,
+    Plus,
+    AddOrganizationMember,
+    EditOrganizationMember,
+    ChangeOrganizationSettings
+},
   props: {
     user: Object,
     organization: Object,
@@ -229,8 +155,6 @@ export default {
       memberToEdit: null,
       editMemberModal: false,
       availableRoles: this.roles,
-      name: this.organization?.name ?? this.user.company_name,
-      numberOfEmployees: this.organization?.number_of_employees,
       newMemberEmail: "",
       newMemberRole: "",
       tableHeaderStyle: "px-6 py-3 text-xs text-gray-700 uppercase bg-gray-50 text-center",
@@ -239,13 +163,6 @@ export default {
         .querySelector('meta[name="csrf-token"]')
         .getAttribute("content"),
       tableHeaderNames: ['Email address', 'role', 'Invite Status', 'Action'],
-      numberOfEmployeesOptions: [
-        { title: "1 to 10 employees", value: "1-10" },
-        { title: "10 to 50 employees", value: "10-50" },
-        { title: "50 to 100 employees", value: "50-100" },
-        { title: "100 to 1,000 employees", value: "100-1000" },
-        { title: "1,000+ employees", value: "1000+" },
-      ],
     };
   },
   mounted() {
@@ -276,8 +193,8 @@ export default {
       }
     },
     editMember(member) {
-      this.editMemberModal = true;
       this.memberToEdit = member;
+      this.editMemberModal = true;
     }
   },
 };
