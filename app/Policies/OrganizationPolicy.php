@@ -27,7 +27,7 @@ class OrganizationPolicy
     public function isAdminOfCustomer(User $user, Organization $organization, Customer $customer)
     {
         // Customer must belong to user's organization, and user must be an admin of their organization.
-        $account = $user->organization->owner ?? $user;
-        return $account->ownsCustomer($customer) && $user->role == Organization::$adminRole;
+        $account = $organization->owner ?? $user;
+        return $account->ownsCustomer($customer) && $user->is_admin;
     }
 }
