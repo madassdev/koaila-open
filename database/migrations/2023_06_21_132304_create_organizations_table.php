@@ -19,11 +19,6 @@ return new class extends Migration {
             $table->string('number_of_employees');
             $table->timestamps();
         });
-
-        // Add organization_id and role to users table.
-        Schema::table('users', function (Blueprint $table) {
-            
-        });
     }
 
     /**
