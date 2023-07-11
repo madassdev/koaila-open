@@ -43,11 +43,6 @@ class UpsellController extends Controller
             });
         }
 
-        if($user->is_admin){
-            // Fetch members of organization to be used when assigning customers on the frontend.
-            $organizationMembers = User::whereOrganizationId($user->id)->get();
-        }
-
         return view('upsell-dashboard')->with([
             'customersByPlans' => $customersByPlans,
             'upsellStats' => $upsellStats,
@@ -128,7 +123,11 @@ class UpsellController extends Controller
 
     public function show()
     {
-        $customers = $this->getLatestState();
+        $customers = Auth::user()->configuration()
+            ->first()
+            ->customers()
+            ->with('latestState')
+            ->get();
 
         return view('upsell-historic-dashboard')->with([
             'customers' => $customers,

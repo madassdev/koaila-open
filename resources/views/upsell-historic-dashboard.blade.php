@@ -45,7 +45,7 @@
                                             <tr class="bg-white border-b">
                                                 <th scope="row"
                                                     class="px-6 py-4 font-bold text-gray-900 whitespace-nowrap text-center">
-                                                    <h1>{{$customer->states()->latest()->first()->date}}</h1>
+                                                    <h1>{{$customer->states()?->latest()?->first()?->date}}</h1>
                                                 </th>
                                                 <th scope="row"
                                                     class="px-6 py-4 font-bold text-gray-900 whitespace-nowrap text-center">

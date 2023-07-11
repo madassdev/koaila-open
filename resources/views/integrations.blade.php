@@ -15,8 +15,7 @@
                 </div>
             @endif
 
-            <div >
-                <div >
+            <div>
                     <div class="grid grid-cols-2 gap-4 pb-10">
                         @foreach([[
                             'name' => 'Amplitude',
@@ -43,8 +42,7 @@
                             'image' => 'hubspot.png',
                             'slug' => 'hubspot',
                             'description' =>'Sync your Hubspot data for more accurate results'
-                            ],
-                            ] as $usage_tracking_provider)
+                            ],] as $usage_tracking_provider)
                             <div class="w-full rounded border border-gray-200 p-2 relative hover:bg-gray-50">
                                 <div class="grid grid-cols-2 items-center p-2">
                                     <div class="w-12">

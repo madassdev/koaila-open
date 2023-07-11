@@ -55,8 +55,3 @@ Route::middleware(['auth'])->group(function () {
 Route::get('/debug-sentry', function () {
     throw new Exception('My first Sentry error!');
 });
-
-Route::get('/mail-preview', function () {
-    $user = User::first();
-    return (new OragnizationMemberInvitedNotification($user, str()->random(8)))->toMail($user);
-});
