@@ -21,11 +21,6 @@ class CustomerPolicy
         return $user->ownsCustomer($customer);
     }
 
-    public function assignToMember(User $user, Customer $customer)
-    {
-        // User must be an admin of  the customer's organization. 
-        return  $this->isAdminOfCustomer($user, $customer);
-    }
 
     public function showCustomerInfo(User $user, Customer $customer)
     {
