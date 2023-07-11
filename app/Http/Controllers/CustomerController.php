@@ -95,7 +95,7 @@ class CustomerController extends Controller
         $customer = Customer::findOrFail($request->customer_id);
 
         // Ensure user can assign the customer to a member in their organization.
-        $this->authorize('assignToMember', $customer);
+        $this->authorize('isAdminOfCustomer', [$user->organization, $customer]);
 
         if ($request->member_id) {
             // Member must belong to authenticated user's organization.
