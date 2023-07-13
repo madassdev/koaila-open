@@ -78,7 +78,8 @@ class ImportUpsellListCommand extends Command
             'plans' => $customerData['current_plan'],
             'predicted_plan'=>$customerData['predicted_plan'],
             'state' => $states,
-            'funnel_id'=>$this->argument('funnel_id')
+            'funnel_id'=>$this->argument('funnel_id'),
+            'linked_IDs'=>$customerData['linked_IDs'],
         ]);
     }
 }

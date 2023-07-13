@@ -31,11 +31,10 @@
                 </div>
             </div>
         </div>
-
-        <customer-upsell-list-by-plan :data='{!!json_encode($customersByPlans)!!}'>
-        </customer-upsell-list-by-plan>
-
-
+{{--        @php--}}
+{{--        dd(json_encode($customersByPlans));--}}
+{{--        @endphp--}}
+        <customer-upsell-list-by-plan :data='{!!json_encode($customersByPlans)!!}'></customer-upsell-list-by-plan>
     </div>
 </div>
 @endif

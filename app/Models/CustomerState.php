@@ -17,11 +17,13 @@ class CustomerState extends Model
         'predicted_plan',
         'funnel_id',
         'state',
+        'linked_IDs'
     ];
 
     protected $casts = [
         'state' => 'array',
         'plans' => 'array',
+        'linked_IDs'=>'array',
     ];
 
     public function customer()

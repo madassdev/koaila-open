@@ -68,6 +68,22 @@
                     @endforeach
                 </div>
 
+                @php
+                $linked_IDS = $customer->first()->states()->orderBy('date', 'desc')->first()->linked_IDs;
+                @endphp
+
+                @if($linked_IDS!=null)
+                    <div class="bg-white rounded mt-4">
+                        <div class="p-8">
+                            <h1 class="text-lg font-semibold text-gray-900">Linked Emails</h1>
+                        @foreach($linked_IDS as $linked_ID)
+                            <h1>{{$linked_ID}}</h1>
+                        @endforeach
+                        </div>
+                    </div>
+                @endif
+
+
                 <div class="bg-white rounded mt-4" id="upsell-table">
                     <div class="p-4">
                         <div class="p-4 text-left bg-white">

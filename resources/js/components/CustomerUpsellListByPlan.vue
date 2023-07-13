@@ -47,6 +47,7 @@
   <div class="p-4" v-if="activePlan.name !== 'all'">
     <SaleFunnelTimeline :sale-funnel-data="activePlan.sale_funnel" />
   </div>
+
   <div class="flex flex-col px-4 space-y-2">
     <div class="flex items-center justify-end">
       <div class="flex items-center text-gray-600 space-x-2 text-xs">
@@ -63,6 +64,7 @@
       </div>
     </div>
   </div>
+
   <div class="flex flex-col p-4">
     <div class="flex">
       <table class="w-full border text-sm text-left text-gray-500">
