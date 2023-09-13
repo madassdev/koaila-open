@@ -22,6 +22,8 @@ class User extends Authenticatable
         'email',
         'password',
         'company_name',
+        'role',
+        'organization_id'
     ];
 
     /**
@@ -58,14 +60,29 @@ class User extends Authenticatable
         return $this->hasOne(Configuration::class);
     }
 
-/**
- * Determine if the authenticated user owns the given customer.
- *
- * @param  \App\Models\Customer  $customer
- * @return bool
- */
+    public function organization()
+    {
+        return $this->belongsTo(Organization::class);
+    }
+
+    /**
+     * Determine if the authenticated user owns the given customer.
+     *
+     * @param  \App\Models\Customer  $customer
+     * @return bool
+     */
     public function ownsCustomer(Customer $customer): bool
     {
-        return $this->configuration()->where('id',$customer->config_id)->exists();
+        return $this->configuration()->where('id', $customer->config_id)->exists();
+    }
+
+    /**
+     * Getter for the "is_admin" attribute of the user. This is determined from the value in "role" column.
+     *
+     * @return bool
+     */
+    public function getIsAdminAttribute()
+    {
+        return $this->role == Organization::$adminRole;
     }
 }

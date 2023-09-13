@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\SaleFunnel;
 use App\Models\User;
-
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -24,27 +24,29 @@ class UpsellController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
+    public function index(Authenticatable $user)
     {
         // Prepare data for frontend.
         $upsellStats = null;
         $customersByPlans = null;
+        $organizationMembers = [];
 
         // Get user's latest state.
         $customersState = $this->getLatestState();
         if ($customersState) {
             // Group customers by plan.
             list($customersByPlans, $upsellStats) = $this->getGroupedPlansData($customersState);
-        }
 
-        $customersByPlans = $customersByPlans->map(function ($customersByPlan) {
-            $customersByPlan['sale_funnel'] = SaleFunnel::find($customersByPlan['customers']?->first()?->latestState?->funnel_id)?->data;
-            return $customersByPlan;
-        });
+            $customersByPlans = $customersByPlans->map(function ($customersByPlan) {
+                $customersByPlan['sale_funnel'] = SaleFunnel::find($customersByPlan['customers']?->first()?->latestState?->funnel_id)?->data;
+                return $customersByPlan;
+            });
+        }
 
         return view('upsell-dashboard')->with([
             'customersByPlans' => $customersByPlans,
-            'upsellStats' => $upsellStats
+            'upsellStats' => $upsellStats,
+            'members' => $organizationMembers
         ]);
     }
 
@@ -218,19 +220,28 @@ class UpsellController extends Controller
      */
     public function getLatestState()
     {
+        $user = Auth::user();
         $customers = null;
-        $latestDate = Auth::user()->configuration()->first()?->customerStates()?->orderByDesc('date')->first()?->date;
+
+        // Use the organization owner's user account, or use authenticated user when organization is not yet setup. 
+        $account = $user->organization?->owner ?? $user;
+        $latestDate = $account->configuration()->first()?->customerStates()?->orderByDesc('date')->first()?->date;
 
         if ($latestDate) {
-            $customers = Auth::user()->configuration()
+            // Fetch customers.
+            $query = $account->configuration()
                 ->first()
                 ->customers()
                 ->whereHas('latestState', function ($q) use ($latestDate) {
                     $latestDateDay = date('Y-m-d', strtotime($latestDate));
                     return $q->whereDate('date', $latestDateDay);
                 })
-                ->with('latestState')
-                ->get();
+                ->with('latestState', 'user');
+            if (!$user->is_admin) {
+                // Fetch only customers assigned to member.
+                $query = $query->whereUserId($user->id);
+            }
+            $customers = $query->get();
         }
 
         return $customers;

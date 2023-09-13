@@ -39,6 +39,9 @@ app.component('user-account-settings', UserAccountSettings);
 import SaleFunnelTimeline from './components/SaleFunnelTimeline.vue';
 app.component('sale-funnel-timeline', SaleFunnelTimeline);
 
+import OrganizationSettings from './components/OrganizationSettings.vue';
+app.component('organization-settings', OrganizationSettings);
+
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue

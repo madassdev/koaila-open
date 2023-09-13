@@ -1,4 +1,4 @@
-@props(['upsellStats', 'customersByPlans'])
+@props(['upsellStats', 'customersByPlans', 'members'])
 
 @php
     // Extract all hidden  customers in each group and flatten to a single array
@@ -31,10 +31,27 @@
                 </div>
             </div>
         </div>
+<<<<<<< HEAD
 {{--        @php--}}
 {{--        dd(json_encode($customersByPlans));--}}
 {{--        @endphp--}}
         <customer-upsell-list-by-plan :data='{!!json_encode($customersByPlans)!!}'></customer-upsell-list-by-plan>
+=======
+
+        @php
+        $routes = ['assign_customer_to_member' => route('customers.member.assign')];
+        @endphp
+
+        <customer-upsell-list-by-plan 
+            :data='{!!json_encode($customersByPlans)!!}'
+            :user="{{ json_encode(auth()->user()) }}"
+            :routes="{{ json_encode($routes) }}"
+            :members="{{ json_encode($members) }}"
+        >
+        </customer-upsell-list-by-plan>
+
+
+>>>>>>> feature/GH-75/enable-multiple-user-accounts
     </div>
 </div>
 @endif

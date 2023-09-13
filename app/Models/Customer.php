@@ -31,4 +31,9 @@ class Customer extends Model
     {
         return $this->belongsTo(Configuration::class);
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
